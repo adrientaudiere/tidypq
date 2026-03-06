@@ -1,0 +1,75 @@
+---
+title: "Getting Started with tidypq"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with tidypq}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tidypq)
+library(MiscMetabar)
+```
+
+## Overview
+tidypq provides tidyverse-style verbs for manipulating phyloseq objects. Use the `.` pronoun to refer to the phyloseq object within expressions.
+
+## Filter samples
+```{r}
+# By metadata
+data_fungi |> 
+  filter_samples_pq(Height == "Low")
+
+# By sequencing depth
+data_fungi |> 
+  filter_samples_pq(sample_sums(.) > 5000)
+
+# Both criteria
+data_fungi |> 
+  filter_samples_pq(Height == "Low" & sample_sums(.) > 5000)
+```
+
+## Filter taxa
+```{r}
+# By taxonomy
+data_fungi |> 
+  filter_taxa_pq(Phylum == "Basidiomycota")
+
+# By abundance
+data_fungi |> 
+  filter_taxa_pq(taxa_sums(.) > 100)
+```
+
+## Mutate
+```{r}
+# Add sample depth
+fungi_modif <- data_fungi |> 
+  mutate_samdata_pq(depth = sample_sums(.), 
+    hill_2 = vegan::renyi(.@otu_table, scales = 2, hill = TRUE),
+    )
+```
+
+## Select columns
+```{r}
+# Select sample metadata
+data_fungi |> select_samdata_pq(Height, Time)
+
+# Select taxonomic ranks
+data_fungi |> select_taxa_pq(Kingdom:Genus)
+```
+
+## Chaining operations
+```{r}
+data_fungi |>
+  filter_samples_pq(Height == "Low") |>
+  filter_taxa_pq(taxa_sums(.) > 50) |>
+  mutate_samdata_pq(log_depth = log(sample_sums(.)))
+```

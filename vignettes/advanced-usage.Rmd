@@ -1,0 +1,69 @@
+---
+title: "Advanced Usage"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Advanced Usage}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tidypq)
+library(MiscMetabar)
+```
+
+## Custom functions in filter
+
+```{r}
+# Filter taxa present in at least 3 samples
+data_fungi |> 
+  filter_taxa_pq(taxa_prevalence(.) >= 3)
+
+# Filter samples with above-median depth
+data_fungi |>
+   filter_samples_pq(sample_sums(.) > median(sample_sums(.)))
+```
+
+## Custom functions in mutate
+
+```{r}
+# Prevalence ratio
+data_fungi |> mutate_taxa_pq(
+  prev_ratio = taxa_prevalence(.) / nsamples(.)
+)
+
+# Relative abundance rank
+data_fungi |> mutate_taxa_pq(
+  abundance_rank = rank(-taxa_sums(.))
+)
+```
+
+## Occurrence-level transformations
+
+```{r}
+# Relative abundance
+data_fungi |> mutate_occurrences_pq(. / sample_total)
+
+# Filter low-abundance occurrences
+data_fungi |> filter_occurrences_pq(. / sample_total > 0.001)
+```
+
+## Complex pipelines
+
+```{r}
+data_fungi |>
+  filter_samples_pq(sample_sums(.) > quantile(sample_sums(.), 0.25)) |>
+  filter_taxa_pq(taxa_prevalence(.) >= 2, taxa_sums(.) > 10) |>
+  mutate_taxa_pq(
+    prevalence = taxa_prevalence(.),
+    mean_abundance = taxa_sums(.) / nsamples(.)
+  ) |>
+  mutate_occurrences_pq(. / sample_total)
+```
