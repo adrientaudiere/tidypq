@@ -1,0 +1,98 @@
+# tidypq
+
+Tidyverse-style verbs for manipulating phyloseq objects at four scales:
+**samples**, **taxa**, **occurrences**, and **tree**.
+
+## Function Naming Convention
+
+All functions follow the pattern: `{verb}_{scale}_pq()`
+
+| Verb | samples | taxa | occurrences | tree |
+|----|----|----|----|----|
+| **filter** | `filter_samples_pq` | `filter_taxa_pq` | `filter_occurrences_pq` | `filter_tree_pq` |
+| **select** | `select_samdata_pq` | `select_taxa_pq` | \- | \- |
+| **mutate** | `mutate_samdata_pq` | `mutate_taxa_pq` | `mutate_occurrences_pq` | \- |
+| **slice** | `slice_samples_pq` | `slice_taxa_pq` | \- | \- |
+| **arrange** | `arrange_samples_pq` | `arrange_taxa_pq` | \- | \- |
+| **rename** | `rename_samples_pq` | `rename_taxa_pq` | \- | \- |
+
+**Helper:** `taxa_prevalence(physeq, threshold)`
+
+## Installation
+
+``` r
+# Install from GitHub
+devtools::install_github("adrientaudiere/tidypq")
+```
+
+## Usage
+
+``` r
+library(tidypq)
+library(MiscMetabar)
+
+# Use the `.` pronoun to refer to the phyloseq object
+data_fungi |>
+filter_samples_pq(Height == "Low", sample_sums(.) > 1000) |>
+filter_taxa_pq(taxa_sums(.) > 100) |>
+mutate_samdata_pq(log_depth = log(sample_sums(.))) |>
+mutate_occurrences_pq(. / sample_total)  # Relative abundance
+```
+
+# Package index
+
+## All functions
+
+- [`arrange_samples_pq()`](https://adrientaudiere.github.io/tidypq/reference/arrange_samples_pq.md)
+  : Arrange samples by column values
+- [`arrange_taxa_pq()`](https://adrientaudiere.github.io/tidypq/reference/arrange_taxa_pq.md)
+  : Arrange taxa by column values
+- [`chimera_removal_dada2()`](https://adrientaudiere.github.io/tidypq/reference/chimera_removal_dada2.md)
+  : Remove chimeric sequences using dada2
+- [`create_chimera_pq()`](https://adrientaudiere.github.io/tidypq/reference/create_chimera_pq.md)
+  : Create a phyloseq object with synthetic chimeric sequences
+- [`decontam_sam_control()`](https://adrientaudiere.github.io/tidypq/reference/decontam_sam_control.md)
+  : Decontaminate based on negative/blank control samples
+- [`decontam_taxa_control()`](https://adrientaudiere.github.io/tidypq/reference/decontam_taxa_control.md)
+  : Decontaminate based on control taxa
+- [`filter_occurrences_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_occurrences_pq.md)
+  : Filter occurrences in the OTU table
+- [`filter_samples_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_samples_pq.md)
+  : Filter samples in a phyloseq object
+- [`filter_taxa_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_taxa_pq.md)
+  : Filter taxa in a phyloseq object
+- [`filter_tree_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_tree_pq.md)
+  : Filter phyloseq by tree topology
+- [`mutate_occurrences_pq()`](https://adrientaudiere.github.io/tidypq/reference/mutate_occurrences_pq.md)
+  : Transform OTU table values
+- [`mutate_samdata_pq()`](https://adrientaudiere.github.io/tidypq/reference/mutate_samdata_pq.md)
+  : Add or modify columns in sample_data
+- [`mutate_taxa_pq()`](https://adrientaudiere.github.io/tidypq/reference/mutate_taxa_pq.md)
+  : Add or modify columns in tax_table
+- [`plot_sample_depth_pq()`](https://adrientaudiere.github.io/tidypq/reference/plot_sample_depth_pq.md)
+  : Plot sample depth differences to detect outliers
+- [`rename_samples_pq()`](https://adrientaudiere.github.io/tidypq/reference/rename_samples_pq.md)
+  : Rename columns in sample_data
+- [`rename_taxa_pq()`](https://adrientaudiere.github.io/tidypq/reference/rename_taxa_pq.md)
+  : Rename columns in tax_table
+- [`select_samdata_pq()`](https://adrientaudiere.github.io/tidypq/reference/select_samdata_pq.md)
+  : Select columns from sample_data in a phyloseq object
+- [`select_taxa_pq()`](https://adrientaudiere.github.io/tidypq/reference/select_taxa_pq.md)
+  : Select columns from tax_table in a phyloseq object
+- [`slice_samples_pq()`](https://adrientaudiere.github.io/tidypq/reference/slice_samples_pq.md)
+  : Subset samples by position
+- [`slice_taxa_pq()`](https://adrientaudiere.github.io/tidypq/reference/slice_taxa_pq.md)
+  : Subset taxa by position
+- [`taxa_prevalence()`](https://adrientaudiere.github.io/tidypq/reference/taxa_prevalence.md)
+  : Calculate taxa prevalence
+
+# Articles
+
+### All vignettes
+
+- [Advanced
+  Usage](https://adrientaudiere.github.io/tidypq/articles/advanced-usage.md):
+- [Benchmarking Chimera Detection
+  Methods](https://adrientaudiere.github.io/tidypq/articles/chimera_detection_testing.md):
+- [Getting Started with
+  tidypq](https://adrientaudiere.github.io/tidypq/articles/getting-started.md):
