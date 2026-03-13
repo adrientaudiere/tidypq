@@ -63,7 +63,7 @@ filter_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' @param physeq (phyloseq, required) A phyloseq object.
 #' @param ... <tidy-select> One or more unquoted expressions separated by
 #'   commas. Variable names can be used as if they were positions in the data
-#'   frame, so expressions like `Kingdom:Genus` can be used to select a range
+#'   frame, so expressions like `Phylum:Genus` can be used to select a range
 #'   of taxonomic ranks.
 #'
 #' @return A phyloseq object with selected tax_table columns.
@@ -73,10 +73,10 @@ filter_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' @examples
 #' library(MiscMetabar)
 #' # Select specific ranks
-#' select_taxa_pq(data_fungi, Kingdom, Phylum, Class)
+#' select_taxa_pq(data_fungi, Phylum, Class)
 #'
 #' # Select a range of ranks
-#' select_taxa_pq(data_fungi, Kingdom:Genus)
+#' select_taxa_pq(data_fungi, Phylum:Genus)
 #'
 #' # Exclude ranks
 #' select_taxa_pq(data_fungi, !Species)
@@ -319,10 +319,10 @@ arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' @examples
 #' library(MiscMetabar)
 #' # Rename a single rank
-#' rename_taxa_pq(data_fungi, tax_kingdom = Kingdom)
+#' rename_taxa_pq(data_fungi, tax_kingdom = "Fungi")
 #'
 #' # Rename multiple ranks
-#' rename_taxa_pq(data_fungi, tax_kingdom = Kingdom, tax_phylum = Phylum)
+#' rename_taxa_pq(data_fungi, tax_phylum = Phylum, tax_class = Class)
 rename_taxa_pq <- function(physeq, ...) {
   MiscMetabar::verify_pq(physeq)
   new_physeq <- physeq
