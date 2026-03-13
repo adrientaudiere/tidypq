@@ -1,4 +1,8 @@
-url: ~
+url: https://adrientaudiere.github.io/tidypq/
 template:
   bootstrap: 5
-
+  bslib:
+    bg: "#c0d4d4"
+    fg: "#124444"
+    primary: "#63450f"
+    secondary: "#3e135a"

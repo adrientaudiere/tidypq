@@ -63,7 +63,7 @@ fungi_modif <- data_fungi |>
 data_fungi |> select_samdata_pq(Height, Time)
 
 # Select taxonomic ranks
-data_fungi |> select_taxa_pq(Kingdom:Genus)
+data_fungi |> select_taxa_pq(Phylum:Genus)
 ```
 
 ## Chaining operations
