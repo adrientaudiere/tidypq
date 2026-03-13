@@ -1,0 +1,11 @@
+pandoc: 3.6.3
+pkgdown: 2.2.0
+pkgdown_sha: ~
+articles:
+  advanced-usage: advanced-usage.html
+  chimera_detection_testing: chimera_detection_testing.html
+  getting-started: getting-started.html
+last_built: 2026-03-13T13:27Z
+urls:
+  reference: https://adrientaudiere.github.io/tidypq/reference
+  article: https://adrientaudiere.github.io/tidypq/articles
