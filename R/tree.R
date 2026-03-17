@@ -23,20 +23,30 @@
 #' @author Adrien Taudière
 #'
 #' @examples
+#' \dontrun{
 #' library(MiscMetabar)
 #' # Synchronize tree with OTU table (remove taxa not in tree)
-#' # filter_tree_pq(physeq_with_tree)
+#' filter_tree_pq(physeq_with_tree)
 #'
 #' # Keep only specific taxa in tree
-#' # filter_tree_pq(physeq_with_tree, taxa = c("ASV1", "ASV2", "ASV3"))
+#' filter_tree_pq(physeq_with_tree, taxa = c("ASV1", "ASV2", "ASV3"))
 #'
 #' # Filter by tip label pattern
-#' # filter_tree_pq(physeq_with_tree, pattern = "^ASV")
-filter_tree_pq <- function(physeq, taxa = NULL, pattern = NULL, invert = FALSE, clean_phyloseq_object = TRUE) {
+#' filter_tree_pq(physeq_with_tree, pattern = "^ASV")
+#' }
+filter_tree_pq <- function(
+  physeq,
+  taxa = NULL,
+  pattern = NULL,
+  invert = FALSE,
+  clean_phyloseq_object = TRUE
+) {
   MiscMetabar::verify_pq(physeq)
 
   if (is.null(physeq@phy_tree)) {
-    stop("The phyloseq object does not contain a phylogenetic tree (phy_tree slot is NULL).")
+    stop(
+      "The phyloseq object does not contain a phylogenetic tree (phy_tree slot is NULL)."
+    )
   }
 
   tree <- phyloseq::phy_tree(physeq)
@@ -58,7 +68,9 @@ filter_tree_pq <- function(physeq, taxa = NULL, pattern = NULL, invert = FALSE, 
   }
 
   if (length(tips_to_keep) == 0) {
-    stop("No taxa remain after filtering. Check that taxa names match tree tip labels.")
+    stop(
+      "No taxa remain after filtering. Check that taxa names match tree tip labels."
+    )
   }
 
   # Prune tree to keep only selected tips

@@ -30,12 +30,9 @@ arrange_taxa_pq(data_fungi, Phylum, Class)@tax_table[, "Phylum"]
 # Arrange by total abundance (descending)
 arrange_taxa_pq(data_fungi, dplyr::desc(taxa_sums(.)))
 
-# order of columns matters
-dfm_arr <- arrange_taxa_pq(data_fungi_mini, Class, Genus)@tax_table[, c("Class", "Genus")]
-arrange_taxa_pq(data_fungi_mini, Genus, Class)@tax_table[, c("Class", "Genus")]
-
-
-
+# Order of columns matters
+dfm_arr <- arrange_taxa_pq(data_fungi, Class, Genus)@tax_table[, c("Class", "Genus")]
+arrange_taxa_pq(data_fungi, Genus, Class)@tax_table[, c("Class", "Genus")]
 }
 \author{
 Adrien Taudière

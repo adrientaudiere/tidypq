@@ -45,12 +45,19 @@ test_that("decontam_sam_control removes contamination based on controls", {
 test_that("decontam_sam_control removes controls when remove_controls = TRUE", {
   pq <- mutate_samdata_pq(data_fungi, is_control = seq_len(nsamples(.)) <= 2)
 
-  result <- decontam_sam_control(pq, is_control, remove_controls = TRUE, verbose = FALSE)
+  result <- decontam_sam_control(
+    pq,
+    is_control,
+    remove_controls = TRUE,
+    verbose = FALSE
+  )
   expect_s4_class(result, "phyloseq")
 
   # Control samples should be removed
   expect_equal(phyloseq::nsamples(result), phyloseq::nsamples(data_fungi) - 2)
-  expect_false(any(phyloseq::sample_names(result) %in% phyloseq::sample_names(pq)[1:2]))
+  expect_false(any(
+    phyloseq::sample_names(result) %in% phyloseq::sample_names(pq)[1:2]
+  ))
 })
 
 test_that("decontam_sam_control works with different summary functions", {
@@ -60,24 +67,42 @@ test_that("decontam_sam_control works with different summary functions", {
   result_max <- decontam_sam_control(pq, is_control, fun = max, verbose = FALSE)
 
   # mean - less conservative
-  result_mean <- decontam_sam_control(pq, is_control, fun = mean, verbose = FALSE)
+  result_mean <- decontam_sam_control(
+    pq,
+    is_control,
+    fun = mean,
+    verbose = FALSE
+  )
 
   expect_s4_class(result_max, "phyloseq")
   expect_s4_class(result_mean, "phyloseq")
 
   # max threshold should remove at least as many occurrences as mean
   # (max >= mean for positive values)
-  expect_true(sum(phyloseq::otu_table(result_max)) <= sum(phyloseq::otu_table(result_mean)))
+  expect_true(
+    sum(phyloseq::otu_table(result_max)) <=
+      sum(phyloseq::otu_table(result_mean))
+  )
 })
 
 test_that("decontam_sam_control works with global_threshold = TRUE", {
   pq <- mutate_samdata_pq(data_fungi, is_control = seq_len(nsamples(.)) <= 2)
 
   # Per-taxon thresholds (default)
-  result_per_taxon <- decontam_sam_control(pq, is_control, global_threshold = FALSE, verbose = FALSE)
+  result_per_taxon <- decontam_sam_control(
+    pq,
+    is_control,
+    global_threshold = FALSE,
+    verbose = FALSE
+  )
 
   # Global threshold
-  result_global <- decontam_sam_control(pq, is_control, global_threshold = TRUE, verbose = FALSE)
+  result_global <- decontam_sam_control(
+    pq,
+    is_control,
+    global_threshold = TRUE,
+    verbose = FALSE
+  )
 
   expect_s4_class(result_per_taxon, "phyloseq")
   expect_s4_class(result_global, "phyloseq")
@@ -90,7 +115,12 @@ test_that("decontam_sam_control works with custom function", {
   pq <- mutate_samdata_pq(data_fungi, is_control = seq_len(nsamples(.)) <= 2)
 
   # Custom function: 2x the max
-  result <- decontam_sam_control(pq, is_control, fun = \(x) 2 * max(x), verbose = FALSE)
+  result <- decontam_sam_control(
+    pq,
+    is_control,
+    fun = \(x) 2 * max(x),
+    verbose = FALSE
+  )
   expect_s4_class(result, "phyloseq")
 })
 
@@ -128,17 +158,26 @@ test_that("decontam_sam_control correctly sets values to zero", {
   # Get the control threshold for the first taxon (using max)
   tar <- phyloseq::taxa_are_rows(pq)
   otu <- as(phyloseq::otu_table(pq), "matrix")
-  if (!tar) otu <- t(otu)
+  if (!tar) {
+    otu <- t(otu)
+  }
 
   control_samples <- phyloseq::sample_names(pq)[1:2]
   first_taxon <- phyloseq::taxa_names(pq)[1]
   threshold <- max(otu[first_taxon, control_samples])
 
-  result <- decontam_sam_control(pq, is_control, clean_phyloseq_object = FALSE, verbose = FALSE)
+  result <- decontam_sam_control(
+    pq,
+    is_control,
+    clean_phyloseq_object = FALSE,
+    verbose = FALSE
+  )
 
   # Get result OTU table
   result_otu <- as(phyloseq::otu_table(result), "matrix")
-  if (!phyloseq::taxa_are_rows(result)) result_otu <- t(result_otu)
+  if (!phyloseq::taxa_are_rows(result)) {
+    result_otu <- t(result_otu)
+  }
 
   # For non-control samples, values <= threshold should now be 0
   # (If the taxon still exists in result - it might have been removed)
@@ -156,7 +195,11 @@ test_that("decontam_taxa_control removes contamination based on control taxa", {
   # Use first 3 taxa as controls via taxa_names
   control_taxa <- phyloseq::taxa_names(data_fungi)[1:3]
 
-  result <- decontam_taxa_control(data_fungi, taxa_names(.) %in% control_taxa, verbose = FALSE)
+  result <- decontam_taxa_control(
+    data_fungi,
+    taxa_names(.) %in% control_taxa,
+    verbose = FALSE
+  )
   expect_s4_class(result, "phyloseq")
 
   # Control taxa should be removed by default
@@ -170,7 +213,11 @@ test_that("decontam_taxa_control works with tax_table condition", {
   tax_mat <- as(phyloseq::tax_table(data_fungi), "matrix")
   test_genus <- tax_mat[1, "Genus"]
 
-  result <- decontam_taxa_control(data_fungi, Genus == test_genus, verbose = FALSE)
+  result <- decontam_taxa_control(
+    data_fungi,
+    Genus == test_genus,
+    verbose = FALSE
+  )
   expect_s4_class(result, "phyloseq")
 })
 
@@ -232,19 +279,30 @@ test_that("decontam_taxa_control works with different summary functions", {
   expect_s4_class(result_mean, "phyloseq")
 
   # max threshold should remove at least as many occurrences as mean
-  expect_true(sum(phyloseq::otu_table(result_max)) <= sum(phyloseq::otu_table(result_mean)))
+  expect_true(
+    sum(phyloseq::otu_table(result_max)) <=
+      sum(phyloseq::otu_table(result_mean))
+  )
 })
 
 test_that("decontam_taxa_control errors with no matching taxa", {
   expect_error(
-    decontam_taxa_control(data_fungi, Genus == "NONEXISTENT_GENUS_XYZ", verbose = FALSE),
+    decontam_taxa_control(
+      data_fungi,
+      Genus == "NONEXISTENT_GENUS_XYZ",
+      verbose = FALSE
+    ),
     "No taxa match"
   )
 })
 
 test_that("decontam_taxa_control errors with all control taxa", {
   expect_error(
-    decontam_taxa_control(data_fungi, taxa_names(.) %in% taxa_names(.), verbose = FALSE),
+    decontam_taxa_control(
+      data_fungi,
+      taxa_names(.) %in% taxa_names(.),
+      verbose = FALSE
+    ),
     "All taxa are control taxa"
   )
 })

@@ -38,21 +38,47 @@
 #'
 #' # Keep only values above taxon mean
 #' filter_occurrences_pq(data_fungi, . > taxon_mean)
-filter_occurrences_pq <- function(physeq, condition, clean_phyloseq_object = TRUE) {
+filter_occurrences_pq <- function(
+  physeq,
+  condition,
+  clean_phyloseq_object = TRUE
+) {
   MiscMetabar::verify_pq(physeq)
 
   tar <- phyloseq::taxa_are_rows(physeq)
   otu <- as(phyloseq::otu_table(physeq), "matrix")
-  if (!tar) otu <- t(otu)
+  if (!tar) {
+    otu <- t(otu)
+  }
 
   nrow_otu <- nrow(otu)
   ncol_otu <- ncol(otu)
 
   # Build matrices for vectorized evaluation
-  sample_total <- matrix(colSums(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = TRUE)
-  taxon_total <- matrix(rowSums(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = FALSE)
-  sample_mean <- matrix(colMeans(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = TRUE)
-  taxon_mean <- matrix(rowMeans(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = FALSE)
+  sample_total <- matrix(
+    colSums(otu),
+    nrow = nrow_otu,
+    ncol = ncol_otu,
+    byrow = TRUE
+  )
+  taxon_total <- matrix(
+    rowSums(otu),
+    nrow = nrow_otu,
+    ncol = ncol_otu,
+    byrow = FALSE
+  )
+  sample_mean <- matrix(
+    colMeans(otu),
+    nrow = nrow_otu,
+    ncol = ncol_otu,
+    byrow = TRUE
+  )
+  taxon_mean <- matrix(
+    rowMeans(otu),
+    nrow = nrow_otu,
+    ncol = ncol_otu,
+    byrow = FALSE
+  )
 
   # Evaluate condition vectorized
   condition_quo <- rlang::enquo(condition)
@@ -128,18 +154,50 @@ mutate_occurrences_pq <- function(physeq, expr) {
 
   tar <- phyloseq::taxa_are_rows(physeq)
   otu <- as(phyloseq::otu_table(physeq), "matrix")
-  if (!tar) otu <- t(otu)
+  if (!tar) {
+    otu <- t(otu)
+  }
 
   nrow_otu <- nrow(otu)
   ncol_otu <- ncol(otu)
 
   # Build matrices for vectorized evaluation
-  sample_total <- matrix(colSums(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = TRUE)
-  taxon_total <- matrix(rowSums(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = FALSE)
-  sample_mean <- matrix(colMeans(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = TRUE)
-  taxon_mean <- matrix(rowMeans(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = FALSE)
-  sample_median <- matrix(apply(otu, 2, stats::median), nrow = nrow_otu, ncol = ncol_otu, byrow = TRUE)
-  taxon_median <- matrix(apply(otu, 1, stats::median), nrow = nrow_otu, ncol = ncol_otu, byrow = FALSE)
+  sample_total <- matrix(
+    colSums(otu),
+    nrow = nrow_otu,
+    ncol = ncol_otu,
+    byrow = TRUE
+  )
+  taxon_total <- matrix(
+    rowSums(otu),
+    nrow = nrow_otu,
+    ncol = ncol_otu,
+    byrow = FALSE
+  )
+  sample_mean <- matrix(
+    colMeans(otu),
+    nrow = nrow_otu,
+    ncol = ncol_otu,
+    byrow = TRUE
+  )
+  taxon_mean <- matrix(
+    rowMeans(otu),
+    nrow = nrow_otu,
+    ncol = ncol_otu,
+    byrow = FALSE
+  )
+  sample_median <- matrix(
+    apply(otu, 2, stats::median),
+    nrow = nrow_otu,
+    ncol = ncol_otu,
+    byrow = TRUE
+  )
+  taxon_median <- matrix(
+    apply(otu, 1, stats::median),
+    nrow = nrow_otu,
+    ncol = ncol_otu,
+    byrow = FALSE
+  )
 
   # Evaluate expression vectorized
   expr_quo <- rlang::enquo(expr)
@@ -160,7 +218,9 @@ mutate_occurrences_pq <- function(physeq, expr) {
   colnames(new_otu) <- colnames(otu)
 
   # Restore original orientation
-  if (!tar) new_otu <- t(new_otu)
+  if (!tar) {
+    new_otu <- t(new_otu)
+  }
 
   new_physeq <- physeq
   new_physeq@otu_table <- phyloseq::otu_table(new_otu, taxa_are_rows = tar)

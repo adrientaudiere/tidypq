@@ -27,10 +27,10 @@
 #'
 #' # Combine multiple conditions
 #' filter_samples_pq(data_fungi, Height == "Low", sample_sums(.) > 5000)
-#' 
+#'
 #' # Keep samples above median abundance
 #' filter_samples_pq(data_fungi, sample_sums(.) > median(sample_sums(.)))
-#' 
+#'
 #' # Keep samples above half of the average abundance
 #' filter_samples_pq(data_fungi, sample_sums(.) > sum(sample_sums(.))/phyloseq::nsamples(.)/2)
 filter_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
@@ -89,7 +89,7 @@ select_samdata_pq <- function(physeq, ...) {
   sam_df <- sam_df[, loc, drop = FALSE]
 
   new_physeq@sam_data <- phyloseq::sample_data(sam_df)
-  sample_names(new_physeq) <- phyloseq::sample_names(physeq)  # Preserve sample names
+  sample_names(new_physeq) <- phyloseq::sample_names(physeq) # Preserve sample names
   MiscMetabar::verify_pq(new_physeq)
   return(new_physeq)
 }
@@ -139,7 +139,9 @@ mutate_samdata_pq <- function(physeq, ...) {
       stop(
         sprintf(
           "Column '%s' has length %d, but must be length 1 or %d (number of samples).",
-          nm, length(value), original_nsamples
+          nm,
+          length(value),
+          original_nsamples
         )
       )
     }
@@ -147,8 +149,13 @@ mutate_samdata_pq <- function(physeq, ...) {
   }
 
   # Verify samples are preserved
- if (nrow(sam_df) != original_nsamples || !identical(rownames(sam_df), original_samples)) {
-    stop("mutate_samdata_pq cannot add or remove samples. Use filter_samples_pq or slice_samples_pq instead.")
+  if (
+    nrow(sam_df) != original_nsamples ||
+      !identical(rownames(sam_df), original_samples)
+  ) {
+    stop(
+      "mutate_samdata_pq cannot add or remove samples. Use filter_samples_pq or slice_samples_pq instead."
+    )
   }
 
   new_physeq@sam_data <- phyloseq::sample_data(sam_df)
@@ -286,7 +293,7 @@ rename_samples_pq <- function(physeq, ...) {
   sam_df <- dplyr::rename(sam_df, ...)
 
   new_physeq@sam_data <- phyloseq::sample_data(sam_df)
-  phyloseq::sample_names(new_physeq) <- phyloseq::sample_names(physeq)  
+  phyloseq::sample_names(new_physeq) <- phyloseq::sample_names(physeq)
 
   MiscMetabar::verify_pq(new_physeq)
   return(new_physeq)

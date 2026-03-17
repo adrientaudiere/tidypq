@@ -35,8 +35,7 @@
 #'   removal, [create_chimera_pq()] for creating test data with synthetic
 #'   chimeras.
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf rlang::is_installed("dada2")
 #' library(MiscMetabar)
 #' data(data_fungi)
 #'
@@ -49,29 +48,49 @@
 #'
 #' # Use pooled method
 #' data_nochim <- chimera_removal_dada2(data_fungi, method = "pooled")
-#' }
-chimera_removal_dada2 <- function(physeq, method = "consensus", return_a_list = FALSE, ...) {
+chimera_removal_dada2 <- function(
+  physeq,
+  method = "consensus",
+  return_a_list = FALSE,
+  ...
+) {
   df_seq_ab <- data.frame(
     sequence = as.character(phyloseq::refseq(physeq)),
     abundance = phyloseq::taxa_sums(physeq)
   )
 
   # Run dada2 chimera removal
-  otu_nochim <- dada2::removeBimeraDenovo(df_seq_ab, method = method, verbose = TRUE, ...)
+  otu_nochim <- dada2::removeBimeraDenovo(
+    df_seq_ab,
+    method = method,
+    verbose = TRUE,
+    ...
+  )
 
   # Find which ASVs were kept (compare sequences)
   kept_seqs <- rownames(otu_nochim)
-  kept_taxa <- names(phyloseq::refseq(physeq))[names(phyloseq::refseq(physeq)) %in% kept_seqs]
+  kept_taxa <- names(phyloseq::refseq(physeq))[
+    names(phyloseq::refseq(physeq)) %in% kept_seqs
+  ]
 
   if (length(kept_taxa) == 0) {
-    stop("No non-chimeric ASVs detected by dada2::removeBimeraDenovo(). This is unexpected.")
+    stop(
+      "No non-chimeric ASVs detected by dada2::removeBimeraDenovo(). This is unexpected."
+    )
   }
 
-  discard_taxa <- phyloseq::taxa_names(physeq)[!phyloseq::taxa_names(physeq) %in% kept_taxa]
-  discard_taxa_collapsed <- paste(discard_taxa[seq_len(min(10, length(discard_taxa)))], collapse = ";")
+  discard_taxa <- phyloseq::taxa_names(physeq)[
+    !phyloseq::taxa_names(physeq) %in% kept_taxa
+  ]
+  discard_taxa_collapsed <- paste(
+    discard_taxa[seq_len(min(10, length(discard_taxa)))],
+    collapse = ";"
+  )
 
   message(
-    "Discard ", phyloseq::ntaxa(physeq) - length(kept_taxa), " chimeric ASVs including:\n",
+    "Discard ",
+    phyloseq::ntaxa(physeq) - length(kept_taxa),
+    " chimeric ASVs including:\n",
     discard_taxa_collapsed,
     "... \nTry return_a_list=TRUE to see all discarded ASVs in the `chimeric_taxa` element."
   )
@@ -80,7 +99,11 @@ chimera_removal_dada2 <- function(physeq, method = "consensus", return_a_list = 
   physeq_nochim <- phyloseq::prune_taxa(kept_taxa, physeq)
 
   if (return_a_list) {
-    return(list(physeq = physeq_nochim, kept_taxa = kept_taxa, chimeric_taxa = discard_taxa))
+    return(list(
+      physeq = physeq_nochim,
+      kept_taxa = kept_taxa,
+      chimeric_taxa = discard_taxa
+    ))
   }
   physeq_nochim
 }
@@ -113,11 +136,11 @@ chimera_removal_dada2 <- function(physeq, method = "consensus", return_a_list = 
 #'   existing sequences. A value of 0.1 means chimeras will have approximately
 #'   10% of the median abundance.
 #' @param min_parent_distance (numeric, default: 0.1) Minimum sequence distance
-#'   (proportion of differing positions) between parent1 and parent2. 
+#'   (proportion of differing positions) between parent1 and parent2.
 #'   If 0, chimeras can be created from very similar
 #'   parents, which may be harder to detect. In some cases, with min_parent_distance = 0,
 #'   you may end up with chimeras that are identical to one of the parents.
-#' 
+#'
 #'
 #' @return A list containing:
 #' \describe{
@@ -134,7 +157,7 @@ chimera_removal_dada2 <- function(physeq, method = "consensus", return_a_list = 
 #'
 #' @seealso [MiscMetabar::chimera_removal_vs()], [chimera_removal_dada2()]
 #'
-#' @examples
+#' @examplesIf rlang::is_installed("Biostrings")
 #' library(MiscMetabar)
 #' data(data_fungi)
 #'
@@ -176,14 +199,16 @@ chimera_removal_dada2 <- function(physeq, method = "consensus", return_a_list = 
 #'                              min_parent_distance = 0)
 #'
 #' @author Adrien Taudiere
-create_chimera_pq <- function(physeq,
-                              n_chimeras = 5,
-                              prop_mean = 0.5,
-                              prop_sd = 0.15,
-                              prop_min = 0.1,
-                              seed = 123,
-                              median_abundance_multiplier = 0.1,
-                              min_parent_distance = 0.1) {
+create_chimera_pq <- function(
+  physeq,
+  n_chimeras = 5,
+  prop_mean = 0.5,
+  prop_sd = 0.15,
+  prop_min = 0.1,
+  seed = 123,
+  median_abundance_multiplier = 0.1,
+  min_parent_distance = 0.1
+) {
   set.seed(seed)
 
   if (is.null(phyloseq::refseq(physeq))) {
@@ -203,7 +228,9 @@ create_chimera_pq <- function(physeq,
 
   # Select parent sequences (use abundant ones)
   n_candidates <- min(20, phyloseq::ntaxa(physeq))
-  abundant_idx <- order(phyloseq::taxa_sums(physeq), decreasing = TRUE)[1:n_candidates]
+  abundant_idx <- order(phyloseq::taxa_sums(physeq), decreasing = TRUE)[
+    1:n_candidates
+  ]
 
   # Helper function to compute sequence distance (proportion of differing positions)
   compute_seq_distance <- function(seq1, seq2) {
@@ -270,8 +297,11 @@ create_chimera_pq <- function(physeq,
 
       if (is.null(p2_idx)) {
         warning(
-          "Could not find parent2 with distance >= ", min_parent_distance,
-          " for chimera ", i, ". Using closest available candidate."
+          "Could not find parent2 with distance >= ",
+          min_parent_distance,
+          " for chimera ",
+          i,
+          ". Using closest available candidate."
         )
         p2_idx <- sample(setdiff(abundant_idx, p1_idx), 1)
       }
@@ -306,16 +336,19 @@ create_chimera_pq <- function(physeq,
     chimera_names <- c(chimera_names, chim_name)
 
     # Store parent information
-    parent_info <- rbind(parent_info, data.frame(
-      chimera = chim_name,
-      parent1 = taxa_nms[parents[1]],
-      parent2 = taxa_nms[parents[2]],
-      parent_distance = round(parent_dist, 4),
-      prop_parent1 = round(prop_p1, 3),
-      breakpoint = bp,
-      seq_length = Biostrings::width(chim),
-      stringsAsFactors = FALSE
-    ))
+    parent_info <- rbind(
+      parent_info,
+      data.frame(
+        chimera = chim_name,
+        parent1 = taxa_nms[parents[1]],
+        parent2 = taxa_nms[parents[2]],
+        parent_distance = round(parent_dist, 4),
+        prop_parent1 = round(prop_p1, 3),
+        breakpoint = bp,
+        seq_length = Biostrings::width(chim),
+        stringsAsFactors = FALSE
+      )
+    )
   }
 
   # Combine chimeras
@@ -327,12 +360,17 @@ create_chimera_pq <- function(physeq,
 
   # Add to OTU table with moderate abundance
   otu <- as(phyloseq::otu_table(physeq), "matrix")
-  if (!phyloseq::taxa_are_rows(physeq)) otu <- t(otu)
+  if (!phyloseq::taxa_are_rows(physeq)) {
+    otu <- t(otu)
+  }
 
   # Give chimeras ~10% of median abundance
   med_abund <- stats::median(rowSums(otu))
   chim_counts <- matrix(
-    stats::rpois(n_chimeras * ncol(otu), med_abund * median_abundance_multiplier / ncol(otu)),
+    stats::rpois(
+      n_chimeras * ncol(otu),
+      med_abund * median_abundance_multiplier / ncol(otu)
+    ),
     nrow = n_chimeras,
     dimnames = list(chimera_names, colnames(otu))
   )
@@ -342,8 +380,12 @@ create_chimera_pq <- function(physeq,
   new_taxtab <- phyloseq::tax_table(physeq)
   new_taxtab <- rbind(
     as(new_taxtab, "matrix"),
-    matrix(NA, nrow = n_chimeras, ncol = ncol(new_taxtab),
-           dimnames = list(chimera_names, colnames(new_taxtab)))
+    matrix(
+      NA,
+      nrow = n_chimeras,
+      ncol = ncol(new_taxtab),
+      dimnames = list(chimera_names, colnames(new_taxtab))
+    )
   )
 
   # Rebuild phyloseq

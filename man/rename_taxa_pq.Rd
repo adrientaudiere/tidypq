@@ -21,10 +21,10 @@ Rename columns (taxonomic ranks) in tax_table using tidyselect semantics.
 \examples{
 library(MiscMetabar)
 # Rename a single rank
-rename_taxa_pq(data_fungi, tax_kingdom = Kingdom)
+rename_taxa_pq(data_fungi, tax_kingdom = "Fungi")
 
 # Rename multiple ranks
-rename_taxa_pq(data_fungi, tax_kingdom = Kingdom, tax_phylum = Phylum)
+rename_taxa_pq(data_fungi, tax_phylum = Phylum, tax_class = Class)
 }
 \author{
 Adrien Taudière

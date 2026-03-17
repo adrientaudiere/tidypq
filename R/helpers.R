@@ -87,13 +87,15 @@ taxa_prevalence <- function(physeq, threshold = 0) {
 #'
 #' # Use a custom function (e.g., 2x the max)
 #' decontam_sam_control(pq, is_control, fun = \(x) 2 * max(x))
-decontam_sam_control <- function(physeq,
-                                 control_condition,
-                                 fun = max,
-                                 global_threshold = FALSE,
-                                 remove_controls = FALSE,
-                                 clean_phyloseq_object = TRUE,
-                                 verbose = TRUE) {
+decontam_sam_control <- function(
+  physeq,
+  control_condition,
+  fun = max,
+  global_threshold = FALSE,
+  remove_controls = FALSE,
+  clean_phyloseq_object = TRUE,
+  verbose = TRUE
+) {
   MiscMetabar::verify_pq(physeq)
 
   # Identify control samples using data masking
@@ -118,7 +120,9 @@ decontam_sam_control <- function(physeq,
   # Get OTU matrix with taxa as rows
   tar <- phyloseq::taxa_are_rows(physeq)
   otu <- as(phyloseq::otu_table(physeq), "matrix")
-  if (!tar) otu <- t(otu)
+  if (!tar) {
+    otu <- t(otu)
+  }
 
   # Calculate threshold from control samples
   control_otu <- otu[, control_samples, drop = FALSE]
@@ -126,19 +130,32 @@ decontam_sam_control <- function(physeq,
   if (global_threshold) {
     # Single global threshold from all control values
     threshold_value <- fun(as.vector(control_otu))
-    threshold_matrix <- matrix(threshold_value, nrow = nrow(otu), ncol = ncol(otu))
+    threshold_matrix <- matrix(
+      threshold_value,
+      nrow = nrow(otu),
+      ncol = ncol(otu)
+    )
   } else {
     # Per-taxon thresholds
     thresholds <- apply(control_otu, 1, fun)
-    threshold_matrix <- matrix(thresholds, nrow = nrow(otu), ncol = ncol(otu), byrow = FALSE)
+    threshold_matrix <- matrix(
+      thresholds,
+      nrow = nrow(otu),
+      ncol = ncol(otu),
+      byrow = FALSE
+    )
   }
 
   # Set values to 0 where value <= threshold (only for non-control samples)
   non_control_cols <- colnames(otu) %in% non_control_samples
-  otu[, non_control_cols][otu[, non_control_cols] <= threshold_matrix[, non_control_cols]] <- 0
+  otu[, non_control_cols][
+    otu[, non_control_cols] <= threshold_matrix[, non_control_cols]
+  ] <- 0
 
   # Restore original orientation
-  if (!tar) otu <- t(otu)
+  if (!tar) {
+    otu <- t(otu)
+  }
 
   # Update phyloseq object
   new_physeq <- physeq
@@ -161,21 +178,32 @@ decontam_sam_control <- function(physeq,
     }
     message(
       "Decontamination complete.",
-      "\nThreshold type: ", threshold_type,
-      "\nNumber of control samples: ", length(control_samples),
-      "\nNumber of non-control samples: ", length(non_control_samples),
-      "\nFunction used for threshold: ", deparse(substitute(fun)),
+      "\nThreshold type: ",
+      threshold_type,
+      "\nNumber of control samples: ",
+      length(control_samples),
+      "\nNumber of non-control samples: ",
+      length(non_control_samples),
+      "\nFunction used for threshold: ",
+      deparse(substitute(fun)),
       threshold_info,
-      "\nRemove control samples: ", remove_controls,
-      "\nNumber of sequences before: ", sum(phyloseq::otu_table(physeq)),
-      "\nNumber of sequences after: ", sum(phyloseq::otu_table(new_physeq)),
+      "\nRemove control samples: ",
+      remove_controls,
+      "\nNumber of sequences before: ",
+      sum(phyloseq::otu_table(physeq)),
+      "\nNumber of sequences after: ",
+      sum(phyloseq::otu_table(new_physeq)),
       "\nNumber of sequences discarded: ",
-        sum(phyloseq::otu_table(physeq)) - sum(phyloseq::otu_table(new_physeq)),
+      sum(phyloseq::otu_table(physeq)) - sum(phyloseq::otu_table(new_physeq)),
       "\nNumber of occurrences discarded: ",
-        sum(phyloseq::otu_table(physeq) > 0) - sum(phyloseq::otu_table(new_physeq) > 0),
-      "\nNumber of taxa before: ", phyloseq::ntaxa(physeq),
-      "\nNumber of taxa after: ", phyloseq::ntaxa(new_physeq),
-      "\nNumber of discarded taxa: ", phyloseq::ntaxa(physeq) - phyloseq::ntaxa(new_physeq)
+      sum(phyloseq::otu_table(physeq) > 0) -
+        sum(phyloseq::otu_table(new_physeq) > 0),
+      "\nNumber of taxa before: ",
+      phyloseq::ntaxa(physeq),
+      "\nNumber of taxa after: ",
+      phyloseq::ntaxa(new_physeq),
+      "\nNumber of discarded taxa: ",
+      phyloseq::ntaxa(physeq) - phyloseq::ntaxa(new_physeq)
     )
   }
 
@@ -227,13 +255,15 @@ decontam_sam_control <- function(physeq,
 #'
 #' # Keep control taxa in output
 #' decontam_taxa_control(data_fungi, Genus == "Tintelnotia", remove_control_taxa = FALSE)
-decontam_taxa_control <- function(physeq,
-                                  control_condition,
-                                  fun = max,
-                                  global_threshold = FALSE,
-                                  remove_control_taxa = TRUE,
-                                  clean_phyloseq_object = TRUE,
-                                  verbose = TRUE) {
+decontam_taxa_control <- function(
+  physeq,
+  control_condition,
+  fun = max,
+  global_threshold = FALSE,
+  remove_control_taxa = TRUE,
+  clean_phyloseq_object = TRUE,
+  verbose = TRUE
+) {
   MiscMetabar::verify_pq(physeq)
 
   all_taxa <- phyloseq::taxa_names(physeq)
@@ -264,7 +294,9 @@ decontam_taxa_control <- function(physeq,
   # Get OTU matrix with taxa as rows
   tar <- phyloseq::taxa_are_rows(physeq)
   otu <- as(phyloseq::otu_table(physeq), "matrix")
-  if (!tar) otu <- t(otu)
+  if (!tar) {
+    otu <- t(otu)
+  }
 
   # Calculate threshold from control taxa
   control_otu <- otu[control_taxa_names, , drop = FALSE]
@@ -272,19 +304,32 @@ decontam_taxa_control <- function(physeq,
   if (global_threshold) {
     # Single global threshold from all control taxa values
     threshold_value <- fun(as.vector(control_otu))
-    threshold_matrix <- matrix(threshold_value, nrow = nrow(otu), ncol = ncol(otu))
+    threshold_matrix <- matrix(
+      threshold_value,
+      nrow = nrow(otu),
+      ncol = ncol(otu)
+    )
   } else {
     # Per-sample thresholds (apply fun to each column = sample)
     thresholds <- apply(control_otu, 2, fun)
-    threshold_matrix <- matrix(thresholds, nrow = nrow(otu), ncol = ncol(otu), byrow = TRUE)
+    threshold_matrix <- matrix(
+      thresholds,
+      nrow = nrow(otu),
+      ncol = ncol(otu),
+      byrow = TRUE
+    )
   }
 
   # Set values to 0 where value <= threshold (only for non-control taxa)
   non_control_rows <- rownames(otu) %in% non_control_taxa
-  otu[non_control_rows, ][otu[non_control_rows, ] <= threshold_matrix[non_control_rows, ]] <- 0
+  otu[non_control_rows, ][
+    otu[non_control_rows, ] <= threshold_matrix[non_control_rows, ]
+  ] <- 0
 
   # Restore original orientation
-  if (!tar) otu <- t(otu)
+  if (!tar) {
+    otu <- t(otu)
+  }
 
   # Update phyloseq object
   new_physeq <- physeq
@@ -307,21 +352,32 @@ decontam_taxa_control <- function(physeq,
     }
     message(
       "Decontamination complete.",
-      "\nThreshold type: ", threshold_type,
-      "\nNumber of control taxa: ", length(control_taxa_names),
-      "\nNumber of non-control taxa: ", length(non_control_taxa),
-      "\nFunction used for threshold: ", deparse(substitute(fun)),
+      "\nThreshold type: ",
+      threshold_type,
+      "\nNumber of control taxa: ",
+      length(control_taxa_names),
+      "\nNumber of non-control taxa: ",
+      length(non_control_taxa),
+      "\nFunction used for threshold: ",
+      deparse(substitute(fun)),
       threshold_info,
-      "\nRemove control taxa: ", remove_control_taxa,
-      "\nNumber of sequences before: ", sum(phyloseq::otu_table(physeq)),
-      "\nNumber of sequences after: ", sum(phyloseq::otu_table(new_physeq)),
+      "\nRemove control taxa: ",
+      remove_control_taxa,
+      "\nNumber of sequences before: ",
+      sum(phyloseq::otu_table(physeq)),
+      "\nNumber of sequences after: ",
+      sum(phyloseq::otu_table(new_physeq)),
       "\nNumber of sequences discarded: ",
-        sum(phyloseq::otu_table(physeq)) - sum(phyloseq::otu_table(new_physeq)),
+      sum(phyloseq::otu_table(physeq)) - sum(phyloseq::otu_table(new_physeq)),
       "\nNumber of occurrences discarded: ",
-        sum(phyloseq::otu_table(physeq) > 0) - sum(phyloseq::otu_table(new_physeq) > 0),
-      "\nNumber of taxa before: ", phyloseq::ntaxa(physeq),
-      "\nNumber of taxa after: ", phyloseq::ntaxa(new_physeq),
-      "\nNumber of discarded taxa: ", phyloseq::ntaxa(physeq) - phyloseq::ntaxa(new_physeq)
+      sum(phyloseq::otu_table(physeq) > 0) -
+        sum(phyloseq::otu_table(new_physeq) > 0),
+      "\nNumber of taxa before: ",
+      phyloseq::ntaxa(physeq),
+      "\nNumber of taxa after: ",
+      phyloseq::ntaxa(new_physeq),
+      "\nNumber of discarded taxa: ",
+      phyloseq::ntaxa(physeq) - phyloseq::ntaxa(new_physeq)
     )
   }
 

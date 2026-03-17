@@ -6,3 +6,57 @@ template:
     fg: "#124444"
     primary: "#63450f"
     secondary: "#3e135a"
+
+reference:
+- title: Sample-scale verbs
+  desc: Filter, select, mutate, slice, arrange, and rename samples.
+  contents:
+  - filter_samples_pq
+  - select_samdata_pq
+  - mutate_samdata_pq
+  - slice_samples_pq
+  - arrange_samples_pq
+  - rename_samples_pq
+
+- title: Taxa-scale verbs
+  desc: Filter, select, mutate, slice, arrange, and rename taxa.
+  contents:
+  - filter_taxa_pq
+  - select_taxa_pq
+  - mutate_taxa_pq
+  - slice_taxa_pq
+  - arrange_taxa_pq
+  - rename_taxa_pq
+
+- title: Occurrence-scale verbs
+  desc: Filter and transform OTU table values.
+  contents:
+  - filter_occurrences_pq
+  - mutate_occurrences_pq
+
+- title: Tree-scale verbs
+  desc: Filter phylogenetic trees.
+  contents:
+  - filter_tree_pq
+
+- title: Helpers
+  desc: Utility functions for common operations.
+  contents:
+  - taxa_prevalence
+
+- title: Decontamination
+  desc: Remove contaminants using negative controls or control taxa.
+  contents:
+  - decontam_sam_control
+  - decontam_taxa_control
+
+- title: Chimera detection
+  desc: Detect and benchmark chimeric sequences.
+  contents:
+  - chimera_removal_dada2
+  - create_chimera_pq
+
+- title: Plots
+  desc: Diagnostic visualizations.
+  contents:
+  - plot_sample_depth_pq

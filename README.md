@@ -20,7 +20,10 @@ All functions follow the pattern: `{verb}_{scale}_pq()`
 ## Installation
 
 ```r
-# Install from GitHub
+# Install from CRAN
+install.packages("tidypq")
+
+# Or install the development version from GitHub
 devtools::install_github("adrientaudiere/tidypq")
 ```
 

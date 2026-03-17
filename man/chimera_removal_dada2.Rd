@@ -42,7 +42,7 @@ assuming that chimeric sequences are less abundant than their parent
 sequences.
 }
 \examples{
-\dontrun{
+\dontshow{if (rlang::is_installed("dada2")) withAutoprint(\{ # examplesIf}
 library(MiscMetabar)
 data(data_fungi)
 
@@ -55,7 +55,7 @@ cat("Removed", length(result$chimeric_taxa), "chimeric ASVs\n")
 
 # Use pooled method
 data_nochim <- chimera_removal_dada2(data_fungi, method = "pooled")
-}
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[MiscMetabar:chimera_removal_vs]{MiscMetabar::chimera_removal_vs()}} for vsearch-based chimera

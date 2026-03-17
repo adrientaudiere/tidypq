@@ -28,10 +28,10 @@
 #'
 #' # Combine multiple conditions
 #' filter_taxa_pq(data_fungi, Phylum == "Basidiomycota", taxa_sums(.) > 100)
-#' 
+#'
 #' # Keep taxa above median abundance
 #' filter_taxa_pq(data_fungi, taxa_sums(.) > median(taxa_sums(.)))
-#' 
+#'
 filter_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   MiscMetabar::verify_pq(physeq)
 
@@ -44,7 +44,6 @@ filter_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   if (length(taxa_to_keep) == 0) {
     warning("No taxa match the filter criteria.")
   }
-
 
   new_physeq <- phyloseq::prune_taxa(taxa_to_keep, physeq)
   if (clean_phyloseq_object) {
@@ -139,7 +138,9 @@ mutate_taxa_pq <- function(physeq, ...) {
       stop(
         sprintf(
           "Column '%s' has length %d, but must be length 1 or %d (number of taxa).",
-          nm, length(value), original_ntaxa
+          nm,
+          length(value),
+          original_ntaxa
         )
       )
     }
@@ -147,8 +148,13 @@ mutate_taxa_pq <- function(physeq, ...) {
   }
 
   # Verify taxa are preserved
-  if (nrow(tax_df) != original_ntaxa || !identical(rownames(tax_df), original_taxa)) {
-    stop("mutate_taxa_pq cannot add or remove taxa. Use filter_taxa_pq or slice_taxa_pq instead.")
+  if (
+    nrow(tax_df) != original_ntaxa ||
+      !identical(rownames(tax_df), original_taxa)
+  ) {
+    stop(
+      "mutate_taxa_pq cannot add or remove taxa. Use filter_taxa_pq or slice_taxa_pq instead."
+    )
   }
 
   new_physeq@tax_table <- phyloseq::tax_table(as.matrix(tax_df))
@@ -225,13 +231,11 @@ slice_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #'
 #' # Arrange by total abundance (descending)
 #' arrange_taxa_pq(data_fungi, dplyr::desc(taxa_sums(.)))
-#' 
-#' # order of columns matters
-#' dfm_arr <- arrange_taxa_pq(data_fungi_mini, Class, Genus)@tax_table[, c("Class", "Genus")]
-#' arrange_taxa_pq(data_fungi_mini, Genus, Class)@tax_table[, c("Class", "Genus")]
-#' 
-#' 
-#' 
+#'
+#' # Order of columns matters
+#' dfm_arr <- arrange_taxa_pq(data_fungi, Class, Genus)@tax_table[, c("Class", "Genus")]
+#' arrange_taxa_pq(data_fungi, Genus, Class)@tax_table[, c("Class", "Genus")]
+
 arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   MiscMetabar::verify_pq(physeq)
 
@@ -239,11 +243,11 @@ arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 
   #save the phylogenetic tree if present and reorder it later
   # set phy_tree to NULL to avoid issues during reordering
- if (!is.null(phyloseq::phy_tree(physeq, errorIfNULL = FALSE))) {
-    new_phy_tree <- physeq@phy_tree 
-   
-   new_physeq@phy_tree <- NULL
- }
+  if (!is.null(phyloseq::phy_tree(physeq, errorIfNULL = FALSE))) {
+    new_phy_tree <- physeq@phy_tree
+
+    new_physeq@phy_tree <- NULL
+  }
 
   tar <- taxa_are_rows(physeq)
 
@@ -264,16 +268,22 @@ arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   # Remove temporary columns
   tax_df <- tax_df[, !names(tax_df) %in% sort_cols, drop = FALSE]
 
-  
   new_physeq@tax_table <- phyloseq::tax_table(as.matrix(tax_df))
   if (tar) {
     new_physeq@otu_table <- phyloseq::otu_table(
-      as(phyloseq::otu_table(physeq), "matrix")[rownames(tax_df), , drop = FALSE],
+      as(phyloseq::otu_table(physeq), "matrix")[
+        rownames(tax_df),
+        ,
+        drop = FALSE
+      ],
       taxa_are_rows = TRUE
     )
   } else {
     new_physeq@otu_table <- phyloseq::otu_table(
-      as(phyloseq::otu_table(physeq), "matrix")[, rownames(tax_df), drop = FALSE],
+      as(phyloseq::otu_table(physeq), "matrix")[,
+        rownames(tax_df),
+        drop = FALSE
+      ],
       taxa_are_rows = FALSE
     )
   }

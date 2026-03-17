@@ -12,7 +12,6 @@ create_chimera_pq(
   prop_min = 0.1,
   seed = 123,
   median_abundance_multiplier = 0.1,
-  ensure_distinct_parents = TRUE,
   min_parent_distance = 0.1
 )
 }
@@ -42,14 +41,11 @@ the abundance of chimeric sequences relative to the median abundance of
 existing sequences. A value of 0.1 means chimeras will have approximately
 10\% of the median abundance.}
 
-\item{ensure_distinct_parents}{(logical, default: TRUE) If TRUE, ensures that
-parent2 is sufficiently different from parent1 based on \code{min_parent_distance}.
-Chimeras created from very similar parent sequences may be undetectable.}
-
 \item{min_parent_distance}{(numeric, default: 0.1) Minimum sequence distance
-(proportion of differing positions) between parent1 and parent2. Only used
-when \code{ensure_distinct_parents = TRUE}. Values typically range from 0.05 (5\%
-divergence) to 0.3 (30\% divergence).}
+(proportion of differing positions) between parent1 and parent2.
+If 0, chimeras can be created from very similar
+parents, which may be harder to detect. In some cases, with min_parent_distance = 0,
+you may end up with chimeras that are identical to one of the parents.}
 }
 \value{
 A list containing:
@@ -60,7 +56,7 @@ A list containing:
 chimera name, parent1, parent2, parent_distance, prop_parent1,
 breakpoint, seq_length}
 \item{params}{List of parameters used (prop_mean, prop_sd, prop_min,
-ensure_distinct_parents, min_parent_distance)}
+min_parent_distance)}
 }
 }
 \description{
@@ -70,7 +66,7 @@ detection methods like \code{\link[MiscMetabar:chimera_removal_vs]{MiscMetabar::
 \code{\link[=chimera_removal_dada2]{chimera_removal_dada2()}}.
 }
 \examples{
-\dontrun{
+\dontshow{if (rlang::is_installed("Biostrings")) withAutoprint(\{ # examplesIf}
 library(MiscMetabar)
 data(data_fungi)
 
@@ -109,9 +105,8 @@ result4 <- create_chimera_pq(data_fungi, n_chimeras = 40,
 
 # Disable parent distance filtering (allows similar parents)
 result5 <- create_chimera_pq(data_fungi, n_chimeras = 40,
-                             ensure_distinct_parents = FALSE)
-}
-
+                             min_parent_distance = 0)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[MiscMetabar:chimera_removal_vs]{MiscMetabar::chimera_removal_vs()}}, \code{\link[=chimera_removal_dada2]{chimera_removal_dada2()}}

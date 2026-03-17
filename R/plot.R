@@ -46,10 +46,12 @@
 #' # Without threshold coloring
 #' plot_sample_depth_pq(data_fungi, show_threshold = FALSE)
 
-plot_sample_depth_pq <- function(physeq,
-                                  lower_quantile = 0.1,
-                                  threshold_quantile = 0.05,
-                                  show_threshold = TRUE) {
+plot_sample_depth_pq <- function(
+  physeq,
+  lower_quantile = 0.1,
+  threshold_quantile = 0.05,
+  show_threshold = TRUE
+) {
   res_tib <-
     phyloseq::sample_sums(physeq) |>
     sort() |>
@@ -61,7 +63,9 @@ plot_sample_depth_pq <- function(physeq,
 
   # Compute differences excluding the lower quantile
 
-diff_filtered <- res_tib$diff[res_tib$diff > stats::quantile(res_tib$diff, lower_quantile)]
+  diff_filtered <- res_tib$diff[
+    res_tib$diff > stats::quantile(res_tib$diff, lower_quantile)
+  ]
   mean_diff <- mean(log10(diff_filtered))
   lower_line <- stats::quantile(log10(diff_filtered), threshold_quantile)
   upper_line <- stats::quantile(log10(diff_filtered), 1 - threshold_quantile)
@@ -91,9 +95,18 @@ diff_filtered <- res_tib$diff[res_tib$diff > stats::quantile(res_tib$diff, lower
       ggplot2::labs(
         title = sprintf("Selected samples have rank >= %d", threshold_rank)
       ) +
-      geom_vline(xintercept = threshold_rank, linetype = 4, color="grey") +
-      geom_point(data = res_tib[threshold_rank, ], aes(y = log10(.data$diff), x = .data$rank), color="black", pch=21, size=4)
-
+      ggplot2::geom_vline(
+        xintercept = threshold_rank,
+        linetype = 4,
+        color = "grey"
+      ) +
+      ggplot2::geom_point(
+        data = res_tib[threshold_rank, ],
+        ggplot2::aes(y = log10(.data$diff), x = .data$rank),
+        color = "black",
+        pch = 21,
+        size = 4
+      )
   }
 
   p

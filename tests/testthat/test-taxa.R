@@ -14,7 +14,11 @@ test_that("filter_taxa_pq filters using . pronoun", {
 })
 
 test_that("filter_taxa_pq combines multiple conditions", {
-  result <- filter_taxa_pq(data_fungi, Phylum == "Basidiomycota", taxa_sums(.) > 50)
+  result <- filter_taxa_pq(
+    data_fungi,
+    Phylum == "Basidiomycota",
+    taxa_sums(.) > 50
+  )
   expect_s4_class(result, "phyloseq")
   tax <- as.data.frame(phyloseq::tax_table(result))
   expect_true(all(tax$Phylum == "Basidiomycota"))
@@ -44,15 +48,20 @@ test_that("mutate_taxa_pq adds new columns", {
   expect_true("total_abundance" %in% colnames(phyloseq::tax_table(result)))
   tax <- as.data.frame(phyloseq::tax_table(result))
   expected <- phyloseq::taxa_sums(data_fungi)
-  expect_equal(sum(as.numeric(tax$total_abundance)- expected), 0)
+  expect_equal(sum(as.numeric(tax$total_abundance) - expected), 0)
 })
 
 test_that("mutate_taxa_pq modifies existing columns", {
-  result <- mutate_taxa_pq(data_fungi, Genus = ifelse(is.na(Genus), "Unknown", Genus))
+  result <- mutate_taxa_pq(
+    data_fungi,
+    Genus = ifelse(is.na(Genus), "Unknown", Genus)
+  )
   expect_s4_class(result, "phyloseq")
   tax <- as.data.frame(phyloseq::tax_table(result))
   # Check that NA values were replaced
-  na_count_orig <- sum(is.na(as.data.frame(phyloseq::tax_table(data_fungi))$Genus))
+  na_count_orig <- sum(is.na(
+    as.data.frame(phyloseq::tax_table(data_fungi))$Genus
+  ))
   na_count_new <- sum(is.na(tax$Genus))
   expect_true(na_count_new <= na_count_orig)
 })
@@ -96,7 +105,10 @@ test_that("rename_taxa_pq renames columns", {
 test_that("arrange_taxa_pq works with phy_tree slot", {
   # Use a subset of GlobalPatterns which has a phy_tree
   data("GlobalPatterns", package = "phyloseq")
-  gp_small <- phyloseq::prune_taxa(phyloseq::taxa_names(GlobalPatterns)[1:50], GlobalPatterns)
+  gp_small <- phyloseq::prune_taxa(
+    phyloseq::taxa_names(GlobalPatterns)[1:50],
+    GlobalPatterns
+  )
 
   # Verify the test object has a phy_tree
 
@@ -108,10 +120,16 @@ test_that("arrange_taxa_pq works with phy_tree slot", {
   expect_false(is.null(phyloseq::phy_tree(result, errorIfNULL = FALSE)))
 
   # Check taxa order matches in tax_table and otu_table
-  expect_equal(phyloseq::taxa_names(result), rownames(phyloseq::tax_table(result)))
+  expect_equal(
+    phyloseq::taxa_names(result),
+    rownames(phyloseq::tax_table(result))
+  )
 
   # Check phy_tree tips match taxa names (order may differ due to tree topology)
-  expect_setequal(phyloseq::phy_tree(result)$tip.label, phyloseq::taxa_names(result))
+  expect_setequal(
+    phyloseq::phy_tree(result)$tip.label,
+    phyloseq::taxa_names(result)
+  )
 
   # Check that tax_table is sorted by Phylum
   tax <- as.data.frame(phyloseq::tax_table(result))

@@ -47,5 +47,3 @@ eval_filter_quos <- function(quos, mask) {
   results <- lapply(quos, rlang::eval_tidy, data = mask)
   Reduce(`&`, results)
 }
-
-
