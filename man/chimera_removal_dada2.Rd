@@ -46,6 +46,7 @@ sequences.
 library(MiscMetabar)
 data(data_fungi)
 
+\donttest{
 # Basic usage
 data_nochim <- chimera_removal_dada2(data_fungi)
 
@@ -55,6 +56,7 @@ cat("Removed", length(result$chimeric_taxa), "chimeric ASVs\n")
 
 # Use pooled method
 data_nochim <- chimera_removal_dada2(data_fungi, method = "pooled")
+}
 \dontshow{\}) # examplesIf}
 }
 \seealso{

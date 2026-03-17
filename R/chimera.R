@@ -39,6 +39,7 @@
 #' library(MiscMetabar)
 #' data(data_fungi)
 #'
+#' \donttest{
 #' # Basic usage
 #' data_nochim <- chimera_removal_dada2(data_fungi)
 #'
@@ -48,6 +49,7 @@
 #'
 #' # Use pooled method
 #' data_nochim <- chimera_removal_dada2(data_fungi, method = "pooled")
+#' }
 chimera_removal_dada2 <- function(
   physeq,
   method = "consensus",
@@ -219,8 +221,8 @@ create_chimera_pq <- function(
     stop("prop_min must be between 0 and 0.5 (exclusive)")
   }
 
-  if (min_parent_distance <= 0 || min_parent_distance >= 1) {
-    stop("min_parent_distance must be between 0 and 1 (inclusive)")
+  if (min_parent_distance < 0 || min_parent_distance >= 1) {
+    stop("min_parent_distance must be >= 0 and < 1")
   }
 
   seqs <- phyloseq::refseq(physeq)

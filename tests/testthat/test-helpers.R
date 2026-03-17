@@ -182,7 +182,8 @@ test_that("decontam_sam_control correctly sets values to zero", {
   # For non-control samples, values <= threshold should now be 0
   # (If the taxon still exists in result - it might have been removed)
   if (first_taxon %in% rownames(result_otu)) {
-    remaining_values <- result_otu[first_taxon, ]
+    non_control <- setdiff(colnames(result_otu), control_samples)
+    remaining_values <- result_otu[first_taxon, non_control]
     expect_true(all(remaining_values == 0 | remaining_values > threshold))
   }
 })
@@ -198,7 +199,8 @@ test_that("decontam_taxa_control removes contamination based on control taxa", {
   result <- decontam_taxa_control(
     data_fungi,
     taxa_names(.) %in% control_taxa,
-    verbose = FALSE
+    verbose = FALSE,
+    clean_phyloseq_object = FALSE
   )
   expect_s4_class(result, "phyloseq")
 

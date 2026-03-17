@@ -3,5 +3,6 @@
 ^pkgdown$
 ^cran-comments\.md$
 ^CLAUDE\.md$
+^vignettes/\.quarto$
 ^\.claude$
 ^\vignettes\.quarto$

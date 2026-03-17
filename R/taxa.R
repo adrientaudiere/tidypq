@@ -329,7 +329,7 @@ arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' @examples
 #' library(MiscMetabar)
 #' # Rename a single rank
-#' rename_taxa_pq(data_fungi, tax_kingdom = "Fungi")
+#' rename_taxa_pq(data_fungi, tax_domain = Domain)
 #'
 #' # Rename multiple ranks
 #' rename_taxa_pq(data_fungi, tax_phylum = Phylum, tax_class = Class)
