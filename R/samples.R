@@ -128,7 +128,6 @@ mutate_samdata_pq <- function(physeq, ...) {
   new_physeq <- physeq
 
   sam_df <- as.data.frame(phyloseq::sample_data(physeq))
-  original_samples <- rownames(sam_df)
   original_nsamples <- nrow(sam_df)
   mask <- build_sample_data_mask(physeq)
 
@@ -146,16 +145,6 @@ mutate_samdata_pq <- function(physeq, ...) {
       )
     }
     sam_df[[nm]] <- value
-  }
-
-  # Verify samples are preserved
-  if (
-    nrow(sam_df) != original_nsamples ||
-      !identical(rownames(sam_df), original_samples)
-  ) {
-    stop(
-      "mutate_samdata_pq cannot add or remove samples. Use filter_samples_pq or slice_samples_pq instead."
-    )
   }
 
   new_physeq@sam_data <- phyloseq::sample_data(sam_df)

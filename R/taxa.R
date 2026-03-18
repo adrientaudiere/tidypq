@@ -127,7 +127,6 @@ mutate_taxa_pq <- function(physeq, ...) {
   new_physeq <- physeq
 
   tax_df <- as.data.frame(phyloseq::tax_table(physeq))
-  original_taxa <- rownames(tax_df)
   original_ntaxa <- nrow(tax_df)
   mask <- build_taxa_data_mask(physeq)
 
@@ -145,16 +144,6 @@ mutate_taxa_pq <- function(physeq, ...) {
       )
     }
     tax_df[[nm]] <- value
-  }
-
-  # Verify taxa are preserved
-  if (
-    nrow(tax_df) != original_ntaxa ||
-      !identical(rownames(tax_df), original_taxa)
-  ) {
-    stop(
-      "mutate_taxa_pq cannot add or remove taxa. Use filter_taxa_pq or slice_taxa_pq instead."
-    )
   }
 
   new_physeq@tax_table <- phyloseq::tax_table(as.matrix(tax_df))

@@ -96,6 +96,7 @@ decontam_sam_control <- function(
   clean_phyloseq_object = TRUE,
   verbose = TRUE
 ) {
+  fun_name <- deparse(substitute(fun))
   MiscMetabar::verify_pq(physeq)
 
   # Identify control samples using data masking
@@ -106,6 +107,7 @@ decontam_sam_control <- function(
   if (!is.logical(is_control)) {
     stop("control_condition must evaluate to a logical vector.")
   }
+  is_control[is.na(is_control)] <- FALSE
   if (sum(is_control) == 0) {
     stop("No samples match the control_condition.")
   }
@@ -185,7 +187,7 @@ decontam_sam_control <- function(
       "\nNumber of non-control samples: ",
       length(non_control_samples),
       "\nFunction used for threshold: ",
-      deparse(substitute(fun)),
+      fun_name,
       threshold_info,
       "\nRemove control samples: ",
       remove_controls,
@@ -264,6 +266,7 @@ decontam_taxa_control <- function(
   clean_phyloseq_object = TRUE,
   verbose = TRUE
 ) {
+  fun_name <- deparse(substitute(fun))
   MiscMetabar::verify_pq(physeq)
 
   all_taxa <- phyloseq::taxa_names(physeq)
@@ -359,7 +362,7 @@ decontam_taxa_control <- function(
       "\nNumber of non-control taxa: ",
       length(non_control_taxa),
       "\nFunction used for threshold: ",
-      deparse(substitute(fun)),
+      fun_name,
       threshold_info,
       "\nRemove control taxa: ",
       remove_control_taxa,

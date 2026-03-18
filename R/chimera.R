@@ -56,6 +56,11 @@ chimera_removal_dada2 <- function(
   return_a_list = FALSE,
   ...
 ) {
+  MiscMetabar::verify_pq(physeq)
+  if (is.null(phyloseq::refseq(physeq, errorIfNULL = FALSE))) {
+    stop("phyloseq object must have a refseq slot containing DNA sequences.")
+  }
+
   df_seq_ab <- data.frame(
     sequence = as.character(phyloseq::refseq(physeq)),
     abundance = phyloseq::taxa_sums(physeq)
@@ -244,18 +249,9 @@ create_chimera_pq <- function(
     sum(chars1 != chars2) / len
   }
 
-  chimera_list <- list()
-  chimera_names <- c()
-  parent_info <- data.frame(
-    chimera = character(),
-    parent1 = character(),
-    parent2 = character(),
-    parent_distance = numeric(),
-    prop_parent1 = numeric(),
-    breakpoint = integer(),
-    seq_length = integer(),
-    stringsAsFactors = FALSE
-  )
+  chimera_list <- vector("list", n_chimeras)
+  chimera_names <- character(n_chimeras)
+  parent_info_rows <- vector("list", n_chimeras)
 
   # Function to sample proportion with minimum threshold
   sample_proportion <- function(mean, sd, min_prop) {
@@ -335,23 +331,21 @@ create_chimera_pq <- function(
 
     chim_name <- paste0("CHIMERA_", i)
     chimera_list[[i]] <- chim
-    chimera_names <- c(chimera_names, chim_name)
+    chimera_names[[i]] <- chim_name
 
     # Store parent information
-    parent_info <- rbind(
-      parent_info,
-      data.frame(
-        chimera = chim_name,
-        parent1 = taxa_nms[parents[1]],
-        parent2 = taxa_nms[parents[2]],
-        parent_distance = round(parent_dist, 4),
-        prop_parent1 = round(prop_p1, 3),
-        breakpoint = bp,
-        seq_length = Biostrings::width(chim),
-        stringsAsFactors = FALSE
-      )
+    parent_info_rows[[i]] <- data.frame(
+      chimera = chim_name,
+      parent1 = taxa_nms[parents[1]],
+      parent2 = taxa_nms[parents[2]],
+      parent_distance = round(parent_dist, 4),
+      prop_parent1 = round(prop_p1, 3),
+      breakpoint = bp,
+      seq_length = Biostrings::width(chim),
+      stringsAsFactors = FALSE
     )
   }
+  parent_info <- do.call(rbind, parent_info_rows)
 
   # Combine chimeras
   chimera_seqs <- do.call(c, chimera_list)

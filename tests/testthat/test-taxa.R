@@ -48,7 +48,7 @@ test_that("mutate_taxa_pq adds new columns", {
   expect_true("total_abundance" %in% colnames(phyloseq::tax_table(result)))
   tax <- as.data.frame(phyloseq::tax_table(result))
   expected <- phyloseq::taxa_sums(data_fungi)
-  expect_equal(sum(as.numeric(tax$total_abundance) - expected), 0)
+  expect_equal(as.numeric(tax$total_abundance), as.numeric(expected))
 })
 
 test_that("mutate_taxa_pq modifies existing columns", {
@@ -100,6 +100,29 @@ test_that("rename_taxa_pq renames columns", {
   expect_s4_class(result, "phyloseq")
   expect_true("tax_Phylum" %in% colnames(phyloseq::tax_table(result)))
   expect_false("Phylum" %in% colnames(phyloseq::tax_table(result)))
+})
+
+test_that("arrange_taxa_pq preserves tree topology after reordering", {
+  # Use a subset of GlobalPatterns which has a phy_tree
+  data("GlobalPatterns", package = "phyloseq")
+  gp_small <- phyloseq::prune_taxa(
+    phyloseq::taxa_names(GlobalPatterns)[1:50],
+    GlobalPatterns
+  )
+
+  dist_before <- ape::cophenetic.phylo(phyloseq::phy_tree(gp_small))
+  result <- arrange_taxa_pq(gp_small, Genus)
+  dist_after <- ape::cophenetic.phylo(phyloseq::phy_tree(result))
+
+  # Same taxa
+  expect_setequal(rownames(dist_after), rownames(dist_before))
+
+  # Pairwise distances preserved (reorder both matrices to same taxa order)
+  taxa_order <- rownames(dist_before)
+  expect_equal(
+    dist_after[taxa_order, taxa_order],
+    dist_before[taxa_order, taxa_order]
+  )
 })
 
 test_that("arrange_taxa_pq works with phy_tree slot", {

@@ -52,6 +52,8 @@ plot_sample_depth_pq <- function(
   threshold_quantile = 0.05,
   show_threshold = TRUE
 ) {
+  MiscMetabar::verify_pq(physeq)
+
   res_tib <-
     phyloseq::sample_sums(physeq) |>
     sort() |>
@@ -61,11 +63,16 @@ plot_sample_depth_pq <- function(
       rank = dplyr::row_number()
     )
 
-  # Compute differences excluding the lower quantile
-
+  # Compute differences excluding the lower quantile and zeros (log10(0) = -Inf)
   diff_filtered <- res_tib$diff[
-    res_tib$diff > stats::quantile(res_tib$diff, lower_quantile)
+    res_tib$diff > stats::quantile(res_tib$diff, lower_quantile) &
+      res_tib$diff > 0
   ]
+  if (length(diff_filtered) == 0) {
+    stop(
+      "All sample depth differences are zero; cannot compute log10 statistics."
+    )
+  }
   mean_diff <- mean(log10(diff_filtered))
   lower_line <- stats::quantile(log10(diff_filtered), threshold_quantile)
   upper_line <- stats::quantile(log10(diff_filtered), 1 - threshold_quantile)

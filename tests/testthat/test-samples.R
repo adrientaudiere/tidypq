@@ -57,9 +57,9 @@ test_that("mutate_samdata_pq adds new columns", {
   result <- mutate_samdata_pq(data_fungi, log_depth = log(sample_sums(.)))
   expect_s4_class(result, "phyloseq")
   expect_true("log_depth" %in% colnames(phyloseq::sample_data(result)))
-  expected <- log(phyloseq::sample_sums(data_fungi))
+  expected <- unname(log(phyloseq::sample_sums(data_fungi)))
   actual <- phyloseq::sample_data(result)$log_depth
-  expect_equal(sum(expected - actual != 0), 0)
+  expect_equal(actual, expected)
 })
 
 test_that("mutate_samdata_pq modifies existing columns", {

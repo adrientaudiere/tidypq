@@ -12,7 +12,6 @@
 #' @param taxa (character, optional) Character vector of taxa names to keep.
 #'   If NULL, keeps all taxa that are present in both the OTU table and tree.
 #' @param pattern (character, optional) A regular expression pattern to match
-
 #'   against tip labels. Only tips matching the pattern are kept.
 #' @param invert (logical, default FALSE) If TRUE and pattern is provided,
 #'   keep tips that do NOT match the pattern.
