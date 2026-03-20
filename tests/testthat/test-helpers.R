@@ -315,3 +315,55 @@ test_that("decontam_taxa_control errors with non-logical condition", {
     "must evaluate to a logical"
   )
 })
+
+test_that("decontam_sam_control verbose output works", {
+  pq <- mutate_samdata_pq(
+    data_fungi,
+    is_control = seq_len(nsamples(.)) <= 2
+  )
+  expect_message(
+    decontam_sam_control(pq, is_control, verbose = TRUE),
+    "Decontamination complete"
+  )
+})
+
+test_that("decontam_sam_control verbose with global_threshold", {
+  pq <- mutate_samdata_pq(
+    data_fungi,
+    is_control = seq_len(nsamples(.)) <= 2
+  )
+  expect_message(
+    decontam_sam_control(
+      pq,
+      is_control,
+      global_threshold = TRUE,
+      verbose = TRUE
+    ),
+    "Global threshold value"
+  )
+})
+
+test_that("decontam_taxa_control verbose output works", {
+  control_taxa <- phyloseq::taxa_names(data_fungi)[1:3]
+  expect_message(
+    decontam_taxa_control(
+      data_fungi,
+      taxa_names(.) %in% control_taxa,
+      verbose = TRUE
+    ),
+    "Decontamination complete"
+  )
+})
+
+test_that("decontam_taxa_control verbose with global_threshold", {
+  control_taxa <- phyloseq::taxa_names(data_fungi)[1:3]
+  expect_message(
+    decontam_taxa_control(
+      data_fungi,
+      taxa_names(.) %in% control_taxa,
+      global_threshold = TRUE,
+      verbose = TRUE
+    ),
+    "Global threshold value"
+  )
+})

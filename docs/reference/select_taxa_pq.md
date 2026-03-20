@@ -18,7 +18,7 @@ select_taxa_pq(physeq, ...)
 
   One or more unquoted expressions separated by commas. Variable names
   can be used as if they were positions in the data frame, so
-  expressions like `Kingdom:Genus` can be used to select a range of
+  expressions like `Phylum:Genus` can be used to select a range of
   taxonomic ranks.
 
 ## Value
@@ -34,14 +34,20 @@ Adrien Taudière
 ``` r
 library(MiscMetabar)
 # Select specific ranks
-select_taxa_pq(data_fungi, Kingdom, Phylum, Class)
-#> Error in select_taxa_pq(data_fungi, Kingdom, Phylum, Class): Can't select columns that don't exist.
-#> ✖ Column `Kingdom` doesn't exist.
+select_taxa_pq(data_fungi, Phylum, Class)
+#> phyloseq-class experiment-level object
+#> otu_table()   OTU Table:         [ 1420 taxa and 185 samples ]
+#> sample_data() Sample Data:       [ 185 samples by 7 sample variables ]
+#> tax_table()   Taxonomy Table:    [ 1420 taxa by 2 taxonomic ranks ]
+#> refseq()      DNAStringSet:      [ 1420 reference sequences ]
 
 # Select a range of ranks
-select_taxa_pq(data_fungi, Kingdom:Genus)
-#> Error in select_taxa_pq(data_fungi, Kingdom:Genus): Can't select columns that don't exist.
-#> ✖ Column `Kingdom` doesn't exist.
+select_taxa_pq(data_fungi, Phylum:Genus)
+#> phyloseq-class experiment-level object
+#> otu_table()   OTU Table:         [ 1420 taxa and 185 samples ]
+#> sample_data() Sample Data:       [ 185 samples by 7 sample variables ]
+#> tax_table()   Taxonomy Table:    [ 1420 taxa by 5 taxonomic ranks ]
+#> refseq()      DNAStringSet:      [ 1420 reference sequences ]
 
 # Exclude ranks
 select_taxa_pq(data_fungi, !Species)

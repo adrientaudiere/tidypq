@@ -138,7 +138,7 @@
 <h3 id="data-masking-pattern">Data Masking Pattern<a class="anchor" aria-label="anchor" href="#data-masking-pattern"></a></h3>
 <p>Functions use rlang data masking with a special <code>.</code> pronoun that refers to the phyloseq object:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/filter_samples_pq.html">filter_samples_pq</a></span><span class="op">(</span><span class="va">data_fungi</span>, <span class="va">Height</span> <span class="op">==</span> <span class="st">"Low"</span>, <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/sample_sums.html" class="external-link">sample_sums</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1000</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/filter_samples_pq.html">filter_samples_pq</a></span><span class="op">(</span><span class="va">data_fungi</span>, <span class="va">Height</span> <span class="op">==</span> <span class="st">"Low"</span>, <span class="fu">sample_sums</span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1000</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">

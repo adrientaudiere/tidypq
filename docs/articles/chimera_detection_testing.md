@@ -32,8 +32,7 @@ data_fungi_subset <- subset_taxa(
   Class %in% c("Agaricomycetes", "Dacrymycetes","Eurotiomycetes", "Lecanoromycetes", "Tremellomycetes")
 )
 
-cat("Original taxa:", ntaxa(data_fungi), "\n")
-cat("Subset taxa:", ntaxa(data_fungi_subset), "\n")
+data_fungi_subset
 ```
 
 ## Creating Test Data with Synthetic Chimeras
@@ -52,14 +51,7 @@ df_chim <- create_chimera_pq(
 data_fungi_test <- df_chim$physeq
 known_chimeras <- df_chim$chimera_names
 
-# View parent information including sequence distance
-print(df_chim$parent_info)
-cat(
-  "\nMinimum parent distance:",
-  min(df_chim$parent_info$parent_distance),
-  "\n"
-)
-cat("\nMean parent distance:", mean(df_chim$parent_info$parent_distance), "\n")
+df_chim$parent_info
 ```
 
 ## Comparing Detection Methods
@@ -134,7 +126,6 @@ result_dada2 <- benchmark_detection(
 ## Benchmark Summary Table
 
 ``` r
-# Create summary table
 benchmark_summary <- data.frame(
   Method = c(result_vs$method, result_dada2$method),
   `N Chimeras` = c(result_vs$n_chimeras, result_dada2$n_chimeras),
@@ -155,29 +146,19 @@ knitr::kable(benchmark_summary, caption = "Chimera Detection Benchmark Summary")
 ## Evaluating Detection Performance
 
 ``` r
-cat("=== Chimera Detection Benchmark ===\n")
-cat("Known chimeras:", length(known_chimeras), "\n\n")
-cat(
-  "vsearch detected:",
-  result_vs$n_detected,
-  "/",
-  result_vs$n_chimeras,
-  "(",
-  round(result_vs$detection_rate, 1),
-  "%)\n"
+eval_summary <- data.frame(
+  Method = c("vsearch", "dada2"),
+  Detected = c(result_vs$n_detected, result_dada2$n_detected),
+  `N Chimeras` = c(result_vs$n_chimeras, result_dada2$n_chimeras),
+  `Detection Rate (%)` = round(
+    c(result_vs$detection_rate, result_dada2$detection_rate), 1
+  ),
+  `Total Removed` = c(
+    result_vs$total_removed, result_dada2$total_removed
+  ),
+  check.names = FALSE
 )
-cat(
-  "dada2 detected:",
-  result_dada2$n_detected,
-  "/",
-  result_dada2$n_chimeras,
-  "(",
-  round(result_dada2$detection_rate, 1),
-  "%)\n\n"
-)
-
-cat("vsearch total removed:", result_vs$total_removed, "\n")
-cat("dada2 total removed:", result_dada2$total_removed, "\n")
+knitr::kable(eval_summary)
 ```
 
 ## Analyzing Missed Chimeras
@@ -186,28 +167,24 @@ Examine which chimeras were missed and their parent sequences:
 
 ``` r
 if (length(result_vs$missed_names) > 0) {
-  cat("\nMissed by vsearch:\n")
   missed_info <- df_chim$parent_info[
     df_chim$parent_info$chimera %in% result_vs$missed_names,
   ]
-  print(missed_info)
-  cat(
-    "\nMean parent distance of missed chimeras:",
-    mean(missed_info$parent_distance),
-    "\n"
+  knitr::kable(
+    missed_info,
+    caption = "Missed by vsearch"
   )
 }
+```
 
+``` r
 if (length(result_dada2$missed_names) > 0) {
-  cat("\nMissed by dada2:\n")
   missed_info <- df_chim$parent_info[
     df_chim$parent_info$chimera %in% result_dada2$missed_names,
   ]
-  print(missed_info)
-  cat(
-    "\nMean parent distance of missed chimeras:",
-    mean(missed_info$parent_distance),
-    "\n"
+  knitr::kable(
+    missed_info,
+    caption = "Missed by dada2"
   )
 }
 ```
@@ -297,7 +274,7 @@ for (name in names(datasets)) {
   )
 }
 
-print(results)
+results
 ```
 
 ## Summary Table: All Scenarios
@@ -373,7 +350,7 @@ p_hist <- ggplot(prop_data, aes(x = prop)) +
   ) +
   theme_bw()
 
-print(p_hist)
+p_hist
 
 # Barplot comparing all detection rates
 results$dataset <- factor(
@@ -405,7 +382,7 @@ p_bar <- ggplot(results, aes(x = dataset, y = detection_rate, fill = method)) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-print(p_bar)
+p_bar
 ```
 
 ## Effect of Chimera Abundance on Detection
@@ -457,7 +434,7 @@ for (mult in abundance_multipliers) {
   )
 }
 
-print(abundance_results)
+abundance_results
 ```
 
 ### Abundance Summary Table
@@ -491,7 +468,7 @@ p_abund_detection <- ggplot(
   ) +
   theme_bw()
 
-print(p_abund_detection)
+p_abund_detection
 
 # Barplot comparison
 abundance_results$multiplier_label <- paste0(
@@ -525,7 +502,7 @@ p_abund_bar <- ggplot(
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-print(p_abund_bar)
+p_abund_bar
 ```
 
 ## Effect of Parent Sequence Distance
@@ -612,6 +589,8 @@ p_dist <- ggplot(
     color = "Method"
   ) +
   theme_bw() +
-  ggrepel::geom_label_repel(aes(label=nb_detected), size = 3, show.legend = FALSE)
-print(p_dist)
+  ggrepel::geom_label_repel(
+    aes(label = nb_detected), size = 3, show.legend = FALSE
+  )
+p_dist
 ```

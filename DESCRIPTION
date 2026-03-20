@@ -1,6 +1,6 @@
 Package: tidypq
 Title: Tidyverse-Style Verbs for 'phyloseq' Objects
-Version: 0.1.0
+Version: 0.1.1
 Authors@R:
     person("Adrien", "Taudière", , "adrien.taudiere@zaclys.net", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0003-1088-1182"))
@@ -11,7 +11,8 @@ Description: Provides tidyverse-style verbs for manipulating 'phyloseq'
     metabarcoding analyses, it integrates with 'MiscMetabar' and the
     'pqverse' ecosystem.
 License: MIT + file LICENSE
-URL: https://github.com/adrientaudiere/tidypq
+URL: https://adrientaudiere.github.io/tidypq,
+    https://github.com/adrientaudiere/tidypq
 BugReports: https://github.com/adrientaudiere/tidypq/issues
 Depends:
     R (>= 4.1.0),

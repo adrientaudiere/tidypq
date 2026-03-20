@@ -20,9 +20,27 @@ All functions follow the pattern: `{verb}_{scale}_pq()`
 
 ## Installation
 
+**tidypq** is not available on CRAN yet. You can install the stable
+development version from GitHub with:
+
 ``` r
-# Install from GitHub
+# Install from GitHub (development version)
+if (!require("devtools", quietly = TRUE)) {
+  install.packages("devtools")
+}
 devtools::install_github("adrientaudiere/tidypq")
+# Or using pak
+# pak::pkg_install("adrientaudiere/tidypq")
+```
+
+You can install the unstable development version from
+[GitHub](https://github.com/) with:
+
+``` r
+if (!require("devtools", quietly = TRUE)) {
+  install.packages("devtools")
+}
+devtools::install_github("adrientaudiere/tidypq", ref = "dev")
 ```
 
 ## Usage

@@ -43,7 +43,7 @@ filter_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   samples_to_keep <- phyloseq::sample_names(physeq)[keep]
 
   if (length(samples_to_keep) == 0) {
-    warning("No samples match the filter criteria.")
+    stop("No samples match the filter criteria.")
   }
 
   new_physeq <- phyloseq::prune_samples(samples_to_keep, physeq)
@@ -103,6 +103,10 @@ select_samdata_pq <- function(physeq, ...) {
 #'
 #' This function only modifies the sample_data slot (columns/metadata). It cannot
 #' add or remove samples. The number of samples and sample names are preserved.
+#'
+#' Unlike `dplyr::mutate()`, columns created in the same call cannot reference
+#' each other (e.g., `mutate_samdata_pq(pq, a = 1, b = a + 1)` will not work
+#' because `a` is not yet available when `b` is evaluated).
 #'
 #' @param physeq (phyloseq, required) A phyloseq object.
 #' @param ... <data-masking> Name-value pairs. The name gives the name of the
@@ -187,7 +191,7 @@ slice_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   samples_to_keep <- sam_df$sample_names__for_slicing
 
   if (length(samples_to_keep) == 0) {
-    warning("No samples selected.")
+    stop("No samples selected.")
   }
 
   new_physeq <- phyloseq::prune_samples(samples_to_keep, physeq)

@@ -33,12 +33,18 @@ Adrien Taudière
 ``` r
 library(MiscMetabar)
 # Rename a single rank
-rename_taxa_pq(data_fungi, tax_kingdom = Kingdom)
-#> Error in dplyr::rename(tax_df, ...): Can't rename columns that don't exist.
-#> ✖ Column `Kingdom` doesn't exist.
+rename_taxa_pq(data_fungi, tax_domain = Domain)
+#> phyloseq-class experiment-level object
+#> otu_table()   OTU Table:         [ 1420 taxa and 185 samples ]
+#> sample_data() Sample Data:       [ 185 samples by 7 sample variables ]
+#> tax_table()   Taxonomy Table:    [ 1420 taxa by 12 taxonomic ranks ]
+#> refseq()      DNAStringSet:      [ 1420 reference sequences ]
 
 # Rename multiple ranks
-rename_taxa_pq(data_fungi, tax_kingdom = Kingdom, tax_phylum = Phylum)
-#> Error in dplyr::rename(tax_df, ...): Can't rename columns that don't exist.
-#> ✖ Column `Kingdom` doesn't exist.
+rename_taxa_pq(data_fungi, tax_phylum = Phylum, tax_class = Class)
+#> phyloseq-class experiment-level object
+#> otu_table()   OTU Table:         [ 1420 taxa and 185 samples ]
+#> sample_data() Sample Data:       [ 185 samples by 7 sample variables ]
+#> tax_table()   Taxonomy Table:    [ 1420 taxa by 12 taxonomic ranks ]
+#> refseq()      DNAStringSet:      [ 1420 reference sequences ]
 ```

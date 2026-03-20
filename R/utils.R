@@ -47,3 +47,124 @@ eval_filter_quos <- function(quos, mask) {
   results <- lapply(quos, rlang::eval_tidy, data = mask)
   Reduce(`&`, results)
 }
+
+#' Build summary matrices from an OTU matrix (taxa as rows)
+#'
+#' Returns a named list of matrices matching OTU dimensions with per-sample
+#' and per-taxon summary statistics. Used by occurrence-level functions.
+#'
+#' @param otu A numeric matrix with taxa as rows and samples as columns.
+#' @param include_median If TRUE, also compute sample_median and taxon_median.
+#' @return A named list of matrices.
+#' @keywords internal
+#' @noRd
+build_otu_summary_matrices <- function(otu, include_median = FALSE) {
+  nr <- nrow(otu)
+  nc <- ncol(otu)
+
+  out <- list(
+    `.` = otu,
+    sample_total = matrix(colSums(otu), nrow = nr, ncol = nc, byrow = TRUE),
+    taxon_total = matrix(rowSums(otu), nrow = nr, ncol = nc, byrow = FALSE),
+    sample_mean = matrix(colMeans(otu), nrow = nr, ncol = nc, byrow = TRUE),
+    taxon_mean = matrix(rowMeans(otu), nrow = nr, ncol = nc, byrow = FALSE)
+  )
+
+  if (include_median) {
+    out$sample_median <- matrix(
+      apply(otu, 2, stats::median),
+      nrow = nr,
+      ncol = nc,
+      byrow = TRUE
+    )
+    out$taxon_median <- matrix(
+      apply(otu, 1, stats::median),
+      nrow = nr,
+      ncol = nc,
+      byrow = FALSE
+    )
+  }
+
+  out
+}
+
+#' Print a standardized decontamination summary message
+#'
+#' @param physeq Original phyloseq object.
+#' @param new_physeq Decontaminated phyloseq object.
+#' @param threshold_type Character, e.g. "global" or "per-taxon".
+#' @param n_control Number of control units.
+#' @param n_non_control Number of non-control units.
+#' @param fun_name Character name of the summary function.
+#' @param global_threshold_value Numeric or NULL.
+#' @param control_label "samples" or "taxa".
+#' @param removed Logical, whether controls were removed.
+#' @keywords internal
+#' @noRd
+decontam_message <- function(
+  physeq,
+  new_physeq,
+  threshold_type,
+  n_control,
+  n_non_control,
+  fun_name,
+  global_threshold_value = NULL,
+  control_label,
+  removed
+) {
+  seqs_before <- sum(phyloseq::otu_table(physeq))
+  seqs_after <- sum(phyloseq::otu_table(new_physeq))
+  occ_before <- sum(phyloseq::otu_table(physeq) > 0)
+  occ_after <- sum(phyloseq::otu_table(new_physeq) > 0)
+  taxa_before <- phyloseq::ntaxa(physeq)
+  taxa_after <- phyloseq::ntaxa(new_physeq)
+
+  threshold_info <- if (!is.null(global_threshold_value)) {
+    paste0(
+      "\nGlobal threshold value: ",
+      global_threshold_value
+    )
+  } else {
+    ""
+  }
+
+  message(
+    "Decontamination complete.",
+    "\nThreshold type: ",
+    threshold_type,
+    "\nControl ",
+    control_label,
+    ": ",
+    n_control,
+    "\nNon-control ",
+    control_label,
+    ": ",
+    n_non_control,
+    "\nThreshold function: ",
+    fun_name,
+    threshold_info,
+    "\nControls removed: ",
+    removed,
+    "\nSequences: ",
+    seqs_before,
+    " -> ",
+    seqs_after,
+    " (-",
+    seqs_before - seqs_after,
+    ")",
+    "\nOccurrences: ",
+    occ_before,
+    " -> ",
+    occ_after,
+    " (-",
+    occ_before - occ_after,
+    ")",
+    "\nTaxa: ",
+    taxa_before,
+    " -> ",
+    taxa_after,
+    " (-",
+    taxa_before - taxa_after,
+    ")"
+  )
+}

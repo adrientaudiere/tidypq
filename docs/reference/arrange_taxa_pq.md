@@ -17,8 +17,9 @@ arrange_taxa_pq(physeq, ..., clean_phyloseq_object = TRUE)
 
 - ...:
 
-  Variables to sort by. Use `desc()` for descending order. Use `.` to
-  refer to the phyloseq object.
+  Variables to sort by. Use
+  [`desc()`](https://dplyr.tidyverse.org/reference/desc.html) for
+  descending order. Use `.` to refer to the phyloseq object.
 
 - clean_phyloseq_object:
 
@@ -1042,7 +1043,426 @@ arrange_taxa_pq(data_fungi, Phylum, Class)@tax_table[, "Phylum"]
 #> ASV469  "Ascomycota"        
 #> ASV470  "Ascomycota"        
 #> ASV480  "Ascomycota"        
-#>  [ reached 'max' / getOption("max.print") -- omitted 420 rows ]
+#> ASV512  "Ascomycota"        
+#> ASV514  "Ascomycota"        
+#> ASV519  "Ascomycota"        
+#> ASV550  "Ascomycota"        
+#> ASV603  "Ascomycota"        
+#> ASV610  "Ascomycota"        
+#> ASV612  "Ascomycota"        
+#> ASV622  "Ascomycota"        
+#> ASV625  "Ascomycota"        
+#> ASV678  "Ascomycota"        
+#> ASV703  "Ascomycota"        
+#> ASV721  "Ascomycota"        
+#> ASV755  "Ascomycota"        
+#> ASV769  "Ascomycota"        
+#> ASV778  "Ascomycota"        
+#> ASV788  "Ascomycota"        
+#> ASV804  "Ascomycota"        
+#> ASV838  "Ascomycota"        
+#> ASV857  "Ascomycota"        
+#> ASV873  "Ascomycota"        
+#> ASV888  "Ascomycota"        
+#> ASV890  "Ascomycota"        
+#> ASV902  "Ascomycota"        
+#> ASV907  "Ascomycota"        
+#> ASV908  "Ascomycota"        
+#> ASV913  "Ascomycota"        
+#> ASV923  "Ascomycota"        
+#> ASV925  "Ascomycota"        
+#> ASV952  "Ascomycota"        
+#> ASV977  "Ascomycota"        
+#> ASV1001 "Ascomycota"        
+#> ASV1026 "Ascomycota"        
+#> ASV1028 "Ascomycota"        
+#> ASV1041 "Ascomycota"        
+#> ASV1062 "Ascomycota"        
+#> ASV1072 "Ascomycota"        
+#> ASV1084 "Ascomycota"        
+#> ASV1112 "Ascomycota"        
+#> ASV1165 "Ascomycota"        
+#> ASV1174 "Ascomycota"        
+#> ASV1241 "Ascomycota"        
+#> ASV1274 "Ascomycota"        
+#> ASV1284 "Ascomycota"        
+#> ASV1325 "Ascomycota"        
+#> ASV1342 "Ascomycota"        
+#> ASV1355 "Ascomycota"        
+#> ASV1378 "Ascomycota"        
+#> ASV1412 "Ascomycota"        
+#> ASV1430 "Ascomycota"        
+#> ASV1444 "Ascomycota"        
+#> ASV1456 "Ascomycota"        
+#> ASV1463 "Ascomycota"        
+#> ASV1481 "Ascomycota"        
+#> ASV1489 "Ascomycota"        
+#> ASV1509 "Ascomycota"        
+#> ASV1541 "Ascomycota"        
+#> ASV1570 "Ascomycota"        
+#> ASV1587 "Ascomycota"        
+#> ASV1594 "Ascomycota"        
+#> ASV1607 "Ascomycota"        
+#> ASV1613 "Ascomycota"        
+#> ASV1614 "Ascomycota"        
+#> ASV1633 "Ascomycota"        
+#> ASV1648 "Ascomycota"        
+#> ASV1672 "Ascomycota"        
+#> ASV1694 "Ascomycota"        
+#> ASV7    "Basidiomycota"     
+#> ASV8    "Basidiomycota"     
+#> ASV12   "Basidiomycota"     
+#> ASV18   "Basidiomycota"     
+#> ASV25   "Basidiomycota"     
+#> ASV26   "Basidiomycota"     
+#> ASV27   "Basidiomycota"     
+#> ASV29   "Basidiomycota"     
+#> ASV32   "Basidiomycota"     
+#> ASV34   "Basidiomycota"     
+#> ASV35   "Basidiomycota"     
+#> ASV41   "Basidiomycota"     
+#> ASV42   "Basidiomycota"     
+#> ASV47   "Basidiomycota"     
+#> ASV48   "Basidiomycota"     
+#> ASV49   "Basidiomycota"     
+#> ASV50   "Basidiomycota"     
+#> ASV53   "Basidiomycota"     
+#> ASV54   "Basidiomycota"     
+#> ASV58   "Basidiomycota"     
+#> ASV59   "Basidiomycota"     
+#> ASV61   "Basidiomycota"     
+#> ASV62   "Basidiomycota"     
+#> ASV63   "Basidiomycota"     
+#> ASV64   "Basidiomycota"     
+#> ASV67   "Basidiomycota"     
+#> ASV68   "Basidiomycota"     
+#> ASV72   "Basidiomycota"     
+#> ASV75   "Basidiomycota"     
+#> ASV77   "Basidiomycota"     
+#> ASV82   "Basidiomycota"     
+#> ASV85   "Basidiomycota"     
+#> ASV91   "Basidiomycota"     
+#> ASV93   "Basidiomycota"     
+#> ASV94   "Basidiomycota"     
+#> ASV99   "Basidiomycota"     
+#> ASV101  "Basidiomycota"     
+#> ASV104  "Basidiomycota"     
+#> ASV105  "Basidiomycota"     
+#> ASV107  "Basidiomycota"     
+#> ASV108  "Basidiomycota"     
+#> ASV120  "Basidiomycota"     
+#> ASV124  "Basidiomycota"     
+#> ASV128  "Basidiomycota"     
+#> ASV131  "Basidiomycota"     
+#> ASV135  "Basidiomycota"     
+#> ASV136  "Basidiomycota"     
+#> ASV138  "Basidiomycota"     
+#> ASV142  "Basidiomycota"     
+#> ASV143  "Basidiomycota"     
+#> ASV144  "Basidiomycota"     
+#> ASV150  "Basidiomycota"     
+#> ASV153  "Basidiomycota"     
+#> ASV157  "Basidiomycota"     
+#> ASV158  "Basidiomycota"     
+#> ASV168  "Basidiomycota"     
+#> ASV170  "Basidiomycota"     
+#> ASV179  "Basidiomycota"     
+#> ASV203  "Basidiomycota"     
+#> ASV205  "Basidiomycota"     
+#> ASV207  "Basidiomycota"     
+#> ASV208  "Basidiomycota"     
+#> ASV209  "Basidiomycota"     
+#> ASV223  "Basidiomycota"     
+#> ASV226  "Basidiomycota"     
+#> ASV227  "Basidiomycota"     
+#> ASV231  "Basidiomycota"     
+#> ASV238  "Basidiomycota"     
+#> ASV246  "Basidiomycota"     
+#> ASV247  "Basidiomycota"     
+#> ASV249  "Basidiomycota"     
+#> ASV251  "Basidiomycota"     
+#> ASV258  "Basidiomycota"     
+#> ASV261  "Basidiomycota"     
+#> ASV267  "Basidiomycota"     
+#> ASV271  "Basidiomycota"     
+#> ASV274  "Basidiomycota"     
+#> ASV280  "Basidiomycota"     
+#> ASV282  "Basidiomycota"     
+#> ASV284  "Basidiomycota"     
+#> ASV285  "Basidiomycota"     
+#> ASV293  "Basidiomycota"     
+#> ASV294  "Basidiomycota"     
+#> ASV297  "Basidiomycota"     
+#> ASV298  "Basidiomycota"     
+#> ASV305  "Basidiomycota"     
+#> ASV307  "Basidiomycota"     
+#> ASV311  "Basidiomycota"     
+#> ASV328  "Basidiomycota"     
+#> ASV330  "Basidiomycota"     
+#> ASV332  "Basidiomycota"     
+#> ASV336  "Basidiomycota"     
+#> ASV338  "Basidiomycota"     
+#> ASV345  "Basidiomycota"     
+#> ASV349  "Basidiomycota"     
+#> ASV364  "Basidiomycota"     
+#> ASV366  "Basidiomycota"     
+#> ASV379  "Basidiomycota"     
+#> ASV381  "Basidiomycota"     
+#> ASV382  "Basidiomycota"     
+#> ASV384  "Basidiomycota"     
+#> ASV386  "Basidiomycota"     
+#> ASV388  "Basidiomycota"     
+#> ASV393  "Basidiomycota"     
+#> ASV394  "Basidiomycota"     
+#> ASV397  "Basidiomycota"     
+#> ASV417  "Basidiomycota"     
+#> ASV420  "Basidiomycota"     
+#> ASV422  "Basidiomycota"     
+#> ASV439  "Basidiomycota"     
+#> ASV446  "Basidiomycota"     
+#> ASV458  "Basidiomycota"     
+#> ASV465  "Basidiomycota"     
+#> ASV474  "Basidiomycota"     
+#> ASV475  "Basidiomycota"     
+#> ASV476  "Basidiomycota"     
+#> ASV483  "Basidiomycota"     
+#> ASV484  "Basidiomycota"     
+#> ASV487  "Basidiomycota"     
+#> ASV493  "Basidiomycota"     
+#> ASV495  "Basidiomycota"     
+#> ASV517  "Basidiomycota"     
+#> ASV524  "Basidiomycota"     
+#> ASV531  "Basidiomycota"     
+#> ASV532  "Basidiomycota"     
+#> ASV547  "Basidiomycota"     
+#> ASV549  "Basidiomycota"     
+#> ASV554  "Basidiomycota"     
+#> ASV557  "Basidiomycota"     
+#> ASV562  "Basidiomycota"     
+#> ASV565  "Basidiomycota"     
+#> ASV580  "Basidiomycota"     
+#> ASV602  "Basidiomycota"     
+#> ASV616  "Basidiomycota"     
+#> ASV619  "Basidiomycota"     
+#> ASV620  "Basidiomycota"     
+#> ASV624  "Basidiomycota"     
+#> ASV633  "Basidiomycota"     
+#> ASV636  "Basidiomycota"     
+#> ASV656  "Basidiomycota"     
+#> ASV662  "Basidiomycota"     
+#> ASV666  "Basidiomycota"     
+#> ASV668  "Basidiomycota"     
+#> ASV672  "Basidiomycota"     
+#> ASV680  "Basidiomycota"     
+#> ASV681  "Basidiomycota"     
+#> ASV682  "Basidiomycota"     
+#> ASV685  "Basidiomycota"     
+#> ASV689  "Basidiomycota"     
+#> ASV691  "Basidiomycota"     
+#> ASV716  "Basidiomycota"     
+#> ASV717  "Basidiomycota"     
+#> ASV720  "Basidiomycota"     
+#> ASV741  "Basidiomycota"     
+#> ASV743  "Basidiomycota"     
+#> ASV749  "Basidiomycota"     
+#> ASV763  "Basidiomycota"     
+#> ASV767  "Basidiomycota"     
+#> ASV780  "Basidiomycota"     
+#> ASV798  "Basidiomycota"     
+#> ASV808  "Basidiomycota"     
+#> ASV815  "Basidiomycota"     
+#> ASV821  "Basidiomycota"     
+#> ASV830  "Basidiomycota"     
+#> ASV833  "Basidiomycota"     
+#> ASV840  "Basidiomycota"     
+#> ASV845  "Basidiomycota"     
+#> ASV847  "Basidiomycota"     
+#> ASV848  "Basidiomycota"     
+#> ASV849  "Basidiomycota"     
+#> ASV851  "Basidiomycota"     
+#> ASV856  "Basidiomycota"     
+#> ASV863  "Basidiomycota"     
+#> ASV867  "Basidiomycota"     
+#> ASV869  "Basidiomycota"     
+#> ASV877  "Basidiomycota"     
+#> ASV909  "Basidiomycota"     
+#> ASV931  "Basidiomycota"     
+#> ASV943  "Basidiomycota"     
+#> ASV944  "Basidiomycota"     
+#> ASV948  "Basidiomycota"     
+#> ASV964  "Basidiomycota"     
+#> ASV972  "Basidiomycota"     
+#> ASV987  "Basidiomycota"     
+#> ASV1017 "Basidiomycota"     
+#> ASV1038 "Basidiomycota"     
+#> ASV1045 "Basidiomycota"     
+#> ASV1048 "Basidiomycota"     
+#> ASV1063 "Basidiomycota"     
+#> ASV1065 "Basidiomycota"     
+#> ASV1070 "Basidiomycota"     
+#> ASV1089 "Basidiomycota"     
+#> ASV1092 "Basidiomycota"     
+#> ASV1093 "Basidiomycota"     
+#> ASV1105 "Basidiomycota"     
+#> ASV1111 "Basidiomycota"     
+#> ASV1129 "Basidiomycota"     
+#> ASV1134 "Basidiomycota"     
+#> ASV1135 "Basidiomycota"     
+#> ASV1182 "Basidiomycota"     
+#> ASV1187 "Basidiomycota"     
+#> ASV1192 "Basidiomycota"     
+#> ASV1208 "Basidiomycota"     
+#> ASV1210 "Basidiomycota"     
+#> ASV1212 "Basidiomycota"     
+#> ASV1213 "Basidiomycota"     
+#> ASV1233 "Basidiomycota"     
+#> ASV1236 "Basidiomycota"     
+#> ASV1252 "Basidiomycota"     
+#> ASV1257 "Basidiomycota"     
+#> ASV1261 "Basidiomycota"     
+#> ASV1263 "Basidiomycota"     
+#> ASV1269 "Basidiomycota"     
+#> ASV1270 "Basidiomycota"     
+#> ASV1302 "Basidiomycota"     
+#> ASV1303 "Basidiomycota"     
+#> ASV1333 "Basidiomycota"     
+#> ASV1340 "Basidiomycota"     
+#> ASV1344 "Basidiomycota"     
+#> ASV1349 "Basidiomycota"     
+#> ASV1374 "Basidiomycota"     
+#> ASV1375 "Basidiomycota"     
+#> ASV1377 "Basidiomycota"     
+#> ASV1385 "Basidiomycota"     
+#> ASV1422 "Basidiomycota"     
+#> ASV1432 "Basidiomycota"     
+#> ASV1438 "Basidiomycota"     
+#> ASV1447 "Basidiomycota"     
+#> ASV1452 "Basidiomycota"     
+#> ASV1453 "Basidiomycota"     
+#> ASV1455 "Basidiomycota"     
+#> ASV1465 "Basidiomycota"     
+#> ASV1516 "Basidiomycota"     
+#> ASV1533 "Basidiomycota"     
+#> ASV1537 "Basidiomycota"     
+#> ASV1542 "Basidiomycota"     
+#> ASV1546 "Basidiomycota"     
+#> ASV1551 "Basidiomycota"     
+#> ASV1552 "Basidiomycota"     
+#> ASV1561 "Basidiomycota"     
+#> ASV1564 "Basidiomycota"     
+#> ASV1621 "Basidiomycota"     
+#> ASV1636 "Basidiomycota"     
+#> ASV1665 "Basidiomycota"     
+#> ASV1667 "Basidiomycota"     
+#> ASV1616 "Basidiomycota"     
+#> ASV1690 "Basidiomycota"     
+#> ASV1707 "Basidiomycota"     
+#> ASV1709 "Basidiomycota"     
+#> ASV1714 "Basidiomycota"     
+#> ASV46   "Basidiomycota"     
+#> ASV147  "Basidiomycota"     
+#> ASV162  "Basidiomycota"     
+#> ASV175  "Basidiomycota"     
+#> ASV694  "Basidiomycota"     
+#> ASV752  "Basidiomycota"     
+#> ASV1087 "Basidiomycota"     
+#> ASV1488 "Basidiomycota"     
+#> ASV1535 "Basidiomycota"     
+#> ASV1562 "Basidiomycota"     
+#> ASV1580 "Basidiomycota"     
+#> ASV199  "Basidiomycota"     
+#> ASV216  "Basidiomycota"     
+#> ASV248  "Basidiomycota"     
+#> ASV310  "Basidiomycota"     
+#> ASV377  "Basidiomycota"     
+#> ASV404  "Basidiomycota"     
+#> ASV428  "Basidiomycota"     
+#> ASV440  "Basidiomycota"     
+#> ASV477  "Basidiomycota"     
+#> ASV488  "Basidiomycota"     
+#> ASV543  "Basidiomycota"     
+#> ASV545  "Basidiomycota"     
+#> ASV615  "Basidiomycota"     
+#> ASV686  "Basidiomycota"     
+#> ASV692  "Basidiomycota"     
+#> ASV722  "Basidiomycota"     
+#> ASV729  "Basidiomycota"     
+#> ASV730  "Basidiomycota"     
+#> ASV839  "Basidiomycota"     
+#> ASV942  "Basidiomycota"     
+#> ASV1036 "Basidiomycota"     
+#> ASV1239 "Basidiomycota"     
+#> ASV1358 "Basidiomycota"     
+#> ASV1534 "Basidiomycota"     
+#> ASV558  "Basidiomycota"     
+#> ASV219  "Basidiomycota"     
+#> ASV744  "Basidiomycota"     
+#> ASV898  "Basidiomycota"     
+#> ASV906  "Basidiomycota"     
+#> ASV1141 "Basidiomycota"     
+#> ASV1581 "Basidiomycota"     
+#> ASV1649 "Basidiomycota"     
+#> ASV71   "Basidiomycota"     
+#> ASV83   "Basidiomycota"     
+#> ASV154  "Basidiomycota"     
+#> ASV186  "Basidiomycota"     
+#> ASV193  "Basidiomycota"     
+#> ASV196  "Basidiomycota"     
+#> ASV265  "Basidiomycota"     
+#> ASV314  "Basidiomycota"     
+#> ASV333  "Basidiomycota"     
+#> ASV413  "Basidiomycota"     
+#> ASV444  "Basidiomycota"     
+#> ASV456  "Basidiomycota"     
+#> ASV536  "Basidiomycota"     
+#> ASV560  "Basidiomycota"     
+#> ASV600  "Basidiomycota"     
+#> ASV631  "Basidiomycota"     
+#> ASV640  "Basidiomycota"     
+#> ASV734  "Basidiomycota"     
+#> ASV739  "Basidiomycota"     
+#> ASV811  "Basidiomycota"     
+#> ASV922  "Basidiomycota"     
+#> ASV945  "Basidiomycota"     
+#> ASV950  "Basidiomycota"     
+#> ASV994  "Basidiomycota"     
+#> ASV999  "Basidiomycota"     
+#> ASV1032 "Basidiomycota"     
+#> ASV1042 "Basidiomycota"     
+#> ASV1079 "Basidiomycota"     
+#> ASV1121 "Basidiomycota"     
+#> ASV1231 "Basidiomycota"     
+#> ASV1321 "Basidiomycota"     
+#> ASV1322 "Basidiomycota"     
+#> ASV1323 "Basidiomycota"     
+#> ASV1356 "Basidiomycota"     
+#> ASV1437 "Basidiomycota"     
+#> ASV1460 "Basidiomycota"     
+#> ASV1478 "Basidiomycota"     
+#> ASV1484 "Basidiomycota"     
+#> ASV1485 "Basidiomycota"     
+#> ASV1507 "Basidiomycota"     
+#> ASV1517 "Basidiomycota"     
+#> ASV1544 "Basidiomycota"     
+#> ASV1576 "Basidiomycota"     
+#> ASV1591 "Basidiomycota"     
+#> ASV1611 "Basidiomycota"     
+#> ASV100  "Basidiomycota"     
+#> ASV568  "Basidiomycota"     
+#> ASV761  "Basidiomycota"     
+#> ASV960  "Basidiomycota"     
+#> ASV1266 "Basidiomycota"     
+#> ASV1426 "Basidiomycota"     
+#> ASV1528 "Basidiomycota"     
+#> ASV1705 "Monoblepharomycota"
+#> ASV1215 "Mortierellomycota" 
+#> ASV1712 "Mucoromycota"      
+#> ASV1423 "Mucoromycota"      
+#> ASV1539 "Mucoromycota"      
+#> ASV1716 "Rozellomycota"     
+#> ASV1671 "Rozellomycota"     
+#> ASV1673 "Rozellomycota"     
+#> ASV1708 "Rozellomycota"     
 
 # Arrange by total abundance (descending)
 arrange_taxa_pq(data_fungi, dplyr::desc(taxa_sums(.)))
@@ -1052,56 +1472,1429 @@ arrange_taxa_pq(data_fungi, dplyr::desc(taxa_sums(.)))
 #> tax_table()   Taxonomy Table:    [ 1420 taxa by 12 taxonomic ranks ]
 #> refseq()      DNAStringSet:      [ 1420 reference sequences ]
 
-# order of columns matters
-dfm_arr <- arrange_taxa_pq(data_fungi_mini, Class, Genus)@tax_table[, c("Class", "Genus")]
-arrange_taxa_pq(data_fungi_mini, Genus, Class)@tax_table[, c("Class", "Genus")]
-#> Taxonomy Table:     [45 taxa by 2 taxonomic ranks]:
-#>        Class                Genus              
-#> ASV27  "Agaricomycetes"     "Antrodiella"      
-#> ASV54  "Agaricomycetes"     "Auricularia"      
-#> ASV91  "Agaricomycetes"     "Auricularia"      
-#> ASV29  "Agaricomycetes"     "Basidiodendron"   
-#> ASV48  "Agaricomycetes"     "Elmerina"         
-#> ASV34  "Agaricomycetes"     "Entocybe"         
-#> ASV82  "Agaricomycetes"     "Exidia"           
-#> ASV108 "Agaricomycetes"     "Exidia"           
-#> ASV35  "Agaricomycetes"     "Fomes"            
-#> ASV53  "Agaricomycetes"     "Fomes"            
-#> ASV58  "Agaricomycetes"     "Fomes"            
-#> ASV99  "Agaricomycetes"     "Fomes"            
-#> ASV50  "Agaricomycetes"     "Gloeohypochnicium"
-#> ASV46  "Atractiellomycetes" "Helicogloea"      
-#> ASV104 "Agaricomycetes"     "Hericium"         
-#> ASV59  "Agaricomycetes"     "Hyphoderma"       
-#> ASV61  "Agaricomycetes"     "Hyphoderma"       
-#> ASV101 "Agaricomycetes"     "Marchandiomyces"  
-#> ASV41  "Agaricomycetes"     "Mycena"           
-#> ASV25  "Agaricomycetes"     "Ossicaulis"       
-#> ASV42  "Agaricomycetes"     "Ossicaulis"       
-#> ASV68  "Agaricomycetes"     "Ossicaulis"       
-#> ASV77  "Agaricomycetes"     "Ossicaulis"       
-#> ASV75  "Agaricomycetes"     "Peniophora"       
-#> ASV85  "Agaricomycetes"     "Peniophorella"    
-#> ASV49  "Agaricomycetes"     "Phanerochaete"    
-#> ASV47  "Agaricomycetes"     "Radulomyces"      
-#> ASV32  "Agaricomycetes"     "Sistotrema"       
-#> ASV8   "Agaricomycetes"     "Stereum"          
-#> ASV18  "Agaricomycetes"     "Stereum"          
-#> ASV26  "Agaricomycetes"     "Stereum"          
-#> ASV94  "Agaricomycetes"     "Stereum"          
-#> ASV64  "Agaricomycetes"     "Trametes"         
-#> ASV12  "Agaricomycetes"     "Xylodon"          
-#> ASV67  "Agaricomycetes"     "Xylodon"          
-#> ASV105 "Agaricomycetes"     "Xylodon"          
-#> ASV107 "Agaricomycetes"     "Xylodon"          
-#> ASV7   "Agaricomycetes"     NA                 
-#> ASV62  "Agaricomycetes"     NA                 
-#> ASV63  "Agaricomycetes"     NA                 
-#> ASV72  "Agaricomycetes"     NA                 
-#> ASV93  "Agaricomycetes"     NA                 
-#> ASV71  "Tremellomycetes"    NA                 
-#> ASV83  "Tremellomycetes"    NA                 
-#> ASV100 NA                   NA                 
-
-
+# Order of columns matters
+dfm_arr <- arrange_taxa_pq(data_fungi, Class, Genus)@tax_table[, c("Class", "Genus")]
+arrange_taxa_pq(data_fungi, Genus, Class)@tax_table[, c("Class", "Genus")]
+#> Taxonomy Table:     [1420 taxa by 2 taxonomic ranks]:
+#>         Class                                Genus                
+#> ASV1712 "Mucoromycetes"                      "Absidia"            
+#> ASV710  "Dothideomycetes"                    "Acanthostigma"      
+#> ASV1381 "Dothideomycetes"                    "Acanthostigma"      
+#> ASV546  "Dothideomycetes"                    "Acericola"          
+#> ASV727  "Dothideomycetes"                    "Acericola"          
+#> ASV1178 "Dothideomycetes"                    "Acericola"          
+#> ASV975  "Sordariomycetes"                    "Achroceratosphaeria"
+#> ASV192  "Sordariomycetes"                    "Acremonium"         
+#> ASV1103 "Leotiomycetes"                      "Alatospora"         
+#> ASV468  "Dothideomycetes"                    "Alternaria"         
+#> ASV1109 "Dothideomycetes"                    "Alternaria"         
+#> ASV1629 "Dothideomycetes"                    "Alternaria"         
+#> ASV724  "Lecanoromycetes"                    "Amandinea"          
+#> ASV1213 "Agaricomycetes"                     "Amanita"            
+#> ASV743  "Agaricomycetes"                     "Amaurodon"          
+#> ASV43   "Dothideomycetes"                    "Angustimassarina"   
+#> ASV201  "Dothideomycetes"                    "Angustimassarina"   
+#> ASV507  "Dothideomycetes"                    "Angustimassarina"   
+#> ASV542  "Dothideomycetes"                    "Angustimassarina"   
+#> ASV828  "Dothideomycetes"                    "Angustimassarina"   
+#> ASV897  "Dothideomycetes"                    "Angustimassarina"   
+#> ASV918  "Dothideomycetes"                    "Angustimassarina"   
+#> ASV988  "Dothideomycetes"                    "Angustimassarina"   
+#> ASV998  "Dothideomycetes"                    "Angustimassarina"   
+#> ASV1125 "Dothideomycetes"                    "Angustimassarina"   
+#> ASV1200 "Dothideomycetes"                    "Angustimassarina"   
+#> ASV1384 "Dothideomycetes"                    "Angustimassarina"   
+#> ASV1387 "Dothideomycetes"                    "Angustimassarina"   
+#> ASV1518 "Dothideomycetes"                    "Angustimassarina"   
+#> ASV1574 "Dothideomycetes"                    "Angustimassarina"   
+#> ASV27   "Agaricomycetes"                     "Antrodiella"        
+#> ASV416  "Leotiomycetes"                      "Arachnopeziza"      
+#> ASV1624 "Orbiliomycetes"                     "Arthrobotrys"       
+#> ASV586  "Dothideomycetes"                    "Arthrocatena"       
+#> ASV1373 "Dothideomycetes"                    "Arthrocatena"       
+#> ASV1288 "Leotiomycetes"                      "Articulospora"      
+#> ASV1417 "Pezizomycetes"                      "Ascobolus"          
+#> ASV1144 "Eurotiomycetes"                     "Aspergillus"        
+#> ASV1262 "Eurotiomycetes"                     "Aspergillus"        
+#> ASV1605 "Eurotiomycetes"                     "Aspergillus"        
+#> ASV329  "Dothideomycetes"                    "Aureobasidium"      
+#> ASV54   "Agaricomycetes"                     "Auricularia"        
+#> ASV91   "Agaricomycetes"                     "Auricularia"        
+#> ASV475  "Agaricomycetes"                     "Auricularia"        
+#> ASV1252 "Agaricomycetes"                     "Auricularia"        
+#> ASV1588 "Lecanoromycetes"                    "Bacidia"            
+#> ASV371  "Arthoniomycetes"                    "Bactrospora"        
+#> ASV1407 "Arthoniomycetes"                    "Bactrospora"        
+#> ASV906  "Microbotryomycetes"                 "Bannozyma"          
+#> ASV89   "Sordariomycetes"                    "Barbatosphaeria"    
+#> ASV313  "Sordariomycetes"                    "Barbatosphaeria"    
+#> ASV462  "Sordariomycetes"                    "Barbatosphaeria"    
+#> ASV534  "Sordariomycetes"                    "Barbatosphaeria"    
+#> ASV801  "Sordariomycetes"                    "Barbatosphaeria"    
+#> ASV1101 "Sordariomycetes"                    "Barbatosphaeria"    
+#> ASV1164 "Sordariomycetes"                    "Barbatosphaeria"    
+#> ASV1558 "Sordariomycetes"                    "Barbatosphaeria"    
+#> ASV29   "Agaricomycetes"                     "Basidiodendron"     
+#> ASV294  "Agaricomycetes"                     "Basidiodendron"     
+#> ASV633  "Agaricomycetes"                     "Basidiodendron"     
+#> ASV720  "Agaricomycetes"                     "Basidiodendron"     
+#> ASV1111 "Agaricomycetes"                     "Basidiodendron"     
+#> ASV1665 "Agaricomycetes"                     "Basidiodendron"     
+#> ASV1667 "Agaricomycetes"                     "Basidiodendron"     
+#> ASV1616 "Agaricostilbomycetes"               "Bensingtonia"       
+#> ASV1155 "Dothideomycetes"                    "Biatriospora"       
+#> ASV33   "Sordariomycetes"                    "Biscogniauxia"      
+#> ASV78   "Sordariomycetes"                    "Biscogniauxia"      
+#> ASV652  "Sordariomycetes"                    "Biscogniauxia"      
+#> ASV941  "Sordariomycetes"                    "Biscogniauxia"      
+#> ASV1291 "Sordariomycetes"                    "Biscogniauxia"      
+#> ASV1314 "Sordariomycetes"                    "Biscogniauxia"      
+#> ASV1510 "Sordariomycetes"                    "Biscogniauxia"      
+#> ASV1625 "Sordariomycetes"                    "Biscogniauxia"      
+#> ASV55   "Leotiomycetes"                      "Bisporella"         
+#> ASV564  "Leotiomycetes"                      "Bisporella"         
+#> ASV1691 "Saccharomycetes"                    "Blastobotrys"       
+#> ASV258  "Agaricomycetes"                     "Botryobasidium"     
+#> ASV943  "Agaricomycetes"                     "Botryobasidium"     
+#> ASV1548 "Sordariomycetes"                    "Brachysporium"      
+#> ASV1593 "Sordariomycetes"                    "Brachysporium"      
+#> ASV151  "Dothideomycetes"                    "Brunneofusispora"   
+#> ASV355  "Dothideomycetes"                    "Brunneofusispora"   
+#> ASV837  "Dothideomycetes"                    "Brunneofusispora"   
+#> ASV1143 "Dothideomycetes"                    "Brunneofusispora"   
+#> ASV1562 "Cystobasidiomycetes"                "Buckleyzyma"        
+#> ASV1209 "Lecanoromycetes"                    "Buellia"            
+#> ASV223  "Agaricomycetes"                     "Burgoa"             
+#> ASV116  "Leotiomycetes"                      "Cadophora"          
+#> ASV414  "Leotiomycetes"                      "Cadophora"          
+#> ASV595  "Leotiomycetes"                      "Cadophora"          
+#> ASV1107 "Leotiomycetes"                      "Cadophora"          
+#> ASV1502 "Leotiomycetes"                      "Cadophora"          
+#> ASV199  "Dacrymycetes"                       "Calocera"           
+#> ASV216  "Dacrymycetes"                       "Calocera"           
+#> ASV310  "Dacrymycetes"                       "Calocera"           
+#> ASV543  "Dacrymycetes"                       "Calocera"           
+#> ASV686  "Dacrymycetes"                       "Calocera"           
+#> ASV692  "Dacrymycetes"                       "Calocera"           
+#> ASV729  "Dacrymycetes"                       "Calocera"           
+#> ASV1036 "Dacrymycetes"                       "Calocera"           
+#> ASV1534 "Dacrymycetes"                       "Calocera"           
+#> ASV1697 "Lecanoromycetes"                    "Caloplaca"          
+#> ASV92   "Leotiomycetes"                      "Calycina"           
+#> ASV148  "Leotiomycetes"                      "Calycina"           
+#> ASV559  "Leotiomycetes"                      "Calycina"           
+#> ASV834  "Leotiomycetes"                      "Calycina"           
+#> ASV836  "Leotiomycetes"                      "Calycina"           
+#> ASV1300 "Leotiomycetes"                      "Calycina"           
+#> ASV198  "Lecanoromycetes"                    "Candelaria"         
+#> ASV1166 "Lecanoromycetes"                    "Candelaria"         
+#> ASV360  "Lecanoromycetes"                    "Candelariella"      
+#> ASV861  "Lecanoromycetes"                    "Candelariella"      
+#> ASV1190 "Lecanoromycetes"                    "Candelariella"      
+#> ASV1469 "Lecanoromycetes"                    "Candelariella"      
+#> ASV1642 "Lecanoromycetes"                    "Candelariella"      
+#> ASV489  "Saccharomycetes"                    "Candida"            
+#> ASV762  "Saccharomycetes"                    "Candida"            
+#> ASV1230 "Saccharomycetes"                    "Candida"            
+#> ASV187  "Eurotiomycetes"                     "Capronia"           
+#> ASV217  "Eurotiomycetes"                     "Capronia"           
+#> ASV378  "Eurotiomycetes"                     "Capronia"           
+#> ASV438  "Eurotiomycetes"                     "Capronia"           
+#> ASV688  "Eurotiomycetes"                     "Capronia"           
+#> ASV884  "Eurotiomycetes"                     "Capronia"           
+#> ASV904  "Eurotiomycetes"                     "Capronia"           
+#> ASV1002 "Eurotiomycetes"                     "Capronia"           
+#> ASV1418 "Eurotiomycetes"                     "Capronia"           
+#> ASV1461 "Eurotiomycetes"                     "Capronia"           
+#> ASV1321 "Tremellomycetes"                    "Carcinomyces"       
+#> ASV1437 "Tremellomycetes"                    "Carcinomyces"       
+#> ASV539  "Dothideomycetes"                    "Catenulostroma"     
+#> ASV1128 "Dothideomycetes"                    "Catenulostroma"     
+#> ASV1251 "Dothideomycetes"                    "Catenulostroma"     
+#> ASV1336 "Dothideomycetes"                    "Catenulostroma"     
+#> ASV1480 "Dothideomycetes"                    "Catenulostroma"     
+#> ASV1503 "Dothideomycetes"                    "Catenulostroma"     
+#> ASV1536 "Dothideomycetes"                    "Catenulostroma"     
+#> ASV1575 "Dothideomycetes"                    "Catenulostroma"     
+#> ASV1459 "Lecanoromycetes"                    "Catillaria"         
+#> ASV1097 "Dothideomycetes"                    "Catinella"          
+#> ASV1583 "Sordariomycetes"                    "Cephalotrichiella"  
+#> ASV1537 "Agaricomycetes"                     "Ceriporia"          
+#> ASV311  "Agaricomycetes"                     "Ceriporiopsis"      
+#> ASV685  "Agaricomycetes"                     "Ceriporiopsis"      
+#> ASV135  "Agaricomycetes"                     "Cerrena"            
+#> ASV150  "Agaricomycetes"                     "Cerrena"            
+#> ASV138  "Agaricomycetes"                     "Chaetospermum"      
+#> ASV226  "Agaricomycetes"                     "Chaetospermum"      
+#> ASV386  "Agaricomycetes"                     "Chaetospermum"      
+#> ASV417  "Agaricomycetes"                     "Chaetospermum"      
+#> ASV487  "Agaricomycetes"                     "Chaetospermum"      
+#> ASV869  "Agaricomycetes"                     "Chaetospermum"      
+#> ASV511  "Sordariomycetes"                    "Chaetosphaeria"     
+#> ASV584  "Sordariomycetes"                    "Chaetosphaeria"     
+#> ASV1610 "Sordariomycetes"                    "Chaetosphaeria"     
+#> ASV498  "Sordariomycetes"                    "Chloridium"         
+#> ASV713  "Sordariomycetes"                    "Chloridium"         
+#> ASV1312 "Sordariomycetes"                    "Chloridium"         
+#> ASV1661 "Sordariomycetes"                    "Chloridium"         
+#> ASV152  "Leotiomycetes"                      "Chlorociboria"      
+#> ASV651  "Leotiomycetes"                      "Chlorociboria"      
+#> ASV393  "Agaricomycetes"                     "Chondrostereum"     
+#> ASV767  "Agaricomycetes"                     "Chondrostereum"     
+#> ASV654  "Sordariomycetes"                    "Ciliciopodium"      
+#> ASV1622 "Pezizomycotina_cls_Incertae_sedis"  "Ciliophora"         
+#> ASV1670 "Pezizomycotina_cls_Incertae_sedis"  "Ciliophora"         
+#> ASV1710 "Pezizomycotina_cls_Incertae_sedis"  "Ciliophora"         
+#> ASV1719 "Pezizomycotina_cls_Incertae_sedis"  "Ciliophora"         
+#> ASV96   "Dothideomycetes"                    "Cladosporium"       
+#> ASV113  "Dothideomycetes"                    "Cladosporium"       
+#> ASV415  "Dothideomycetes"                    "Cladosporium"       
+#> ASV1010 "Dothideomycetes"                    "Cladosporium"       
+#> ASV1022 "Dothideomycetes"                    "Cladosporium"       
+#> ASV1037 "Dothideomycetes"                    "Cladosporium"       
+#> ASV1067 "Dothideomycetes"                    "Cladosporium"       
+#> ASV1117 "Dothideomycetes"                    "Cladosporium"       
+#> ASV1127 "Dothideomycetes"                    "Cladosporium"       
+#> ASV1186 "Dothideomycetes"                    "Cladosporium"       
+#> ASV1243 "Dothideomycetes"                    "Cladosporium"       
+#> ASV1287 "Dothideomycetes"                    "Cladosporium"       
+#> ASV1368 "Dothideomycetes"                    "Cladosporium"       
+#> ASV1379 "Dothideomycetes"                    "Cladosporium"       
+#> ASV1451 "Dothideomycetes"                    "Cladosporium"       
+#> ASV1532 "Dothideomycetes"                    "Cladosporium"       
+#> ASV1569 "Dothideomycetes"                    "Cladosporium"       
+#> ASV1602 "Dothideomycetes"                    "Cladosporium"       
+#> ASV144  "Agaricomycetes"                     "Clitopilus"         
+#> ASV384  "Agaricomycetes"                     "Clitopilus"         
+#> ASV616  "Agaricomycetes"                     "Clitopilus"         
+#> ASV895  "Sordariomycetes"                    "Clonostachys"       
+#> ASV219  "Microbotryomycetes"                 "Colacogloea"        
+#> ASV898  "Microbotryomycetes"                 "Colacogloea"        
+#> ASV1649 "Microbotryomycetes"                 "Colacogloea"        
+#> ASV574  "Sordariomycetes"                    "Colletotrichum"     
+#> ASV696  "Leotiomycetes"                      "Collophora"         
+#> ASV90   "Sordariomycetes"                    "Coniochaeta"        
+#> ASV300  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV344  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV347  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV351  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV399  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV424  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV467  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV472  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV492  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV521  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV582  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV661  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV670  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV704  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV723  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV728  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV768  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV799  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV805  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV827  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV844  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV878  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV916  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV928  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV958  "Sordariomycetes"                    "Coniochaeta"        
+#> ASV1021 "Sordariomycetes"                    "Coniochaeta"        
+#> ASV1057 "Sordariomycetes"                    "Coniochaeta"        
+#> ASV1172 "Sordariomycetes"                    "Coniochaeta"        
+#> ASV1219 "Sordariomycetes"                    "Coniochaeta"        
+#> ASV1282 "Sordariomycetes"                    "Coniochaeta"        
+#> ASV1293 "Sordariomycetes"                    "Coniochaeta"        
+#> ASV1361 "Sordariomycetes"                    "Coniochaeta"        
+#> ASV1362 "Sordariomycetes"                    "Coniochaeta"        
+#> ASV1498 "Sordariomycetes"                    "Coniochaeta"        
+#> ASV1531 "Sordariomycetes"                    "Coniochaeta"        
+#> ASV1664 "Sordariomycetes"                    "Coniochaeta"        
+#> ASV1687 "Sordariomycetes"                    "Coniochaeta"        
+#> ASV823  "Dothideomycetes"                    "Coniothyrium"       
+#> ASV1340 "Agaricomycetes"                     "Coprinellus"        
+#> ASV1333 "Agaricomycetes"                     "Coprinopsis"        
+#> ASV1135 "Agaricomycetes"                     "Corticium"          
+#> ASV176  "Sordariomycetes"                    "Cryptendoxyla"      
+#> ASV1059 "Sordariomycetes"                    "Cryptendoxyla"      
+#> ASV1404 "Sordariomycetes"                    "Cryptendoxyla"      
+#> ASV341  "Dothideomycetes"                    "Cryptocoryneum"     
+#> ASV419  "Dothideomycetes"                    "Cryptocoryneum"     
+#> ASV614  "Dothideomycetes"                    "Cryptocoryneum"     
+#> ASV667  "Dothideomycetes"                    "Cryptocoryneum"     
+#> ASV733  "Dothideomycetes"                    "Cryptocoryneum"     
+#> ASV1055 "Dothideomycetes"                    "Cryptocoryneum"     
+#> ASV357  "Lecanoromycetes"                    "Cryptodiscus"       
+#> ASV627  "Lecanoromycetes"                    "Cryptodiscus"       
+#> ASV643  "Lecanoromycetes"                    "Cryptodiscus"       
+#> ASV831  "Lecanoromycetes"                    "Cryptodiscus"       
+#> ASV1486 "Lecanoromycetes"                    "Cryptodiscus"       
+#> ASV1543 "Lecanoromycetes"                    "Cryptodiscus"       
+#> ASV588  "Sordariomycetes"                    "Custingophora"      
+#> ASV1099 "Sordariomycetes"                    "Custingophora"      
+#> ASV1079 "Tremellomycetes"                    "Cutaneotrichosporon"
+#> ASV526  "Eurotiomycetes"                     "Cyphellophora"      
+#> ASV1133 "Eurotiomycetes"                     "Cyphellophora"      
+#> ASV1553 "Eurotiomycetes"                     "Cyphellophora"      
+#> ASV1690 "Agaricostilbomycetes"               "Cystobasidiopsis"   
+#> ASV1205 "Sordariomycetes"                    "Cytospora"          
+#> ASV248  "Dacrymycetes"                       "Dacrymyces"         
+#> ASV377  "Dacrymycetes"                       "Dacrymyces"         
+#> ASV404  "Dacrymycetes"                       "Dacrymyces"         
+#> ASV428  "Dacrymycetes"                       "Dacrymyces"         
+#> ASV440  "Dacrymycetes"                       "Dacrymyces"         
+#> ASV477  "Dacrymycetes"                       "Dacrymyces"         
+#> ASV488  "Dacrymycetes"                       "Dacrymyces"         
+#> ASV545  "Dacrymycetes"                       "Dacrymyces"         
+#> ASV615  "Dacrymycetes"                       "Dacrymyces"         
+#> ASV722  "Dacrymycetes"                       "Dacrymyces"         
+#> ASV730  "Dacrymycetes"                       "Dacrymyces"         
+#> ASV839  "Dacrymycetes"                       "Dacrymyces"         
+#> ASV942  "Dacrymycetes"                       "Dacrymyces"         
+#> ASV1239 "Dacrymycetes"                       "Dacrymyces"         
+#> ASV1066 "Orbiliomycetes"                     "Dactylaria"         
+#> ASV127  "Eurotiomycetes"                     "Dactylospora"       
+#> ASV530  "Eurotiomycetes"                     "Dactylospora"       
+#> ASV946  "Eurotiomycetes"                     "Dactylospora"       
+#> ASV967  "Eurotiomycetes"                     "Dactylospora"       
+#> ASV1069 "Eurotiomycetes"                     "Dactylospora"       
+#> ASV23   "Sordariomycetes"                    "Daldinia"           
+#> ASV1634 "Saccharomycetes"                    "Debaryomyces"       
+#> ASV1096 "Arthoniomycetes"                    "Dendrographa"       
+#> ASV971  "Dothideomycetes"                    "Devriesia"          
+#> ASV1228 "Dothideomycetes"                    "Devriesia"          
+#> ASV318  "Sordariomycetes"                    "Diatrype"           
+#> ASV1253 "Sordariomycetes"                    "Diatrype"           
+#> ASV597  "Saccharomycetes"                    "Diddensiella"       
+#> ASV807  "Saccharomycetes"                    "Diddensiella"       
+#> ASV1497 "Saccharomycetes"                    "Diddensiella"       
+#> ASV1611 "Tremellomycetes"                    "Dioszegia"          
+#> ASV515  "Dothideomycetes"                    "Diplodia"           
+#> ASV270  "Dothideomycetes"                    "Dothiorella"        
+#> ASV816  "Leotiomycetes"                      "Durella"            
+#> ASV48   "Agaricomycetes"                     "Elmerina"           
+#> ASV1589 "Dothideomycetes"                    "Endosporium"        
+#> ASV34   "Agaricomycetes"                     "Entocybe"           
+#> ASV668  "Agaricomycetes"                     "Entocybe"           
+#> ASV1257 "Agaricomycetes"                     "Entocybe"           
+#> ASV2    "Sordariomycetes"                    "Eutypa"             
+#> ASV31   "Sordariomycetes"                    "Eutypa"             
+#> ASV373  "Sordariomycetes"                    "Eutypa"             
+#> ASV375  "Sordariomycetes"                    "Eutypa"             
+#> ASV541  "Sordariomycetes"                    "Eutypa"             
+#> ASV576  "Sordariomycetes"                    "Eutypa"             
+#> ASV604  "Sordariomycetes"                    "Eutypa"             
+#> ASV635  "Sordariomycetes"                    "Eutypa"             
+#> ASV962  "Sordariomycetes"                    "Eutypa"             
+#> ASV1027 "Sordariomycetes"                    "Eutypa"             
+#> ASV1053 "Sordariomycetes"                    "Eutypa"             
+#> ASV1082 "Sordariomycetes"                    "Eutypa"             
+#> ASV1116 "Sordariomycetes"                    "Eutypa"             
+#> ASV1163 "Sordariomycetes"                    "Eutypa"             
+#> ASV1247 "Sordariomycetes"                    "Eutypa"             
+#> ASV1278 "Sordariomycetes"                    "Eutypa"             
+#> ASV1320 "Sordariomycetes"                    "Eutypa"             
+#> ASV1479 "Sordariomycetes"                    "Eutypa"             
+#> ASV1615 "Sordariomycetes"                    "Eutypa"             
+#> ASV1645 "Sordariomycetes"                    "Eutypa"             
+#> ASV1176 "Leotiomycetes"                      "Everhartia"         
+#> ASV82   "Agaricomycetes"                     "Exidia"             
+#> ASV108  "Agaricomycetes"                     "Exidia"             
+#> ASV157  "Agaricomycetes"                     "Exidia"             
+#> ASV662  "Agaricomycetes"                     "Exidia"             
+#> ASV851  "Agaricomycetes"                     "Exidia"             
+#> ASV856  "Agaricomycetes"                     "Exidia"             
+#> ASV1063 "Agaricomycetes"                     "Exidia"             
+#> ASV1452 "Agaricomycetes"                     "Exidia"             
+#> ASV112  "Eurotiomycetes"                     "Exophiala"          
+#> ASV342  "Eurotiomycetes"                     "Exophiala"          
+#> ASV452  "Eurotiomycetes"                     "Exophiala"          
+#> ASV537  "Eurotiomycetes"                     "Exophiala"          
+#> ASV679  "Eurotiomycetes"                     "Exophiala"          
+#> ASV783  "Eurotiomycetes"                     "Exophiala"          
+#> ASV1030 "Eurotiomycetes"                     "Exophiala"          
+#> ASV1073 "Eurotiomycetes"                     "Exophiala"          
+#> ASV1114 "Eurotiomycetes"                     "Exophiala"          
+#> ASV1173 "Eurotiomycetes"                     "Exophiala"          
+#> ASV1217 "Eurotiomycetes"                     "Exophiala"          
+#> ASV1227 "Eurotiomycetes"                     "Exophiala"          
+#> ASV1316 "Eurotiomycetes"                     "Exophiala"          
+#> ASV1317 "Eurotiomycetes"                     "Exophiala"          
+#> ASV1332 "Eurotiomycetes"                     "Exophiala"          
+#> ASV1419 "Eurotiomycetes"                     "Exophiala"          
+#> ASV1521 "Eurotiomycetes"                     "Exophiala"          
+#> ASV1557 "Eurotiomycetes"                     "Exophiala"          
+#> ASV1604 "Eurotiomycetes"                     "Exophiala"          
+#> ASV265  "Tremellomycetes"                    "Fibulobasidium"     
+#> ASV333  "Tremellomycetes"                    "Fibulobasidium"     
+#> ASV1485 "Tremellomycetes"                    "Filobasidium"       
+#> ASV1586 "Lecanoromycetes"                    "Flavoparmelia"      
+#> ASV35   "Agaricomycetes"                     "Fomes"              
+#> ASV53   "Agaricomycetes"                     "Fomes"              
+#> ASV58   "Agaricomycetes"                     "Fomes"              
+#> ASV99   "Agaricomycetes"                     "Fomes"              
+#> ASV205  "Agaricomycetes"                     "Fomes"              
+#> ASV364  "Agaricomycetes"                     "Fomes"              
+#> ASV153  "Agaricomycetes"                     "Fomitiporella"      
+#> ASV332  "Agaricomycetes"                     "Fomitiporella"      
+#> ASV397  "Agaricomycetes"                     "Fomitiporella"      
+#> ASV681  "Agaricomycetes"                     "Fomitiporella"      
+#> ASV1032 "Tremellomycetes"                    "Fonsecazyma"        
+#> ASV847  "Agaricomycetes"                     "Fuscoporia"         
+#> ASV765  "Sordariomycetes"                    "Gibberella"         
+#> ASV1650 "Sordariomycetes"                    "Gibellulopsis"      
+#> ASV50   "Agaricomycetes"                     "Gloeohypochnicium"  
+#> ASV1631 "Leotiomycetes"                      "Gorgomyces"         
+#> ASV273  "Sordariomycetes"                    "Graphium"           
+#> ASV411  "Sordariomycetes"                    "Graphium"           
+#> ASV590  "Sordariomycetes"                    "Graphium"           
+#> ASV862  "Sordariomycetes"                    "Graphium"           
+#> ASV968  "Sordariomycetes"                    "Graphium"           
+#> ASV1513 "Sordariomycetes"                    "Graphium"           
+#> ASV1455 "Agaricomycetes"                     "Gymnopilus"         
+#> ASV744  "Microbotryomycetes"                 "Hamamotoa"          
+#> ASV1141 "Microbotryomycetes"                 "Hamamotoa"          
+#> ASV222  "Saccharomycetes"                    "Hanseniaspora"      
+#> ASV46   "Atractiellomycetes"                 "Helicogloea"        
+#> ASV147  "Atractiellomycetes"                 "Helicogloea"        
+#> ASV162  "Atractiellomycetes"                 "Helicogloea"        
+#> ASV175  "Atractiellomycetes"                 "Helicogloea"        
+#> ASV694  "Atractiellomycetes"                 "Helicogloea"        
+#> ASV752  "Atractiellomycetes"                 "Helicogloea"        
+#> ASV1416 "Dothideomycetes"                    "Helicosporium"      
+#> ASV104  "Agaricomycetes"                     "Hericium"           
+#> ASV124  "Agaricomycetes"                     "Hericium"           
+#> ASV142  "Agaricomycetes"                     "Hericium"           
+#> ASV420  "Agaricomycetes"                     "Hericium"           
+#> ASV163  "Dothideomycetes"                    "Hormonema"          
+#> ASV1603 "Orbiliomycetes"                     "Hyalorbilia"        
+#> ASV254  "Leotiomycetes"                      "Hyaloscypha"        
+#> ASV500  "Leotiomycetes"                      "Hyaloscypha"        
+#> ASV1454 "Leotiomycetes"                      "Hyaloscypha"        
+#> ASV69   "Lecanoromycetes"                    "Hyperphyscia"       
+#> ASV358  "Lecanoromycetes"                    "Hyperphyscia"       
+#> ASV405  "Lecanoromycetes"                    "Hyperphyscia"       
+#> ASV552  "Lecanoromycetes"                    "Hyperphyscia"       
+#> ASV556  "Lecanoromycetes"                    "Hyperphyscia"       
+#> ASV673  "Lecanoromycetes"                    "Hyperphyscia"       
+#> ASV776  "Lecanoromycetes"                    "Hyperphyscia"       
+#> ASV797  "Lecanoromycetes"                    "Hyperphyscia"       
+#> ASV858  "Lecanoromycetes"                    "Hyperphyscia"       
+#> ASV914  "Lecanoromycetes"                    "Hyperphyscia"       
+#> ASV915  "Lecanoromycetes"                    "Hyperphyscia"       
+#> ASV930  "Lecanoromycetes"                    "Hyperphyscia"       
+#> ASV966  "Lecanoromycetes"                    "Hyperphyscia"       
+#> ASV1102 "Lecanoromycetes"                    "Hyperphyscia"       
+#> ASV1290 "Lecanoromycetes"                    "Hyperphyscia"       
+#> ASV59   "Agaricomycetes"                     "Hyphoderma"         
+#> ASV61   "Agaricomycetes"                     "Hyphoderma"         
+#> ASV131  "Agaricomycetes"                     "Hyphoderma"         
+#> ASV1438 "Agaricomycetes"                     "Hyphoderma"         
+#> ASV1495 "Leotiomycetes"                      "Hyphodiscus"        
+#> ASV230  "Sordariomycetes"                    "Hypoxylon"          
+#> ASV52   "Dothideomycetes"                    "Hysterobrevium"     
+#> ASV159  "Dothideomycetes"                    "Hysterobrevium"     
+#> ASV880  "Dothideomycetes"                    "Hysterobrevium"     
+#> ASV1007 "Dothideomycetes"                    "Hysterobrevium"     
+#> ASV1276 "Dothideomycetes"                    "Hysterobrevium"     
+#> ASV1674 "Dothideomycetes"                    "Hysterobrevium"     
+#> ASV1683 "Dothideomycetes"                    "Hysterobrevium"     
+#> ASV208  "Agaricomycetes"                     "Inonotus"           
+#> ASV227  "Agaricomycetes"                     "Inonotus"           
+#> ASV238  "Agaricomycetes"                     "Inonotus"           
+#> ASV285  "Agaricomycetes"                     "Inonotus"           
+#> ASV298  "Agaricomycetes"                     "Inonotus"           
+#> ASV305  "Agaricomycetes"                     "Inonotus"           
+#> ASV458  "Agaricomycetes"                     "Inonotus"           
+#> ASV1561 "Agaricomycetes"                     "Inonotus"           
+#> ASV235  "Sordariomycetes"                    "Jattaea"            
+#> ASV1424 "Sordariomycetes"                    "Jattaea"            
+#> ASV993  "Eurotiomycetes"                     "Knufia"             
+#> ASV1501 "Eurotiomycetes"                     "Knufia"             
+#> ASV194  "Sordariomycetes"                    "Kretzschmaria"      
+#> ASV1577 "Saccharomycetes"                    "Kuraishia"          
+#> ASV1709 "Agaricostilbomycetes"               "Kurtzmanomyces"     
+#> ASV751  "Leotiomycetes"                      "Lachnum"            
+#> ASV1156 "Leotiomycetes"                      "Lachnum"            
+#> ASV1289 "Leotiomycetes"                      "Lachnum"            
+#> ASV1402 "Leotiomycetes"                      "Lachnum"            
+#> ASV264  "Sordariomycetes"                    "Lasionectria"       
+#> ASV348  "Sordariomycetes"                    "Lasionectria"       
+#> ASV523  "Sordariomycetes"                    "Lasiosphaeris"      
+#> ASV129  "Lecanoromycetes"                    "Lecanora"           
+#> ASV505  "Lecanoromycetes"                    "Lecanora"           
+#> ASV529  "Lecanoromycetes"                    "Lecanora"           
+#> ASV641  "Lecanoromycetes"                    "Lecanora"           
+#> ASV660  "Lecanoromycetes"                    "Lecanora"           
+#> ASV674  "Lecanoromycetes"                    "Lecanora"           
+#> ASV784  "Lecanoromycetes"                    "Lecanora"           
+#> ASV899  "Lecanoromycetes"                    "Lecanora"           
+#> ASV995  "Lecanoromycetes"                    "Lecanora"           
+#> ASV1218 "Lecanoromycetes"                    "Lecanora"           
+#> ASV1279 "Lecanoromycetes"                    "Lecanora"           
+#> ASV1319 "Lecanoromycetes"                    "Lecanora"           
+#> ASV1376 "Lecanoromycetes"                    "Lecanora"           
+#> ASV1601 "Lecanoromycetes"                    "Lecanora"           
+#> ASV1630 "Lecanoromycetes"                    "Lecanora"           
+#> ASV1658 "Lecanoromycetes"                    "Lecanora"           
+#> ASV1662 "Lecanoromycetes"                    "Lecanora"           
+#> ASV626  "Lecanoromycetes"                    "Lecidella"          
+#> ASV632  "Lecanoromycetes"                    "Lecidella"          
+#> ASV868  "Lecanoromycetes"                    "Lecidella"          
+#> ASV1004 "Lecanoromycetes"                    "Lecidella"          
+#> ASV1434 "Lecanoromycetes"                    "Lecidella"          
+#> ASV1468 "Lecanoromycetes"                    "Lecidella"          
+#> ASV1523 "Lecanoromycetes"                    "Lecidella"          
+#> ASV146  "Sordariomycetes"                    "Lentomitella"       
+#> ASV233  "Sordariomycetes"                    "Lentomitella"       
+#> ASV408  "Sordariomycetes"                    "Lentomitella"       
+#> ASV540  "Sordariomycetes"                    "Lentomitella"       
+#> ASV599  "Sordariomycetes"                    "Lentomitella"       
+#> ASV607  "Sordariomycetes"                    "Lentomitella"       
+#> ASV658  "Sordariomycetes"                    "Lentomitella"       
+#> ASV677  "Sordariomycetes"                    "Lentomitella"       
+#> ASV781  "Sordariomycetes"                    "Lentomitella"       
+#> ASV935  "Sordariomycetes"                    "Lentomitella"       
+#> ASV990  "Sordariomycetes"                    "Lentomitella"       
+#> ASV1168 "Sordariomycetes"                    "Lentomitella"       
+#> ASV1184 "Sordariomycetes"                    "Lentomitella"       
+#> ASV1366 "Sordariomycetes"                    "Lentomitella"       
+#> ASV1397 "Sordariomycetes"                    "Lentomitella"       
+#> ASV1654 "Sordariomycetes"                    "Lentomitella"       
+#> ASV1147 "Leotiomycetes"                      "Leohumicola"        
+#> ASV1203 "Leotiomycetes"                      "Leohumicola"        
+#> ASV1006 "Dothideomycetes"                    "Libertasomyces"     
+#> ASV139  "Dothideomycetes"                    "Lophiostoma"        
+#> ASV244  "Dothideomycetes"                    "Lophiostoma"        
+#> ASV766  "Dothideomycetes"                    "Lophiostoma"        
+#> ASV1035 "Dothideomycetes"                    "Lophiostoma"        
+#> ASV1268 "Dothideomycetes"                    "Lophiostoma"        
+#> ASV1427 "Dothideomycetes"                    "Lophiostoma"        
+#> ASV70   "Dothideomycetes"                    "Lophiotrema"        
+#> ASV228  "Dothideomycetes"                    "Lophiotrema"        
+#> ASV461  "Dothideomycetes"                    "Lophiotrema"        
+#> ASV742  "Dothideomycetes"                    "Lophiotrema"        
+#> ASV983  "Dothideomycetes"                    "Lophiotrema"        
+#> ASV1115 "Dothideomycetes"                    "Lophiotrema"        
+#> ASV1472 "Dothideomycetes"                    "Lophiotrema"        
+#> ASV1525 "Dothideomycetes"                    "Lophiotrema"        
+#> ASV101  "Agaricomycetes"                     "Marchandiomyces"    
+#> ASV207  "Agaricomycetes"                     "Marchandiomyces"    
+#> ASV122  "Dothideomycetes"                    "Massarina"          
+#> ASV504  "Eurotiomycetes"                     "Melanchlenus"       
+#> ASV693  "Eurotiomycetes"                     "Melanchlenus"       
+#> ASV773  "Eurotiomycetes"                     "Melanchlenus"       
+#> ASV835  "Eurotiomycetes"                     "Melanchlenus"       
+#> ASV860  "Eurotiomycetes"                     "Melanchlenus"       
+#> ASV1409 "Eurotiomycetes"                     "Melanchlenus"       
+#> ASV619  "Agaricomycetes"                     "Merismodes"         
+#> ASV1139 "Sordariomycetes"                    "Microcera"          
+#> ASV1224 "Leotiomycetes"                      "Mollisia"           
+#> ASV533  "Sordariomycetes"                    "Monocillium"        
+#> ASV1215 "Mortierellomycetes"                 "Mortierella"        
+#> ASV1546 "Agaricomycetes"                     "Mucronella"         
+#> ASV1003 "Dothideomycetes"                    "Murilentithecium"   
+#> ASV41   "Agaricomycetes"                     "Mycena"             
+#> ASV247  "Agaricomycetes"                     "Mycena"             
+#> ASV251  "Agaricomycetes"                     "Mycena"             
+#> ASV274  "Agaricomycetes"                     "Mycena"             
+#> ASV394  "Agaricomycetes"                     "Mycena"             
+#> ASV554  "Agaricomycetes"                     "Mycena"             
+#> ASV672  "Agaricomycetes"                     "Mycena"             
+#> ASV682  "Agaricomycetes"                     "Mycena"             
+#> ASV716  "Agaricomycetes"                     "Mycena"             
+#> ASV863  "Agaricomycetes"                     "Mycena"             
+#> ASV1045 "Agaricomycetes"                     "Mycena"             
+#> ASV1093 "Agaricomycetes"                     "Mycena"             
+#> ASV1377 "Agaricomycetes"                     "Mycenella"          
+#> ASV60   "Dothideomycetes"                    "Mycosphaerella"     
+#> ASV496  "Dothideomycetes"                    "Mycosphaerella"     
+#> ASV608  "Dothideomycetes"                    "Mycosphaerella"     
+#> ASV796  "Dothideomycetes"                    "Mycosphaerella"     
+#> ASV984  "Dothideomycetes"                    "Mycosphaerella"     
+#> ASV1024 "Dothideomycetes"                    "Mycosphaerella"     
+#> ASV1305 "Dothideomycetes"                    "Mycosphaerella"     
+#> ASV1410 "Dothideomycetes"                    "Myriangium"         
+#> ASV821  "Agaricomycetes"                     "Myxarium"           
+#> ASV320  "Saccharomycetes"                    "Myxozyma"           
+#> ASV739  "Tremellomycetes"                    "Naganishia"         
+#> ASV87   "Sordariomycetes"                    "Natantiella"        
+#> ASV215  "Sordariomycetes"                    "Natantiella"        
+#> ASV497  "Sordariomycetes"                    "Natantiella"        
+#> ASV1229 "Sordariomycetes"                    "Natantiella"        
+#> ASV1280 "Sordariomycetes"                    "Natantiella"        
+#> ASV183  "Sordariomycetes"                    "Nemania"            
+#> ASV190  "Sordariomycetes"                    "Nemania"            
+#> ASV687  "Sordariomycetes"                    "Nemania"            
+#> ASV1294 "Sordariomycetes"                    "Nemania"            
+#> ASV56   "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV80   "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV164  "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV182  "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV211  "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV239  "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV309  "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV395  "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV453  "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV502  "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV544  "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV561  "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV676  "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV707  "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV937  "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV949  "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV985  "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV1029 "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV1046 "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV1110 "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV1124 "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV1137 "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV1158 "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV1159 "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV1492 "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV1496 "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV1620 "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV1639 "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV1689 "Dothideomycetes"                    "Neocucurbitaria"    
+#> ASV697  "Dothideomycetes"                    "Neohendersonia"     
+#> ASV242  "Lecanoromycetes"                    "Ochrolechia"        
+#> ASV1167 "Lecanoromycetes"                    "Ochrolechia"        
+#> ASV346  "Leotiomycetes"                      "Oidiodendron"       
+#> ASV592  "Leotiomycetes"                      "Oidiodendron"       
+#> ASV618  "Leotiomycetes"                      "Oidiodendron"       
+#> ASV953  "Leotiomycetes"                      "Oidiodendron"       
+#> ASV1152 "Leotiomycetes"                      "Oidiodendron"       
+#> ASV1265 "Leotiomycetes"                      "Oidiodendron"       
+#> ASV1612 "Leotiomycetes"                      "Oidiodendron"       
+#> ASV1663 "Leotiomycetes"                      "Oidiodendron"       
+#> ASV524  "Agaricomycetes"                     "Omphalotus"         
+#> ASV987  "Agaricomycetes"                     "Omphalotus"         
+#> ASV1134 "Agaricomycetes"                     "Omphalotus"         
+#> ASV286  "Orbiliomycetes"                     "Orbilia"            
+#> ASV359  "Orbiliomycetes"                     "Orbilia"            
+#> ASV464  "Orbiliomycetes"                     "Orbilia"            
+#> ASV548  "Orbiliomycetes"                     "Orbilia"            
+#> ASV577  "Orbiliomycetes"                     "Orbilia"            
+#> ASV629  "Orbiliomycetes"                     "Orbilia"            
+#> ASV653  "Orbiliomycetes"                     "Orbilia"            
+#> ASV665  "Orbiliomycetes"                     "Orbilia"            
+#> ASV699  "Orbiliomycetes"                     "Orbilia"            
+#> ASV829  "Orbiliomycetes"                     "Orbilia"            
+#> ASV842  "Orbiliomycetes"                     "Orbilia"            
+#> ASV870  "Orbiliomycetes"                     "Orbilia"            
+#> ASV919  "Orbiliomycetes"                     "Orbilia"            
+#> ASV1315 "Orbiliomycetes"                     "Orbilia"            
+#> ASV1334 "Orbiliomycetes"                     "Orbilia"            
+#> ASV1466 "Orbiliomycetes"                     "Orbilia"            
+#> ASV1545 "Orbiliomycetes"                     "Orbilia"            
+#> ASV1550 "Orbiliomycetes"                     "Orbilia"            
+#> ASV1585 "Orbiliomycetes"                     "Orbilia"            
+#> ASV1644 "Orbiliomycetes"                     "Orbilia"            
+#> ASV1666 "Orbiliomycetes"                     "Orbilia"            
+#> ASV1677 "Orbiliomycetes"                     "Orbilia"            
+#> ASV25   "Agaricomycetes"                     "Ossicaulis"         
+#> ASV42   "Agaricomycetes"                     "Ossicaulis"         
+#> ASV68   "Agaricomycetes"                     "Ossicaulis"         
+#> ASV77   "Agaricomycetes"                     "Ossicaulis"         
+#> ASV1275 "Dothideomycetes"                    "Paraconiothyrium"   
+#> ASV1425 "Dothideomycetes"                    "Paraconiothyrium"   
+#> ASV785  "Dothideomycetes"                    "Parafenestella"     
+#> ASV927  "Dothideomycetes"                    "Parafenestella"     
+#> ASV790  "Dothideomycetes"                    "Paraphoma"          
+#> ASV1023 "Dothideomycetes"                    "Paraphoma"          
+#> ASV431  "Lecanoromycetes"                    "Parmelina"          
+#> ASV563  "Lecanoromycetes"                    "Parmelina"          
+#> ASV617  "Lecanoromycetes"                    "Parmelina"          
+#> ASV1428 "Lecanoromycetes"                    "Parmelina"          
+#> ASV81   "Eurotiomycetes"                     "Penicillium"        
+#> ASV149  "Eurotiomycetes"                     "Penicillium"        
+#> ASV189  "Eurotiomycetes"                     "Penicillium"        
+#> ASV214  "Eurotiomycetes"                     "Penicillium"        
+#> ASV272  "Eurotiomycetes"                     "Penicillium"        
+#> ASV339  "Eurotiomycetes"                     "Penicillium"        
+#> ASV383  "Eurotiomycetes"                     "Penicillium"        
+#> ASV538  "Eurotiomycetes"                     "Penicillium"        
+#> ASV587  "Eurotiomycetes"                     "Penicillium"        
+#> ASV702  "Eurotiomycetes"                     "Penicillium"        
+#> ASV712  "Eurotiomycetes"                     "Penicillium"        
+#> ASV738  "Eurotiomycetes"                     "Penicillium"        
+#> ASV758  "Eurotiomycetes"                     "Penicillium"        
+#> ASV764  "Eurotiomycetes"                     "Penicillium"        
+#> ASV795  "Eurotiomycetes"                     "Penicillium"        
+#> ASV841  "Eurotiomycetes"                     "Penicillium"        
+#> ASV959  "Eurotiomycetes"                     "Penicillium"        
+#> ASV1052 "Eurotiomycetes"                     "Penicillium"        
+#> ASV1058 "Eurotiomycetes"                     "Penicillium"        
+#> ASV1100 "Eurotiomycetes"                     "Penicillium"        
+#> ASV1151 "Eurotiomycetes"                     "Penicillium"        
+#> ASV1161 "Eurotiomycetes"                     "Penicillium"        
+#> ASV1181 "Eurotiomycetes"                     "Penicillium"        
+#> ASV1238 "Eurotiomycetes"                     "Penicillium"        
+#> ASV1267 "Eurotiomycetes"                     "Penicillium"        
+#> ASV1304 "Eurotiomycetes"                     "Penicillium"        
+#> ASV1338 "Eurotiomycetes"                     "Penicillium"        
+#> ASV1367 "Eurotiomycetes"                     "Penicillium"        
+#> ASV1406 "Eurotiomycetes"                     "Penicillium"        
+#> ASV1563 "Eurotiomycetes"                     "Penicillium"        
+#> ASV1684 "Eurotiomycetes"                     "Penicillium"        
+#> ASV75   "Agaricomycetes"                     "Peniophora"         
+#> ASV280  "Agaricomycetes"                     "Peniophora"         
+#> ASV284  "Agaricomycetes"                     "Peniophora"         
+#> ASV446  "Agaricomycetes"                     "Peniophora"         
+#> ASV1516 "Agaricomycetes"                     "Peniophora"         
+#> ASV85   "Agaricomycetes"                     "Peniophorella"      
+#> ASV483  "Agaricomycetes"                     "Peniophorella"      
+#> ASV1375 "Agaricomycetes"                     "Peniophorella"      
+#> ASV28   "Lecanoromycetes"                    "Pertusaria"         
+#> ASV84   "Lecanoromycetes"                    "Pertusaria"         
+#> ASV145  "Lecanoromycetes"                    "Pertusaria"         
+#> ASV210  "Lecanoromycetes"                    "Pertusaria"         
+#> ASV367  "Lecanoromycetes"                    "Pertusaria"         
+#> ASV433  "Lecanoromycetes"                    "Pertusaria"         
+#> ASV491  "Lecanoromycetes"                    "Pertusaria"         
+#> ASV772  "Lecanoromycetes"                    "Pertusaria"         
+#> ASV814  "Lecanoromycetes"                    "Pertusaria"         
+#> ASV926  "Lecanoromycetes"                    "Pertusaria"         
+#> ASV1020 "Lecanoromycetes"                    "Pertusaria"         
+#> ASV1118 "Lecanoromycetes"                    "Pertusaria"         
+#> ASV1223 "Lecanoromycetes"                    "Pertusaria"         
+#> ASV1259 "Lecanoromycetes"                    "Pertusaria"         
+#> ASV1365 "Lecanoromycetes"                    "Pertusaria"         
+#> ASV1369 "Lecanoromycetes"                    "Pertusaria"         
+#> ASV1396 "Lecanoromycetes"                    "Pertusaria"         
+#> ASV1493 "Lecanoromycetes"                    "Pertusaria"         
+#> ASV1565 "Lecanoromycetes"                    "Pertusaria"         
+#> ASV528  "Pezizomycetes"                      "Peziza"             
+#> ASV579  "Leotiomycetes"                      "Pezoloma"           
+#> ASV132  "Sordariomycetes"                    "Phaeoacremonium"    
+#> ASV172  "Sordariomycetes"                    "Phaeoacremonium"    
+#> ASV714  "Sordariomycetes"                    "Phaeoacremonium"    
+#> ASV737  "Sordariomycetes"                    "Phaeoacremonium"    
+#> ASV892  "Sordariomycetes"                    "Phaeoacremonium"    
+#> ASV920  "Sordariomycetes"                    "Phaeoacremonium"    
+#> ASV963  "Sordariomycetes"                    "Phaeoacremonium"    
+#> ASV980  "Sordariomycetes"                    "Phaeoacremonium"    
+#> ASV1258 "Sordariomycetes"                    "Phaeoacremonium"    
+#> ASV1371 "Sordariomycetes"                    "Phaeoacremonium"    
+#> ASV1372 "Sordariomycetes"                    "Phaeoacremonium"    
+#> ASV402  "Arthoniomycetes"                    "Phaeococcomyces"    
+#> ASV969  "Arthoniomycetes"                    "Phaeococcomyces"    
+#> ASV98   "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV197  "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV237  "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV292  "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV302  "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV368  "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV376  "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV443  "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV567  "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV695  "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV700  "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV732  "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV782  "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV855  "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV961  "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV1085 "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV1108 "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV1175 "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV1628 "Sordariomycetes"                    "Phaeoisaria"        
+#> ASV221  "Lecanoromycetes"                    "Phaeophyscia"       
+#> ASV832  "Lecanoromycetes"                    "Phaeophyscia"       
+#> ASV186  "Tremellomycetes"                    "Phaeotremella"      
+#> ASV922  "Tremellomycetes"                    "Phaeotremella"      
+#> ASV1460 "Tremellomycetes"                    "Phaeotremella"      
+#> ASV1636 "Agaricomycetes"                     "Phallus"            
+#> ASV49   "Agaricomycetes"                     "Phanerochaete"      
+#> ASV1462 "Sordariomycetes"                    "Phialemoniopsis"    
+#> ASV288  "Sordariomycetes"                    "Phialemonium"       
+#> ASV38   "Leotiomycetes"                      "Phialocephala"      
+#> ASV466  "Leotiomycetes"                      "Phialocephala"      
+#> ASV715  "Leotiomycetes"                      "Phialocephala"      
+#> ASV817  "Leotiomycetes"                      "Phialocephala"      
+#> ASV853  "Leotiomycetes"                      "Phialocephala"      
+#> ASV976  "Leotiomycetes"                      "Phialocephala"      
+#> ASV989  "Leotiomycetes"                      "Phialocephala"      
+#> ASV1337 "Leotiomycetes"                      "Phialocephala"      
+#> ASV1657 "Leotiomycetes"                      "Phialocephala"      
+#> ASV1370 "Eurotiomycetes"                     "Phialophora"        
+#> ASV171  "Lecanoromycetes"                    "Phlyctis"           
+#> ASV748  "Lecanoromycetes"                    "Phlyctis"           
+#> ASV753  "Lecanoromycetes"                    "Phlyctis"           
+#> ASV771  "Lecanoromycetes"                    "Phlyctis"           
+#> ASV1311 "Lecanoromycetes"                    "Phlyctis"           
+#> ASV1421 "Lecanoromycetes"                    "Phlyctis"           
+#> ASV569  "Dothideomycetes"                    "Phoma"              
+#> ASV133  "Lecanoromycetes"                    "Physcia"            
+#> ASV279  "Lecanoromycetes"                    "Physcia"            
+#> ASV787  "Lecanoromycetes"                    "Physcia"            
+#> ASV932  "Lecanoromycetes"                    "Physcia"            
+#> ASV1726 "Saccharomycetes"                    "Pichia"             
+#> ASV945  "Tremellomycetes"                    "Piskurozyma"        
+#> ASV1591 "Tremellomycetes"                    "Piskurozyma"        
+#> ASV1526 "Dothideomycetes"                    "Platystomum"        
+#> ASV605  "Dothideomycetes"                    "Plenodomus"         
+#> ASV891  "Dothideomycetes"                    "Plenodomus"         
+#> ASV1295 "Dothideomycetes"                    "Plenodomus"         
+#> ASV327  "Dothideomycetes"                    "Pleomonodictys"     
+#> ASV591  "Dothideomycetes"                    "Pleomonodictys"     
+#> ASV792  "Dothideomycetes"                    "Pleomonodictys"     
+#> ASV883  "Dothideomycetes"                    "Pleomonodictys"     
+#> ASV1401 "Dothideomycetes"                    "Pleomonodictys"     
+#> ASV1448 "Dothideomycetes"                    "Pleomonodictys"     
+#> ASV454  "Sordariomycetes"                    "Pleurothecium"      
+#> ASV566  "Sordariomycetes"                    "Pleurothecium"      
+#> ASV1146 "Sordariomycetes"                    "Pleurothecium"      
+#> ASV1179 "Sordariomycetes"                    "Pleurothecium"      
+#> ASV1198 "Sordariomycetes"                    "Pleurothecium"      
+#> ASV1609 "Sordariomycetes"                    "Pleurothecium"      
+#> ASV1632 "Sordariomycetes"                    "Pleurothecium"      
+#> ASV1681 "Sordariomycetes"                    "Pleurothecium"      
+#> ASV297  "Agaricomycetes"                     "Pleurotus"          
+#> ASV179  "Agaricomycetes"                     "Pluteus"            
+#> ASV877  "Agaricomycetes"                     "Pluteus"            
+#> ASV1584 "Lecanoromycetes"                    "Porina"             
+#> ASV917  "Sordariomycetes"                    "Porosphaerella"     
+#> ASV1592 "Saccharomycetes"                    "Priceomyces"        
+#> ASV1038 "Agaricomycetes"                     "Protomerulius"      
+#> ASV224  "Sordariomycetes"                    "Pseudodiplococcium" 
+#> ASV865  "Sordariomycetes"                    "Pseudodiplococcium" 
+#> ASV874  "Sordariomycetes"                    "Pseudodiplococcium" 
+#> ASV596  "Leotiomycetes"                      "Pseudogymnoascus"   
+#> ASV1420 "Lecanoromycetes"                    "Punctelia"          
+#> ASV981  "Dothideomycetes"                    "Pyrenochaeta"       
+#> ASV1390 "Dothideomycetes"                    "Pyrenochaeta"       
+#> ASV1171 "Dothideomycetes"                    "Rachicladosporium"  
+#> ASV47   "Agaricomycetes"                     "Radulomyces"        
+#> ASV1180 "Lecanoromycetes"                    "Ramalina"           
+#> ASV422  "Agaricomycetes"                     "Resupinatus"        
+#> ASV549  "Agaricomycetes"                     "Resupinatus"        
+#> ASV1092 "Agaricomycetes"                     "Resupinatus"        
+#> ASV1212 "Agaricomycetes"                     "Resupinatus"        
+#> ASV1303 "Agaricomycetes"                     "Resupinatus"        
+#> ASV1189 "Orbiliomycetes"                     "Retiarius"          
+#> ASV1500 "Orbiliomycetes"                     "Retiarius"          
+#> ASV1656 "Orbiliomycetes"                     "Retiarius"          
+#> ASV255  "Sordariomycetes"                    "Rhamphoria"         
+#> ASV854  "Sordariomycetes"                    "Rhamphoria"         
+#> ASV1388 "Sordariomycetes"                    "Rhamphoria"         
+#> ASV463  "Eurotiomycetes"                     "Rhinocladiella"     
+#> ASV593  "Eurotiomycetes"                     "Rhinocladiella"     
+#> ASV598  "Eurotiomycetes"                     "Rhinocladiella"     
+#> ASV900  "Eurotiomycetes"                     "Rhinocladiella"     
+#> ASV1005 "Eurotiomycetes"                     "Rhinocladiella"     
+#> ASV1199 "Eurotiomycetes"                     "Rhinocladiella"     
+#> ASV1214 "Eurotiomycetes"                     "Rhinocladiella"     
+#> ASV1297 "Eurotiomycetes"                     "Rhinocladiella"     
+#> ASV1477 "Eurotiomycetes"                     "Rhinocladiella"     
+#> ASV1560 "Eurotiomycetes"                     "Rhinocladiella"     
+#> ASV570  "Sordariomycetes"                    "Rhodoveronaea"      
+#> ASV1272 "Eurotiomycetes"                     "Rhopalophora"       
+#> ASV1627 "Eurotiomycetes"                     "Rhopalophora"       
+#> ASV1478 "Tremellomycetes"                    "Rhynchogastrema"    
+#> ASV1705 "Sanchytriomycetes"                  "Sanchytrium"        
+#> ASV19   "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV24   "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV178  "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV266  "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV334  "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV594  "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV731  "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV736  "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV746  "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV756  "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV859  "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV979  "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV986  "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV1011 "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV1078 "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV1131 "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV1271 "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV1467 "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV1471 "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV1635 "Saccharomycetes"                    "Scheffersomyces"    
+#> ASV312  "Sordariomycetes"                    "Schizothecium"      
+#> ASV380  "Sordariomycetes"                    "Schizothecium"      
+#> ASV1216 "Sordariomycetes"                    "Schizothecium"      
+#> ASV1281 "Saccharomycetes"                    "Schwanniomyces"     
+#> ASV1031 "Lecanoromycetes"                    "Scoliciosporum"     
+#> ASV1242 "Lecanoromycetes"                    "Scoliciosporum"     
+#> ASV1554 "Lecanoromycetes"                    "Scoliciosporum"     
+#> ASV1263 "Agaricomycetes"                     "Scopuloides"        
+#> ASV1302 "Agaricomycetes"                     "Scopuloides"        
+#> ASV45   "Leotiomycetes"                      "Scytalidium"        
+#> ASV137  "Leotiomycetes"                      "Scytalidium"        
+#> ASV362  "Leotiomycetes"                      "Scytalidium"        
+#> ASV459  "Leotiomycetes"                      "Scytalidium"        
+#> ASV647  "Leotiomycetes"                      "Scytalidium"        
+#> ASV671  "Leotiomycetes"                      "Scytalidium"        
+#> ASV711  "Leotiomycetes"                      "Scytalidium"        
+#> ASV726  "Leotiomycetes"                      "Scytalidium"        
+#> ASV760  "Leotiomycetes"                      "Scytalidium"        
+#> ASV875  "Leotiomycetes"                      "Scytalidium"        
+#> ASV879  "Leotiomycetes"                      "Scytalidium"        
+#> ASV940  "Leotiomycetes"                      "Scytalidium"        
+#> ASV973  "Leotiomycetes"                      "Scytalidium"        
+#> ASV996  "Leotiomycetes"                      "Scytalidium"        
+#> ASV1068 "Leotiomycetes"                      "Scytalidium"        
+#> ASV1169 "Leotiomycetes"                      "Scytalidium"        
+#> ASV1234 "Leotiomycetes"                      "Scytalidium"        
+#> ASV1380 "Leotiomycetes"                      "Scytalidium"        
+#> ASV1386 "Leotiomycetes"                      "Scytalidium"        
+#> ASV1470 "Leotiomycetes"                      "Scytalidium"        
+#> ASV1483 "Leotiomycetes"                      "Scytalidium"        
+#> ASV1653 "Leotiomycetes"                      "Scytalidium"        
+#> ASV32   "Agaricomycetes"                     "Sistotrema"         
+#> ASV231  "Agaricomycetes"                     "Sistotrema"         
+#> ASV388  "Agaricomycetes"                     "Sistotrema"         
+#> ASV465  "Agaricomycetes"                     "Sistotrema"         
+#> ASV476  "Agaricomycetes"                     "Sistotrema"         
+#> ASV517  "Agaricomycetes"                     "Sistotrema"         
+#> ASV557  "Agaricomycetes"                     "Sistotrema"         
+#> ASV602  "Agaricomycetes"                     "Sistotrema"         
+#> ASV689  "Agaricomycetes"                     "Sistotrema"         
+#> ASV749  "Agaricomycetes"                     "Sistotrema"         
+#> ASV845  "Agaricomycetes"                     "Sistotrema"         
+#> ASV1192 "Agaricomycetes"                     "Sistotrema"         
+#> ASV1233 "Agaricomycetes"                     "Sistotrema"         
+#> ASV1270 "Agaricomycetes"                     "Sistotrema"         
+#> ASV1422 "Agaricomycetes"                     "Sistotrema"         
+#> ASV143  "Agaricomycetes"                     "Sistotremastrum"    
+#> ASV338  "Agaricomycetes"                     "Sistotremastrum"    
+#> ASV65   "Sordariomycetes"                    "Spadicoides"        
+#> ASV229  "Sordariomycetes"                    "Spadicoides"        
+#> ASV278  "Sordariomycetes"                    "Spadicoides"        
+#> ASV322  "Sordariomycetes"                    "Spadicoides"        
+#> ASV365  "Sordariomycetes"                    "Spadicoides"        
+#> ASV509  "Sordariomycetes"                    "Spadicoides"        
+#> ASV1298 "Sordariomycetes"                    "Spadicoides"        
+#> ASV1225 "Dothideomycetes"                    "Sphaeropsis"        
+#> ASV1641 "Dothideomycetes"                    "Stemphylium"        
+#> ASV8    "Agaricomycetes"                     "Stereum"            
+#> ASV18   "Agaricomycetes"                     "Stereum"            
+#> ASV26   "Agaricomycetes"                     "Stereum"            
+#> ASV94   "Agaricomycetes"                     "Stereum"            
+#> ASV170  "Agaricomycetes"                     "Stereum"            
+#> ASV209  "Agaricomycetes"                     "Stereum"            
+#> ASV261  "Agaricomycetes"                     "Stereum"            
+#> ASV474  "Agaricomycetes"                     "Stereum"            
+#> ASV493  "Agaricomycetes"                     "Stereum"            
+#> ASV636  "Agaricomycetes"                     "Stereum"            
+#> ASV666  "Agaricomycetes"                     "Stereum"            
+#> ASV741  "Agaricomycetes"                     "Stereum"            
+#> ASV833  "Agaricomycetes"                     "Stereum"            
+#> ASV1182 "Agaricomycetes"                     "Stereum"            
+#> ASV1453 "Agaricomycetes"                     "Stereum"            
+#> ASV1551 "Agaricomycetes"                     "Stereum"            
+#> ASV1552 "Agaricomycetes"                     "Stereum"            
+#> ASV1313 "Leotiomycetes"                      "Strossmayeria"      
+#> ASV717  "Agaricomycetes"                     "Stypella"           
+#> ASV798  "Agaricomycetes"                     "Stypella"           
+#> ASV840  "Agaricomycetes"                     "Stypella"           
+#> ASV964  "Agaricomycetes"                     "Stypella"           
+#> ASV1236 "Agaricomycetes"                     "Stypella"           
+#> ASV1564 "Agaricomycetes"                     "Stypella"           
+#> ASV202  "Saccharomycetes"                    "Sugiyamaella"       
+#> ASV1341 "Saccharomycetes"                    "Sugiyamaella"       
+#> ASV1458 "Saccharomycetes"                    "Sugiyamaella"       
+#> ASV1568 "Saccharomycetes"                    "Sugiyamaella"       
+#> ASV1014 "Saccharomycetes"                    "Suhomyces"          
+#> ASV1403 "Saccharomycetes"                    "Suhomyces"          
+#> ASV1704 "Dothideomycetes"                    "Suttonomyces"       
+#> ASV119  "Xylonomycetes"                      "Symbiotaphrina"     
+#> ASV578  "Xylonomycetes"                      "Symbiotaphrina"     
+#> ASV637  "Xylonomycetes"                      "Symbiotaphrina"     
+#> ASV903  "Xylonomycetes"                      "Symbiotaphrina"     
+#> ASV1015 "Xylonomycetes"                      "Symbiotaphrina"     
+#> ASV1074 "Xylonomycetes"                      "Symbiotaphrina"     
+#> ASV1132 "Xylonomycetes"                      "Symbiotaphrina"     
+#> ASV413  "Tremellomycetes"                    "Syzygospora"        
+#> ASV1359 "Taphrinomycetes"                    "Taphrina"           
+#> ASV444  "Tremellomycetes"                    "Tausonia"           
+#> ASV999  "Tremellomycetes"                    "Tausonia"           
+#> ASV1356 "Tremellomycetes"                    "Tausonia"           
+#> ASV1507 "Tremellomycetes"                    "Tausonia"           
+#> ASV910  "Dothideomycetes"                    "Tintelnotia"        
+#> ASV111  "Sordariomycetes"                    "Torrentispora"      
+#> ASV253  "Sordariomycetes"                    "Torrentispora"      
+#> ASV64   "Agaricomycetes"                     "Trametes"           
+#> ASV168  "Agaricomycetes"                     "Trametes"           
+#> ASV203  "Agaricomycetes"                     "Trametes"           
+#> ASV249  "Agaricomycetes"                     "Trametes"           
+#> ASV271  "Agaricomycetes"                     "Trametes"           
+#> ASV379  "Agaricomycetes"                     "Trametes"           
+#> ASV580  "Agaricomycetes"                     "Trametes"           
+#> ASV1048 "Agaricomycetes"                     "Trechispora"        
+#> ASV154  "Tremellomycetes"                    "Tremella"           
+#> ASV196  "Tremellomycetes"                    "Tremella"           
+#> ASV314  "Tremellomycetes"                    "Tremella"           
+#> ASV456  "Tremellomycetes"                    "Tremella"           
+#> ASV994  "Tremellomycetes"                    "Tremella"           
+#> ASV1484 "Tremellomycetes"                    "Tremella"           
+#> ASV173  "Sordariomycetes"                    "Trichoderma"        
+#> ASV240  "Sordariomycetes"                    "Trichoderma"        
+#> ASV256  "Sordariomycetes"                    "Trichoderma"        
+#> ASV494  "Sordariomycetes"                    "Trichoderma"        
+#> ASV581  "Sordariomycetes"                    "Trichoderma"        
+#> ASV1086 "Sordariomycetes"                    "Trichoderma"        
+#> ASV1405 "Sordariomycetes"                    "Trichoderma"        
+#> ASV1415 "Sordariomycetes"                    "Trichoderma"        
+#> ASV1436 "Sordariomycetes"                    "Trichoderma"        
+#> ASV1423 "Umbelopsidomycetes"                 "Umbelopsis"         
+#> ASV1539 "Umbelopsidomycetes"                 "Umbelopsis"         
+#> ASV650  "Eurotiomycetes"                     "Veronaea"           
+#> ASV1211 "Eurotiomycetes"                     "Veronaea"           
+#> ASV427  "Leotiomycetes"                      "Vexillomyces"       
+#> ASV934  "Leotiomycetes"                      "Vexillomyces"       
+#> ASV193  "Tremellomycetes"                    "Vishniacozyma"      
+#> ASV631  "Tremellomycetes"                    "Vishniacozyma"      
+#> ASV950  "Tremellomycetes"                    "Vishniacozyma"      
+#> ASV1576 "Tremellomycetes"                    "Vishniacozyma"      
+#> ASV6    "Sordariomycetes"                    "Xylaria"            
+#> ASV22   "Sordariomycetes"                    "Xylaria"            
+#> ASV481  "Sordariomycetes"                    "Xylaria"            
+#> ASV628  "Sordariomycetes"                    "Xylaria"            
+#> ASV822  "Sordariomycetes"                    "Xylaria"            
+#> ASV843  "Sordariomycetes"                    "Xylaria"            
+#> ASV970  "Sordariomycetes"                    "Xylaria"            
+#> ASV1016 "Sordariomycetes"                    "Xylaria"            
+#> ASV1095 "Sordariomycetes"                    "Xylaria"            
+#> ASV1148 "Sordariomycetes"                    "Xylaria"            
+#> ASV1345 "Sordariomycetes"                    "Xylaria"            
+#> ASV1350 "Sordariomycetes"                    "Xylaria"            
+#> ASV1389 "Sordariomycetes"                    "Xylaria"            
+#> ASV12   "Agaricomycetes"                     "Xylodon"            
+#> ASV67   "Agaricomycetes"                     "Xylodon"            
+#> ASV105  "Agaricomycetes"                     "Xylodon"            
+#> ASV107  "Agaricomycetes"                     "Xylodon"            
+#> ASV307  "Agaricomycetes"                     "Xylodon"            
+#> ASV624  "Agaricomycetes"                     "Xylodon"            
+#> ASV780  "Agaricomycetes"                     "Xylodon"            
+#> ASV1017 "Agaricomycetes"                     "Xylodon"            
+#> ASV1070 "Agaricomycetes"                     "Xylodon"            
+#> ASV1129 "Agaricomycetes"                     "Xylodon"            
+#> ASV1261 "Agaricomycetes"                     "Xylodon"            
+#> ASV1542 "Agaricomycetes"                     "Xylodon"            
+#> ASV1621 "Agaricomycetes"                     "Xylodon"            
+#> ASV1264 "Sordariomycetes"                    "Xylomelasma"        
+#> ASV1414 "Sordariomycetes"                    "Xylomelasma"        
+#> ASV51   "Sordariomycetes"                    "Zignoella"          
+#> ASV372  "Sordariomycetes"                    "Zignoella"          
+#> ASV572  "Sordariomycetes"                    "Zignoella"          
+#> ASV573  "Sordariomycetes"                    "Zignoella"          
+#> ASV634  "Sordariomycetes"                    "Zignoella"          
+#> ASV947  "Sordariomycetes"                    "Zignoella"          
+#> ASV1185 "Sordariomycetes"                    "Zignoella"          
+#> ASV1283 "Sordariomycetes"                    "Zignoella"          
+#> ASV1354 "Sordariomycetes"                    "Zignoella"          
+#> ASV1360 "Sordariomycetes"                    "Zignoella"          
+#> ASV7    "Agaricomycetes"                     NA                   
+#> ASV62   "Agaricomycetes"                     NA                   
+#> ASV63   "Agaricomycetes"                     NA                   
+#> ASV72   "Agaricomycetes"                     NA                   
+#> ASV93   "Agaricomycetes"                     NA                   
+#> ASV120  "Agaricomycetes"                     NA                   
+#> ASV128  "Agaricomycetes"                     NA                   
+#> ASV136  "Agaricomycetes"                     NA                   
+#> ASV158  "Agaricomycetes"                     NA                   
+#> ASV246  "Agaricomycetes"                     NA                   
+#> ASV267  "Agaricomycetes"                     NA                   
+#> ASV282  "Agaricomycetes"                     NA                   
+#> ASV293  "Agaricomycetes"                     NA                   
+#> ASV328  "Agaricomycetes"                     NA                   
+#> ASV330  "Agaricomycetes"                     NA                   
+#> ASV336  "Agaricomycetes"                     NA                   
+#> ASV345  "Agaricomycetes"                     NA                   
+#> ASV349  "Agaricomycetes"                     NA                   
+#> ASV366  "Agaricomycetes"                     NA                   
+#> ASV381  "Agaricomycetes"                     NA                   
+#> ASV382  "Agaricomycetes"                     NA                   
+#> ASV439  "Agaricomycetes"                     NA                   
+#> ASV484  "Agaricomycetes"                     NA                   
+#> ASV495  "Agaricomycetes"                     NA                   
+#> ASV531  "Agaricomycetes"                     NA                   
+#> ASV532  "Agaricomycetes"                     NA                   
+#> ASV547  "Agaricomycetes"                     NA                   
+#> ASV562  "Agaricomycetes"                     NA                   
+#> ASV565  "Agaricomycetes"                     NA                   
+#> ASV620  "Agaricomycetes"                     NA                   
+#> ASV656  "Agaricomycetes"                     NA                   
+#> ASV680  "Agaricomycetes"                     NA                   
+#> ASV691  "Agaricomycetes"                     NA                   
+#> ASV763  "Agaricomycetes"                     NA                   
+#> ASV808  "Agaricomycetes"                     NA                   
+#> ASV815  "Agaricomycetes"                     NA                   
+#> ASV830  "Agaricomycetes"                     NA                   
+#> ASV848  "Agaricomycetes"                     NA                   
+#> ASV849  "Agaricomycetes"                     NA                   
+#> ASV867  "Agaricomycetes"                     NA                   
+#> ASV909  "Agaricomycetes"                     NA                   
+#> ASV931  "Agaricomycetes"                     NA                   
+#> ASV944  "Agaricomycetes"                     NA                   
+#> ASV948  "Agaricomycetes"                     NA                   
+#> ASV972  "Agaricomycetes"                     NA                   
+#> ASV1065 "Agaricomycetes"                     NA                   
+#> ASV1089 "Agaricomycetes"                     NA                   
+#> ASV1105 "Agaricomycetes"                     NA                   
+#> ASV1187 "Agaricomycetes"                     NA                   
+#> ASV1208 "Agaricomycetes"                     NA                   
+#> ASV1210 "Agaricomycetes"                     NA                   
+#> ASV1269 "Agaricomycetes"                     NA                   
+#> ASV1344 "Agaricomycetes"                     NA                   
+#> ASV1349 "Agaricomycetes"                     NA                   
+#> ASV1374 "Agaricomycetes"                     NA                   
+#> ASV1385 "Agaricomycetes"                     NA                   
+#> ASV1432 "Agaricomycetes"                     NA                   
+#> ASV1447 "Agaricomycetes"                     NA                   
+#> ASV1465 "Agaricomycetes"                     NA                   
+#> ASV1533 "Agaricomycetes"                     NA                   
+#> ASV1707 "Agaricostilbomycetes"               NA                   
+#> ASV1714 "Agaricostilbomycetes"               NA                   
+#> ASV1087 "Cystobasidiomycetes"                NA                   
+#> ASV1488 "Cystobasidiomycetes"                NA                   
+#> ASV1535 "Cystobasidiomycetes"                NA                   
+#> ASV1580 "Cystobasidiomycetes"                NA                   
+#> ASV1358 "Dacrymycetes"                       NA                   
+#> ASV353  "Dothideomycetes"                    NA                   
+#> ASV418  "Dothideomycetes"                    NA                   
+#> ASV449  "Dothideomycetes"                    NA                   
+#> ASV479  "Dothideomycetes"                    NA                   
+#> ASV499  "Dothideomycetes"                    NA                   
+#> ASV516  "Dothideomycetes"                    NA                   
+#> ASV520  "Dothideomycetes"                    NA                   
+#> ASV535  "Dothideomycetes"                    NA                   
+#> ASV555  "Dothideomycetes"                    NA                   
+#> ASV698  "Dothideomycetes"                    NA                   
+#> ASV701  "Dothideomycetes"                    NA                   
+#> ASV705  "Dothideomycetes"                    NA                   
+#> ASV754  "Dothideomycetes"                    NA                   
+#> ASV786  "Dothideomycetes"                    NA                   
+#> ASV924  "Dothideomycetes"                    NA                   
+#> ASV939  "Dothideomycetes"                    NA                   
+#> ASV955  "Dothideomycetes"                    NA                   
+#> ASV956  "Dothideomycetes"                    NA                   
+#> ASV1040 "Dothideomycetes"                    NA                   
+#> ASV1044 "Dothideomycetes"                    NA                   
+#> ASV1071 "Dothideomycetes"                    NA                   
+#> ASV1091 "Dothideomycetes"                    NA                   
+#> ASV1120 "Dothideomycetes"                    NA                   
+#> ASV1122 "Dothideomycetes"                    NA                   
+#> ASV1150 "Dothideomycetes"                    NA                   
+#> ASV1154 "Dothideomycetes"                    NA                   
+#> ASV1160 "Dothideomycetes"                    NA                   
+#> ASV1235 "Dothideomycetes"                    NA                   
+#> ASV1245 "Dothideomycetes"                    NA                   
+#> ASV1273 "Dothideomycetes"                    NA                   
+#> ASV1286 "Dothideomycetes"                    NA                   
+#> ASV1296 "Dothideomycetes"                    NA                   
+#> ASV1307 "Dothideomycetes"                    NA                   
+#> ASV1310 "Dothideomycetes"                    NA                   
+#> ASV1326 "Dothideomycetes"                    NA                   
+#> ASV1331 "Dothideomycetes"                    NA                   
+#> ASV1351 "Dothideomycetes"                    NA                   
+#> ASV1364 "Dothideomycetes"                    NA                   
+#> ASV1393 "Dothideomycetes"                    NA                   
+#> ASV1395 "Dothideomycetes"                    NA                   
+#> ASV1398 "Dothideomycetes"                    NA                   
+#> ASV1400 "Dothideomycetes"                    NA                   
+#> ASV1413 "Dothideomycetes"                    NA                   
+#> ASV1457 "Dothideomycetes"                    NA                   
+#> ASV1482 "Dothideomycetes"                    NA                   
+#> ASV1504 "Dothideomycetes"                    NA                   
+#> ASV1524 "Dothideomycetes"                    NA                   
+#> ASV1538 "Dothideomycetes"                    NA                   
+#> ASV1573 "Dothideomycetes"                    NA                   
+#> ASV95   "Eurotiomycetes"                     NA                   
+#> ASV260  "Eurotiomycetes"                     NA                   
+#> ASV369  "Eurotiomycetes"                     NA                   
+#> ASV522  "Eurotiomycetes"                     NA                   
+#> ASV527  "Eurotiomycetes"                     NA                   
+#> ASV571  "Eurotiomycetes"                     NA                   
+#> ASV669  "Eurotiomycetes"                     NA                   
+#> ASV675  "Eurotiomycetes"                     NA                   
+#> ASV747  "Eurotiomycetes"                     NA                   
+#> ASV774  "Eurotiomycetes"                     NA                   
+#> ASV887  "Eurotiomycetes"                     NA                   
+#> ASV911  "Eurotiomycetes"                     NA                   
+#> ASV1064 "Eurotiomycetes"                     NA                   
+#> ASV1162 "Eurotiomycetes"                     NA                   
+#> ASV1177 "Eurotiomycetes"                     NA                   
+#> ASV1194 "Eurotiomycetes"                     NA                   
+#> ASV1197 "Eurotiomycetes"                     NA                   
+#> ASV1232 "Eurotiomycetes"                     NA                   
+#> ASV1301 "Eurotiomycetes"                     NA                   
+#> ASV1335 "Eurotiomycetes"                     NA                   
+#> ASV1408 "Eurotiomycetes"                     NA                   
+#> ASV1449 "Eurotiomycetes"                     NA                   
+#> ASV1450 "Eurotiomycetes"                     NA                   
+#> ASV1549 "Eurotiomycetes"                     NA                   
+#> ASV1559 "Eurotiomycetes"                     NA                   
+#> ASV1582 "Eurotiomycetes"                     NA                   
+#> ASV1638 "Eurotiomycetes"                     NA                   
+#> ASV167  "Lecanoromycetes"                    NA                   
+#> ASV212  "Lecanoromycetes"                    NA                   
+#> ASV262  "Lecanoromycetes"                    NA                   
+#> ASV442  "Lecanoromycetes"                    NA                   
+#> ASV639  "Lecanoromycetes"                    NA                   
+#> ASV664  "Lecanoromycetes"                    NA                   
+#> ASV802  "Lecanoromycetes"                    NA                   
+#> ASV876  "Lecanoromycetes"                    NA                   
+#> ASV974  "Lecanoromycetes"                    NA                   
+#> ASV1013 "Lecanoromycetes"                    NA                   
+#> ASV1157 "Lecanoromycetes"                    NA                   
+#> ASV1207 "Lecanoromycetes"                    NA                   
+#> ASV1246 "Lecanoromycetes"                    NA                   
+#> ASV1392 "Lecanoromycetes"                    NA                   
+#> ASV1490 "Lecanoromycetes"                    NA                   
+#> ASV1578 "Lecanoromycetes"                    NA                   
+#> ASV103  "Leotiomycetes"                      NA                   
+#> ASV109  "Leotiomycetes"                      NA                   
+#> ASV118  "Leotiomycetes"                      NA                   
+#> ASV121  "Leotiomycetes"                      NA                   
+#> ASV126  "Leotiomycetes"                      NA                   
+#> ASV166  "Leotiomycetes"                      NA                   
+#> ASV243  "Leotiomycetes"                      NA                   
+#> ASV277  "Leotiomycetes"                      NA                   
+#> ASV315  "Leotiomycetes"                      NA                   
+#> ASV316  "Leotiomycetes"                      NA                   
+#> ASV325  "Leotiomycetes"                      NA                   
+#> ASV337  "Leotiomycetes"                      NA                   
+#> ASV340  "Leotiomycetes"                      NA                   
+#> ASV385  "Leotiomycetes"                      NA                   
+#> ASV390  "Leotiomycetes"                      NA                   
+#> ASV401  "Leotiomycetes"                      NA                   
+#> ASV429  "Leotiomycetes"                      NA                   
+#> ASV430  "Leotiomycetes"                      NA                   
+#> ASV434  "Leotiomycetes"                      NA                   
+#> ASV457  "Leotiomycetes"                      NA                   
+#> ASV490  "Leotiomycetes"                      NA                   
+#> ASV501  "Leotiomycetes"                      NA                   
+#> ASV553  "Leotiomycetes"                      NA                   
+#> ASV621  "Leotiomycetes"                      NA                   
+#> ASV630  "Leotiomycetes"                      NA                   
+#> ASV644  "Leotiomycetes"                      NA                   
+#> ASV645  "Leotiomycetes"                      NA                   
+#> ASV657  "Leotiomycetes"                      NA                   
+#> ASV659  "Leotiomycetes"                      NA                   
+#> ASV684  "Leotiomycetes"                      NA                   
+#> ASV745  "Leotiomycetes"                      NA                   
+#> ASV757  "Leotiomycetes"                      NA                   
+#> ASV779  "Leotiomycetes"                      NA                   
+#> ASV810  "Leotiomycetes"                      NA                   
+#> ASV819  "Leotiomycetes"                      NA                   
+#> ASV824  "Leotiomycetes"                      NA                   
+#> ASV866  "Leotiomycetes"                      NA                   
+#> ASV901  "Leotiomycetes"                      NA                   
+#> ASV905  "Leotiomycetes"                      NA                   
+#> ASV921  "Leotiomycetes"                      NA                   
+#> ASV929  "Leotiomycetes"                      NA                   
+#> ASV938  "Leotiomycetes"                      NA                   
+#> ASV978  "Leotiomycetes"                      NA                   
+#> ASV992  "Leotiomycetes"                      NA                   
+#> ASV1000 "Leotiomycetes"                      NA                   
+#> ASV1008 "Leotiomycetes"                      NA                   
+#> ASV1018 "Leotiomycetes"                      NA                   
+#> ASV1033 "Leotiomycetes"                      NA                   
+#> ASV1039 "Leotiomycetes"                      NA                   
+#> ASV1049 "Leotiomycetes"                      NA                   
+#> ASV1076 "Leotiomycetes"                      NA                   
+#> ASV1081 "Leotiomycetes"                      NA                   
+#> ASV1090 "Leotiomycetes"                      NA                   
+#> ASV1193 "Leotiomycetes"                      NA                   
+#> ASV1195 "Leotiomycetes"                      NA                   
+#> ASV1206 "Leotiomycetes"                      NA                   
+#> ASV1221 "Leotiomycetes"                      NA                   
+#> ASV1226 "Leotiomycetes"                      NA                   
+#> ASV1260 "Leotiomycetes"                      NA                   
+#> ASV1330 "Leotiomycetes"                      NA                   
+#> ASV1352 "Leotiomycetes"                      NA                   
+#> ASV1363 "Leotiomycetes"                      NA                   
+#> ASV1394 "Leotiomycetes"                      NA                   
+#> ASV1399 "Leotiomycetes"                      NA                   
+#> ASV1443 "Leotiomycetes"                      NA                   
+#> ASV1494 "Leotiomycetes"                      NA                   
+#> ASV1527 "Leotiomycetes"                      NA                   
+#> ASV1529 "Leotiomycetes"                      NA                   
+#> ASV1571 "Leotiomycetes"                      NA                   
+#> ASV1595 "Leotiomycetes"                      NA                   
+#> ASV1597 "Leotiomycetes"                      NA                   
+#> ASV1606 "Leotiomycetes"                      NA                   
+#> ASV558  "Malasseziomycetes"                  NA                   
+#> ASV1581 "Microbotryomycetes"                 NA                   
+#> ASV1126 "Orbiliomycetes"                     NA                   
+#> ASV1285 "Orbiliomycetes"                     NA                   
+#> ASV1487 "Pezizomycetes"                      NA                   
+#> ASV1716 "Rozellomycotina_cls_Incertae_sedis" NA                   
+#> ASV460  "Saccharomycetes"                    NA                   
+#> ASV803  "Saccharomycetes"                    NA                   
+#> ASV10   "Sordariomycetes"                    NA                   
+#> ASV79   "Sordariomycetes"                    NA                   
+#> ASV106  "Sordariomycetes"                    NA                   
+#> ASV195  "Sordariomycetes"                    NA                   
+#> ASV245  "Sordariomycetes"                    NA                   
+#> ASV257  "Sordariomycetes"                    NA                   
+#> ASV283  "Sordariomycetes"                    NA                   
+#> ASV350  "Sordariomycetes"                    NA                   
+#> ASV406  "Sordariomycetes"                    NA                   
+#> ASV407  "Sordariomycetes"                    NA                   
+#> ASV409  "Sordariomycetes"                    NA                   
+#> ASV412  "Sordariomycetes"                    NA                   
+#> ASV432  "Sordariomycetes"                    NA                   
+#> ASV448  "Sordariomycetes"                    NA                   
+#> ASV451  "Sordariomycetes"                    NA                   
+#> ASV473  "Sordariomycetes"                    NA                   
+#> ASV478  "Sordariomycetes"                    NA                   
+#> ASV486  "Sordariomycetes"                    NA                   
+#> ASV508  "Sordariomycetes"                    NA                   
+#> ASV551  "Sordariomycetes"                    NA                   
+#> ASV585  "Sordariomycetes"                    NA                   
+#> ASV589  "Sordariomycetes"                    NA                   
+#> ASV649  "Sordariomycetes"                    NA                   
+#> ASV683  "Sordariomycetes"                    NA                   
+#> ASV718  "Sordariomycetes"                    NA                   
+#> ASV740  "Sordariomycetes"                    NA                   
+#> ASV770  "Sordariomycetes"                    NA                   
+#> ASV775  "Sordariomycetes"                    NA                   
+#> ASV777  "Sordariomycetes"                    NA                   
+#> ASV806  "Sordariomycetes"                    NA                   
+#> ASV820  "Sordariomycetes"                    NA                   
+#> ASV826  "Sordariomycetes"                    NA                   
+#> ASV850  "Sordariomycetes"                    NA                   
+#> ASV852  "Sordariomycetes"                    NA                   
+#> ASV936  "Sordariomycetes"                    NA                   
+#> ASV951  "Sordariomycetes"                    NA                   
+#> ASV957  "Sordariomycetes"                    NA                   
+#> ASV997  "Sordariomycetes"                    NA                   
+#> ASV1025 "Sordariomycetes"                    NA                   
+#> ASV1047 "Sordariomycetes"                    NA                   
+#> ASV1056 "Sordariomycetes"                    NA                   
+#> ASV1061 "Sordariomycetes"                    NA                   
+#> ASV1098 "Sordariomycetes"                    NA                   
+#> ASV1104 "Sordariomycetes"                    NA                   
+#> ASV1138 "Sordariomycetes"                    NA                   
+#> ASV1188 "Sordariomycetes"                    NA                   
+#> ASV1204 "Sordariomycetes"                    NA                   
+#> ASV1254 "Sordariomycetes"                    NA                   
+#> ASV1255 "Sordariomycetes"                    NA                   
+#> ASV1324 "Sordariomycetes"                    NA                   
+#> ASV1327 "Sordariomycetes"                    NA                   
+#> ASV1328 "Sordariomycetes"                    NA                   
+#> ASV1353 "Sordariomycetes"                    NA                   
+#> ASV1433 "Sordariomycetes"                    NA                   
+#> ASV1435 "Sordariomycetes"                    NA                   
+#> ASV1442 "Sordariomycetes"                    NA                   
+#> ASV1476 "Sordariomycetes"                    NA                   
+#> ASV1515 "Sordariomycetes"                    NA                   
+#> ASV1600 "Sordariomycetes"                    NA                   
+#> ASV1618 "Sordariomycetes"                    NA                   
+#> ASV1651 "Sordariomycetes"                    NA                   
+#> ASV1680 "Sordariomycetes"                    NA                   
+#> ASV1706 "Sordariomycetes"                    NA                   
+#> ASV71   "Tremellomycetes"                    NA                   
+#> ASV83   "Tremellomycetes"                    NA                   
+#> ASV536  "Tremellomycetes"                    NA                   
+#> ASV560  "Tremellomycetes"                    NA                   
+#> ASV600  "Tremellomycetes"                    NA                   
+#> ASV640  "Tremellomycetes"                    NA                   
+#> ASV734  "Tremellomycetes"                    NA                   
+#> ASV811  "Tremellomycetes"                    NA                   
+#> ASV1042 "Tremellomycetes"                    NA                   
+#> ASV1121 "Tremellomycetes"                    NA                   
+#> ASV1231 "Tremellomycetes"                    NA                   
+#> ASV1322 "Tremellomycetes"                    NA                   
+#> ASV1323 "Tremellomycetes"                    NA                   
+#> ASV1517 "Tremellomycetes"                    NA                   
+#> ASV1544 "Tremellomycetes"                    NA                   
+#> ASV13   NA                                   NA                   
+#> ASV57   NA                                   NA                   
+#> ASV100  NA                                   NA                   
+#> ASV115  NA                                   NA                   
+#> ASV130  NA                                   NA                   
+#> ASV181  NA                                   NA                   
+#> ASV234  NA                                   NA                   
+#> ASV263  NA                                   NA                   
+#> ASV287  NA                                   NA                   
+#> ASV295  NA                                   NA                   
+#> ASV323  NA                                   NA                   
+#> ASV356  NA                                   NA                   
+#> ASV423  NA                                   NA                   
+#> ASV426  NA                                   NA                   
+#> ASV445  NA                                   NA                   
+#> ASV469  NA                                   NA                   
+#> ASV470  NA                                   NA                   
+#> ASV480  NA                                   NA                   
+#> ASV512  NA                                   NA                   
+#> ASV514  NA                                   NA                   
+#> ASV519  NA                                   NA                   
+#> ASV550  NA                                   NA                   
+#> ASV568  NA                                   NA                   
+#> ASV603  NA                                   NA                   
+#> ASV610  NA                                   NA                   
+#> ASV612  NA                                   NA                   
+#> ASV622  NA                                   NA                   
+#> ASV625  NA                                   NA                   
+#> ASV678  NA                                   NA                   
+#> ASV703  NA                                   NA                   
+#> ASV721  NA                                   NA                   
+#> ASV755  NA                                   NA                   
+#> ASV761  NA                                   NA                   
+#> ASV769  NA                                   NA                   
+#> ASV778  NA                                   NA                   
+#> ASV788  NA                                   NA                   
+#> ASV804  NA                                   NA                   
+#> ASV838  NA                                   NA                   
+#> ASV857  NA                                   NA                   
+#> ASV873  NA                                   NA                   
+#> ASV888  NA                                   NA                   
+#> ASV890  NA                                   NA                   
+#> ASV902  NA                                   NA                   
+#> ASV907  NA                                   NA                   
+#> ASV908  NA                                   NA                   
+#> ASV913  NA                                   NA                   
+#> ASV923  NA                                   NA                   
+#> ASV925  NA                                   NA                   
+#> ASV952  NA                                   NA                   
+#> ASV960  NA                                   NA                   
+#> ASV977  NA                                   NA                   
+#> ASV1001 NA                                   NA                   
+#> ASV1026 NA                                   NA                   
+#> ASV1028 NA                                   NA                   
+#> ASV1041 NA                                   NA                   
+#> ASV1062 NA                                   NA                   
+#> ASV1072 NA                                   NA                   
+#> ASV1084 NA                                   NA                   
+#> ASV1112 NA                                   NA                   
+#> ASV1165 NA                                   NA                   
+#> ASV1174 NA                                   NA                   
+#> ASV1241 NA                                   NA                   
+#> ASV1266 NA                                   NA                   
+#> ASV1274 NA                                   NA                   
+#> ASV1284 NA                                   NA                   
+#> ASV1325 NA                                   NA                   
+#> ASV1342 NA                                   NA                   
+#> ASV1355 NA                                   NA                   
+#> ASV1378 NA                                   NA                   
+#> ASV1412 NA                                   NA                   
+#> ASV1426 NA                                   NA                   
+#> ASV1430 NA                                   NA                   
+#> ASV1444 NA                                   NA                   
+#> ASV1456 NA                                   NA                   
+#> ASV1463 NA                                   NA                   
+#> ASV1481 NA                                   NA                   
+#> ASV1489 NA                                   NA                   
+#> ASV1509 NA                                   NA                   
+#> ASV1528 NA                                   NA                   
+#> ASV1541 NA                                   NA                   
+#> ASV1570 NA                                   NA                   
+#> ASV1587 NA                                   NA                   
+#> ASV1594 NA                                   NA                   
+#> ASV1607 NA                                   NA                   
+#> ASV1613 NA                                   NA                   
+#> ASV1614 NA                                   NA                   
+#> ASV1633 NA                                   NA                   
+#> ASV1648 NA                                   NA                   
+#> ASV1671 NA                                   NA                   
+#> ASV1672 NA                                   NA                   
+#> ASV1673 NA                                   NA                   
+#> ASV1694 NA                                   NA                   
+#> ASV1708 NA                                   NA                   
 ```

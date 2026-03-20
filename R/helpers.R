@@ -172,40 +172,18 @@ decontam_sam_control <- function(
   }
 
   if (verbose) {
-    threshold_type <- if (global_threshold) "global" else "per-taxon"
-    threshold_info <- if (global_threshold) {
-      paste0("\nGlobal threshold value: ", fun(as.vector(control_otu)))
-    } else {
-      ""
-    }
-    message(
-      "Decontamination complete.",
-      "\nThreshold type: ",
-      threshold_type,
-      "\nNumber of control samples: ",
-      length(control_samples),
-      "\nNumber of non-control samples: ",
-      length(non_control_samples),
-      "\nFunction used for threshold: ",
-      fun_name,
-      threshold_info,
-      "\nRemove control samples: ",
-      remove_controls,
-      "\nNumber of sequences before: ",
-      sum(phyloseq::otu_table(physeq)),
-      "\nNumber of sequences after: ",
-      sum(phyloseq::otu_table(new_physeq)),
-      "\nNumber of sequences discarded: ",
-      sum(phyloseq::otu_table(physeq)) - sum(phyloseq::otu_table(new_physeq)),
-      "\nNumber of occurrences discarded: ",
-      sum(phyloseq::otu_table(physeq) > 0) -
-        sum(phyloseq::otu_table(new_physeq) > 0),
-      "\nNumber of taxa before: ",
-      phyloseq::ntaxa(physeq),
-      "\nNumber of taxa after: ",
-      phyloseq::ntaxa(new_physeq),
-      "\nNumber of discarded taxa: ",
-      phyloseq::ntaxa(physeq) - phyloseq::ntaxa(new_physeq)
+    decontam_message(
+      physeq,
+      new_physeq,
+      threshold_type = if (global_threshold) "global" else "per-taxon",
+      n_control = length(control_samples),
+      n_non_control = length(non_control_samples),
+      fun_name = fun_name,
+      global_threshold_value = if (global_threshold) {
+        fun(as.vector(control_otu))
+      },
+      control_label = "samples",
+      removed = remove_controls
     )
   }
 
@@ -347,40 +325,18 @@ decontam_taxa_control <- function(
   }
 
   if (verbose) {
-    threshold_type <- if (global_threshold) "global" else "per-sample"
-    threshold_info <- if (global_threshold) {
-      paste0("\nGlobal threshold value: ", fun(as.vector(control_otu)))
-    } else {
-      ""
-    }
-    message(
-      "Decontamination complete.",
-      "\nThreshold type: ",
-      threshold_type,
-      "\nNumber of control taxa: ",
-      length(control_taxa_names),
-      "\nNumber of non-control taxa: ",
-      length(non_control_taxa),
-      "\nFunction used for threshold: ",
-      fun_name,
-      threshold_info,
-      "\nRemove control taxa: ",
-      remove_control_taxa,
-      "\nNumber of sequences before: ",
-      sum(phyloseq::otu_table(physeq)),
-      "\nNumber of sequences after: ",
-      sum(phyloseq::otu_table(new_physeq)),
-      "\nNumber of sequences discarded: ",
-      sum(phyloseq::otu_table(physeq)) - sum(phyloseq::otu_table(new_physeq)),
-      "\nNumber of occurrences discarded: ",
-      sum(phyloseq::otu_table(physeq) > 0) -
-        sum(phyloseq::otu_table(new_physeq) > 0),
-      "\nNumber of taxa before: ",
-      phyloseq::ntaxa(physeq),
-      "\nNumber of taxa after: ",
-      phyloseq::ntaxa(new_physeq),
-      "\nNumber of discarded taxa: ",
-      phyloseq::ntaxa(physeq) - phyloseq::ntaxa(new_physeq)
+    decontam_message(
+      physeq,
+      new_physeq,
+      threshold_type = if (global_threshold) "global" else "per-sample",
+      n_control = length(control_taxa_names),
+      n_non_control = length(non_control_taxa),
+      fun_name = fun_name,
+      global_threshold_value = if (global_threshold) {
+        fun(as.vector(control_otu))
+      },
+      control_label = "taxa",
+      removed = remove_control_taxa
     )
   }
 

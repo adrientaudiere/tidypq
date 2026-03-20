@@ -54,6 +54,10 @@ plot_sample_depth_pq <- function(
 ) {
   MiscMetabar::verify_pq(physeq)
 
+  if (phyloseq::nsamples(physeq) < 3) {
+    stop("plot_sample_depth_pq() requires at least 3 samples.")
+  }
+
   res_tib <-
     phyloseq::sample_sums(physeq) |>
     sort() |>
@@ -100,7 +104,10 @@ plot_sample_depth_pq <- function(
         labels = c("FALSE" = "No", "TRUE" = "Yes")
       ) +
       ggplot2::labs(
-        title = sprintf("Selected samples have rank >= %d", threshold_rank)
+        title = sprintf(
+          "Selected samples have rank >= %d",
+          as.integer(threshold_rank)
+        )
       ) +
       ggplot2::geom_vline(
         xintercept = threshold_rank,

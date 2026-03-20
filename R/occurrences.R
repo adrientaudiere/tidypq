@@ -51,44 +51,11 @@ filter_occurrences_pq <- function(
     otu <- t(otu)
   }
 
-  nrow_otu <- nrow(otu)
-  ncol_otu <- ncol(otu)
-
-  # Build matrices for vectorized evaluation
-  sample_total <- matrix(
-    colSums(otu),
-    nrow = nrow_otu,
-    ncol = ncol_otu,
-    byrow = TRUE
-  )
-  taxon_total <- matrix(
-    rowSums(otu),
-    nrow = nrow_otu,
-    ncol = ncol_otu,
-    byrow = FALSE
-  )
-  sample_mean <- matrix(
-    colMeans(otu),
-    nrow = nrow_otu,
-    ncol = ncol_otu,
-    byrow = TRUE
-  )
-  taxon_mean <- matrix(
-    rowMeans(otu),
-    nrow = nrow_otu,
-    ncol = ncol_otu,
-    byrow = FALSE
-  )
+  summaries <- build_otu_summary_matrices(otu)
 
   # Evaluate condition vectorized
   condition_quo <- rlang::enquo(condition)
-  mask_env <- rlang::new_environment(list(
-    `.` = otu,
-    sample_total = sample_total,
-    taxon_total = taxon_total,
-    sample_mean = sample_mean,
-    taxon_mean = taxon_mean
-  ))
+  mask_env <- rlang::new_environment(summaries)
   mask <- rlang::new_data_mask(mask_env)
   keep_matrix <- rlang::eval_tidy(condition_quo, data = mask)
 
@@ -158,58 +125,11 @@ mutate_occurrences_pq <- function(physeq, expr) {
     otu <- t(otu)
   }
 
-  nrow_otu <- nrow(otu)
-  ncol_otu <- ncol(otu)
-
-  # Build matrices for vectorized evaluation
-  sample_total <- matrix(
-    colSums(otu),
-    nrow = nrow_otu,
-    ncol = ncol_otu,
-    byrow = TRUE
-  )
-  taxon_total <- matrix(
-    rowSums(otu),
-    nrow = nrow_otu,
-    ncol = ncol_otu,
-    byrow = FALSE
-  )
-  sample_mean <- matrix(
-    colMeans(otu),
-    nrow = nrow_otu,
-    ncol = ncol_otu,
-    byrow = TRUE
-  )
-  taxon_mean <- matrix(
-    rowMeans(otu),
-    nrow = nrow_otu,
-    ncol = ncol_otu,
-    byrow = FALSE
-  )
-  sample_median <- matrix(
-    apply(otu, 2, stats::median),
-    nrow = nrow_otu,
-    ncol = ncol_otu,
-    byrow = TRUE
-  )
-  taxon_median <- matrix(
-    apply(otu, 1, stats::median),
-    nrow = nrow_otu,
-    ncol = ncol_otu,
-    byrow = FALSE
-  )
+  summaries <- build_otu_summary_matrices(otu, include_median = TRUE)
 
   # Evaluate expression vectorized
   expr_quo <- rlang::enquo(expr)
-  mask_env <- rlang::new_environment(list(
-    `.` = otu,
-    sample_total = sample_total,
-    taxon_total = taxon_total,
-    sample_mean = sample_mean,
-    taxon_mean = taxon_mean,
-    sample_median = sample_median,
-    taxon_median = taxon_median
-  ))
+  mask_env <- rlang::new_environment(summaries)
   mask <- rlang::new_data_mask(mask_env)
   new_otu <- rlang::eval_tidy(expr_quo, data = mask)
 

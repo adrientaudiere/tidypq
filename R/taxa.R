@@ -42,7 +42,7 @@ filter_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   taxa_to_keep <- phyloseq::taxa_names(physeq)[keep]
 
   if (length(taxa_to_keep) == 0) {
-    warning("No taxa match the filter criteria.")
+    stop("No taxa match the filter criteria.")
   }
 
   new_physeq <- phyloseq::prune_taxa(taxa_to_keep, physeq)
@@ -103,6 +103,10 @@ select_taxa_pq <- function(physeq, ...) {
 #'
 #' This function only modifies the tax_table slot (columns/taxonomic ranks). It
 #' cannot add or remove taxa. The number of taxa and taxa names are preserved.
+#'
+#' Unlike `dplyr::mutate()`, columns created in the same call cannot reference
+#' each other (e.g., `mutate_taxa_pq(pq, a = 1, b = a + 1)` will not work
+#' because `a` is not yet available when `b` is evaluated).
 #'
 #' @param physeq (phyloseq, required) A phyloseq object.
 #' @param ... <data-masking> Name-value pairs. The name gives the name of the
@@ -185,7 +189,7 @@ slice_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   taxa_to_keep <- rownames(tax_df)
 
   if (length(taxa_to_keep) == 0) {
-    warning("No taxa selected.")
+    stop("No taxa selected.")
   }
 
   new_physeq <- phyloseq::prune_taxa(taxa_to_keep, physeq)
@@ -229,12 +233,12 @@ arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   MiscMetabar::verify_pq(physeq)
 
   new_physeq <- physeq
+  new_phy_tree <- NULL
 
-  #save the phylogenetic tree if present and reorder it later
-  # set phy_tree to NULL to avoid issues during reordering
+  # Save the phylogenetic tree if present and reorder it later
+  # Set phy_tree to NULL to avoid issues during reordering
   if (!is.null(phyloseq::phy_tree(physeq, errorIfNULL = FALSE))) {
     new_phy_tree <- physeq@phy_tree
-
     new_physeq@phy_tree <- NULL
   }
 

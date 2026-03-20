@@ -62,7 +62,6 @@ detection methods like <code><a href="https://adrientaudiere.github.io/MiscMetab
 <span>  prop_min <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>  seed <span class="op">=</span> <span class="fl">123</span>,</span>
 <span>  median_abundance_multiplier <span class="op">=</span> <span class="fl">0.1</span>,</span>
-<span>  ensure_distinct_parents <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  min_parent_distance <span class="op">=</span> <span class="fl">0.1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -110,17 +109,12 @@ existing sequences. A value of 0.1 means chimeras will have approximately
 10% of the median abundance.</p></dd>
 
 
-<dt id="arg-ensure-distinct-parents">ensure_distinct_parents<a class="anchor" aria-label="anchor" href="#arg-ensure-distinct-parents"></a></dt>
-<dd><p>(logical, default: TRUE) If TRUE, ensures that
-parent2 is sufficiently different from parent1 based on <code>min_parent_distance</code>.
-Chimeras created from very similar parent sequences may be undetectable.</p></dd>
-
-
 <dt id="arg-min-parent-distance">min_parent_distance<a class="anchor" aria-label="anchor" href="#arg-min-parent-distance"></a></dt>
 <dd><p>(numeric, default: 0.1) Minimum sequence distance
-(proportion of differing positions) between parent1 and parent2. Only used
-when <code>ensure_distinct_parents = TRUE</code>. Values typically range from 0.05 (5%
-divergence) to 0.3 (30% divergence).</p></dd>
+(proportion of differing positions) between parent1 and parent2.
+If 0, chimeras can be created from very similar
+parents, which may be harder to detect. In some cases, with min_parent_distance = 0,
+you may end up with chimeras that are identical to one of the parents.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -138,7 +132,7 @@ breakpoint, seq_length</p></dd>
 
 <dt>params</dt>
 <dd><p>List of parameters used (prop_mean, prop_sd, prop_min,
-ensure_distinct_parents, min_parent_distance)</p></dd>
+min_parent_distance)</p></dd>
 
 
 </dl></div>
@@ -153,8 +147,7 @@ ensure_distinct_parents, min_parent_distance)</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/adrientaudiere/MiscMetabar" class="external-link">MiscMetabar</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/adrientaudiere/MiscMetabar" class="external-link">MiscMetabar</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">data_fungi</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Default: centered around 50% with some variation</span></span></span>
@@ -164,6 +157,88 @@ ensure_distinct_parents, min_parent_distance)</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># View the parent information and proportions</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">parent_info</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       chimera parent1 parent2 parent_distance prop_parent1 breakpoint</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   CHIMERA_1   ASV27   ASV33          0.5017        0.679        206</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   CHIMERA_2   ASV22   ASV32          0.5082        0.686        209</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   CHIMERA_3   ASV10   ASV27          0.5233        0.569        171</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   CHIMERA_4   ASV10   ASV33          0.4800        0.754        226</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   CHIMERA_5   ASV19    ASV7          0.5412        0.517        176</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   CHIMERA_6   ASV13   ASV23          0.4502        0.768        223</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   CHIMERA_7   ASV32    ASV8          0.5126        0.205         73</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   CHIMERA_8   ASV23   ASV13          0.4502        0.429        125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   CHIMERA_9   ASV27   ASV22          0.5410        0.450        137</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 CHIMERA_10   ASV19   ASV22          0.4984        0.487        149</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 CHIMERA_11   ASV13   ASV12          0.4880        0.603        175</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 CHIMERA_12   ASV10   ASV19          0.5167        0.456        137</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 CHIMERA_13   ASV25   ASV32          0.5629        0.632        221</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 CHIMERA_14   ASV12   ASV28          0.5364        0.384        127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 CHIMERA_15   ASV28   ASV12          0.5364        0.469        155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 CHIMERA_16   ASV13   ASV29          0.5223        0.360        105</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 CHIMERA_17   ASV31   ASV29          0.5479        0.561        170</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 CHIMERA_18   ASV25   ASV10          0.5400        0.302         91</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 CHIMERA_19   ASV32   ASV26          0.5130        0.705        245</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 CHIMERA_20    ASV7   ASV19          0.5412        0.727        247</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 CHIMERA_21   ASV24   ASV27          0.5162        0.519        176</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 CHIMERA_22    ASV7   ASV27          0.5333        0.557        192</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 CHIMERA_23   ASV13    ASV7          0.4674        0.450        131</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 CHIMERA_24   ASV27   ASV10          0.5233        0.546        164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 CHIMERA_25   ASV22   ASV32          0.5082        0.508        155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 CHIMERA_26    ASV6   ASV23          0.4252        0.808        243</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 CHIMERA_27   ASV24   ASV27          0.5162        0.365        124</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 CHIMERA_28   ASV26    ASV7          0.4524        0.397        138</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 CHIMERA_29   ASV32   ASV27          0.4986        0.397        137</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 CHIMERA_30   ASV23   ASV13          0.4502        0.479        139</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31 CHIMERA_31   ASV12   ASV27          0.4515        0.444        147</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 CHIMERA_32   ASV13   ASV23          0.4502        0.406        118</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33 CHIMERA_33   ASV28   ASV23          0.5238        0.511        161</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 CHIMERA_34   ASV26   ASV33          0.5512        0.406        123</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 CHIMERA_35   ASV19   ASV13          0.5086        0.694        202</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36 CHIMERA_36   ASV25   ASV33          0.5446        0.546        165</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37 CHIMERA_37   ASV27   ASV13          0.4605        0.562        163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38 CHIMERA_38   ASV18   ASV29          0.5050        0.676        205</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39 CHIMERA_39   ASV23   ASV29          0.5380        0.358        109</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40 CHIMERA_40    ASV7   ASV10          0.5467        0.250         75</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    seq_length</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         303</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2         305</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3         300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4         300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5         340</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6         291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7         357</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8         291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9         305</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10        305</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11        291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12        300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13        350</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14        330</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15        330</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16        291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17        303</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18        300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19        347</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20        340</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21        339</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22        345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23        291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24        300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25        305</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26        301</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27        339</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28        347</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29        345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30        291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31        330</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32        291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33        315</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34        303</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35        291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36        303</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37        291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38        303</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39        303</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40        300</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># More variable proportions (wider distribution)</span></span></span>
 <span class="r-in"><span><span class="va">result2</span> <span class="op">&lt;-</span> <span class="fu">create_chimera_pq</span><span class="op">(</span><span class="va">data_fungi</span>, n_chimeras <span class="op">=</span> <span class="fl">40</span>,</span></span>
@@ -180,11 +255,20 @@ ensure_distinct_parents, min_parent_distance)</p></dd>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"vsearch detected:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">detected_vs</span><span class="op">)</span>, <span class="st">"/"</span>,</span></span>
 <span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">known_chimeras</span><span class="op">)</span>, <span class="st">"chimeras\n"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Filtering for sequences under 100 bp remove a total of 0 ( 0 %) unique sequences for a total of 0 sequences removed ( 0 %)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Cleaning suppress 0 taxa (  ) and 0 sample(s) (  ).</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Number of non-matching ASV 0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Number of matching ASV 1460</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Number of filtered-out ASV 279</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Number of kept ASV 1181</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Number of kept samples 185</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> vsearch detected: 39 / 40 chimeras</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Visualize the distribution of proportions</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">parent_info</span><span class="op">$</span><span class="va">prop_parent1</span>,</span></span>
 <span class="r-in"><span>     main <span class="op">=</span> <span class="st">"Distribution of parent1 proportions"</span>,</span></span>
 <span class="r-in"><span>     xlab <span class="op">=</span> <span class="st">"Proportion from parent1"</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="create_chimera_pq-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Ensure parents are at least 15% different (more detectable chimeras)</span></span></span>
 <span class="r-in"><span><span class="va">result4</span> <span class="op">&lt;-</span> <span class="fu">create_chimera_pq</span><span class="op">(</span><span class="va">data_fungi</span>, n_chimeras <span class="op">=</span> <span class="fl">40</span>,</span></span>
@@ -192,9 +276,7 @@ ensure_distinct_parents, min_parent_distance)</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Disable parent distance filtering (allows similar parents)</span></span></span>
 <span class="r-in"><span><span class="va">result5</span> <span class="op">&lt;-</span> <span class="fu">create_chimera_pq</span><span class="op">(</span><span class="va">data_fungi</span>, n_chimeras <span class="op">=</span> <span class="fl">40</span>,</span></span>
-<span class="r-in"><span>                             ensure_distinct_parents <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
-<span class="r-in"><span></span></span>
+<span class="r-in"><span>                             min_parent_distance <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

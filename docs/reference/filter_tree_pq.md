@@ -55,13 +55,15 @@ Adrien Taudière
 ## Examples
 
 ``` r
+if (FALSE) { # \dontrun{
 library(MiscMetabar)
 # Synchronize tree with OTU table (remove taxa not in tree)
-# filter_tree_pq(physeq_with_tree)
+filter_tree_pq(physeq_with_tree)
 
 # Keep only specific taxa in tree
-# filter_tree_pq(physeq_with_tree, taxa = c("ASV1", "ASV2", "ASV3"))
+filter_tree_pq(physeq_with_tree, taxa = c("ASV1", "ASV2", "ASV3"))
 
 # Filter by tip label pattern
-# filter_tree_pq(physeq_with_tree, pattern = "^ASV")
+filter_tree_pq(physeq_with_tree, pattern = "^ASV")
+} # }
 ```

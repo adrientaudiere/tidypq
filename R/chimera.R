@@ -236,7 +236,7 @@ create_chimera_pq <- function(
   # Select parent sequences (use abundant ones)
   n_candidates <- min(20, phyloseq::ntaxa(physeq))
   abundant_idx <- order(phyloseq::taxa_sums(physeq), decreasing = TRUE)[
-    1:n_candidates
+    seq_len(n_candidates)
   ]
 
   # Helper function to compute sequence distance (proportion of differing positions)

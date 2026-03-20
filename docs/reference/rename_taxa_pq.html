@@ -74,14 +74,20 @@ and the value is the old name. Use <code>new_name = old_name</code> syntax.</tid
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/adrientaudiere/MiscMetabar" class="external-link">MiscMetabar</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Rename a single rank</span></span></span>
-<span class="r-in"><span><span class="fu">rename_taxa_pq</span><span class="op">(</span><span class="va">data_fungi</span>, tax_kingdom <span class="op">=</span> <span class="va">Kingdom</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::rename(tax_df, ...):</span> Can't rename columns that don't exist.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> Column `Kingdom` doesn't exist.</span>
+<span class="r-in"><span><span class="fu">rename_taxa_pq</span><span class="op">(</span><span class="va">data_fungi</span>, tax_domain <span class="op">=</span> <span class="va">Domain</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> phyloseq-class experiment-level object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> otu_table()   OTU Table:         [ 1420 taxa and 185 samples ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sample_data() Sample Data:       [ 185 samples by 7 sample variables ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> tax_table()   Taxonomy Table:    [ 1420 taxa by 12 taxonomic ranks ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> refseq()      DNAStringSet:      [ 1420 reference sequences ]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Rename multiple ranks</span></span></span>
-<span class="r-in"><span><span class="fu">rename_taxa_pq</span><span class="op">(</span><span class="va">data_fungi</span>, tax_kingdom <span class="op">=</span> <span class="va">Kingdom</span>, tax_phylum <span class="op">=</span> <span class="va">Phylum</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::rename(tax_df, ...):</span> Can't rename columns that don't exist.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> Column `Kingdom` doesn't exist.</span>
+<span class="r-in"><span><span class="fu">rename_taxa_pq</span><span class="op">(</span><span class="va">data_fungi</span>, tax_phylum <span class="op">=</span> <span class="va">Phylum</span>, tax_class <span class="op">=</span> <span class="va">Class</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> phyloseq-class experiment-level object</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> otu_table()   OTU Table:         [ 1420 taxa and 185 samples ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sample_data() Sample Data:       [ 185 samples by 7 sample variables ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> tax_table()   Taxonomy Table:    [ 1420 taxa by 12 taxonomic ranks ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> refseq()      DNAStringSet:      [ 1420 reference sequences ]</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

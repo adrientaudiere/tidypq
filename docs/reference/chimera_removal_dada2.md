@@ -73,18 +73,31 @@ for creating test data with synthetic chimeras.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
 library(MiscMetabar)
 data(data_fungi)
 
+# \donttest{
 # Basic usage
 data_nochim <- chimera_removal_dada2(data_fungi)
+#> Identified 450 bimeras out of 1420 input sequences.
+#> Discard 450 chimeric ASVs including:
+#> ASV94;ASV120;ASV128;ASV158;ASV159;ASV170;ASV178;ASV182;ASV186;ASV201... 
+#> Try return_a_list=TRUE to see all discarded ASVs in the `chimeric_taxa` element.
 
 # Get detailed output
 result <- chimera_removal_dada2(data_fungi, return_a_list = TRUE)
+#> Identified 450 bimeras out of 1420 input sequences.
+#> Discard 450 chimeric ASVs including:
+#> ASV94;ASV120;ASV128;ASV158;ASV159;ASV170;ASV178;ASV182;ASV186;ASV201... 
+#> Try return_a_list=TRUE to see all discarded ASVs in the `chimeric_taxa` element.
 cat("Removed", length(result$chimeric_taxa), "chimeric ASVs\n")
+#> Removed 450 chimeric ASVs
 
 # Use pooled method
 data_nochim <- chimera_removal_dada2(data_fungi, method = "pooled")
-} # }
+#> Identified 450 bimeras out of 1420 input sequences.
+#> Discard 450 chimeric ASVs including:
+#> ASV94;ASV120;ASV128;ASV158;ASV159;ASV170;ASV178;ASV182;ASV186;ASV201... 
+#> Try return_a_list=TRUE to see all discarded ASVs in the `chimeric_taxa` element.
+# }
 ```

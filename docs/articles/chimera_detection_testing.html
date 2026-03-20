@@ -68,7 +68,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/adrientaudiere/tidypq" class="external-link">tidypq</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://adrientaudiere.github.io/tidypq">tidypq</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/adrientaudiere/MiscMetabar" class="external-link">MiscMetabar</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://dx.plos.org/10.1371/journal.pone.0061217" class="external-link">phyloseq</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -97,8 +97,7 @@ filtering to test on larger or smaller datasets.</p>
 <span>  <span class="va">Class</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Agaricomycetes"</span>, <span class="st">"Dacrymycetes"</span>,<span class="st">"Eurotiomycetes"</span>, <span class="st">"Lecanoromycetes"</span>, <span class="st">"Tremellomycetes"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Original taxa:"</span>, <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/ntaxa-methods.html" class="external-link">ntaxa</a></span><span class="op">(</span><span class="va">data_fungi</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Subset taxa:"</span>, <span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/ntaxa-methods.html" class="external-link">ntaxa</a></span><span class="op">(</span><span class="va">data_fungi_subset</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">data_fungi_subset</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="creating-test-data-with-synthetic-chimeras">Creating Test Data with Synthetic Chimeras<a class="anchor" aria-label="anchor" href="#creating-test-data-with-synthetic-chimeras"></a>
@@ -117,14 +116,7 @@ detectable.</p>
 <span><span class="va">data_fungi_test</span> <span class="op">&lt;-</span> <span class="va">df_chim</span><span class="op">$</span><span class="va">physeq</span></span>
 <span><span class="va">known_chimeras</span> <span class="op">&lt;-</span> <span class="va">df_chim</span><span class="op">$</span><span class="va">chimera_names</span></span>
 <span></span>
-<span><span class="co"># View parent information including sequence distance</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">df_chim</span><span class="op">$</span><span class="va">parent_info</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span></span>
-<span>  <span class="st">"\nMinimum parent distance:"</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">df_chim</span><span class="op">$</span><span class="va">parent_info</span><span class="op">$</span><span class="va">parent_distance</span><span class="op">)</span>,</span>
-<span>  <span class="st">"\n"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\nMean parent distance:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">df_chim</span><span class="op">$</span><span class="va">parent_info</span><span class="op">$</span><span class="va">parent_distance</span><span class="op">)</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">df_chim</span><span class="op">$</span><span class="va">parent_info</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="comparing-detection-methods">Comparing Detection Methods<a class="anchor" aria-label="anchor" href="#comparing-detection-methods"></a>
@@ -201,8 +193,7 @@ detectable.</p>
 <h2 id="benchmark-summary-table">Benchmark Summary Table<a class="anchor" aria-label="anchor" href="#benchmark-summary-table"></a>
 </h2>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Create summary table</span></span>
-<span><span class="va">benchmark_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">benchmark_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  Method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">result_vs</span><span class="op">$</span><span class="va">method</span>, <span class="va">result_dada2</span><span class="op">$</span><span class="va">method</span><span class="op">)</span>,</span>
 <span>  `N Chimeras` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">result_vs</span><span class="op">$</span><span class="va">n_chimeras</span>, <span class="va">result_dada2</span><span class="op">$</span><span class="va">n_chimeras</span><span class="op">)</span>,</span>
 <span>  Detected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">result_vs</span><span class="op">$</span><span class="va">n_detected</span>, <span class="va">result_dada2</span><span class="op">$</span><span class="va">n_detected</span><span class="op">)</span>,</span>
@@ -222,29 +213,19 @@ detectable.</p>
 <h2 id="evaluating-detection-performance">Evaluating Detection Performance<a class="anchor" aria-label="anchor" href="#evaluating-detection-performance"></a>
 </h2>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"=== Chimera Detection Benchmark ===\n"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Known chimeras:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">known_chimeras</span><span class="op">)</span>, <span class="st">"\n\n"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span></span>
-<span>  <span class="st">"vsearch detected:"</span>,</span>
-<span>  <span class="va">result_vs</span><span class="op">$</span><span class="va">n_detected</span>,</span>
-<span>  <span class="st">"/"</span>,</span>
-<span>  <span class="va">result_vs</span><span class="op">$</span><span class="va">n_chimeras</span>,</span>
-<span>  <span class="st">"("</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">result_vs</span><span class="op">$</span><span class="va">detection_rate</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>  <span class="st">"%)\n"</span></span>
+<code class="sourceCode R"><span><span class="va">eval_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  Method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vsearch"</span>, <span class="st">"dada2"</span><span class="op">)</span>,</span>
+<span>  Detected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">result_vs</span><span class="op">$</span><span class="va">n_detected</span>, <span class="va">result_dada2</span><span class="op">$</span><span class="va">n_detected</span><span class="op">)</span>,</span>
+<span>  `N Chimeras` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">result_vs</span><span class="op">$</span><span class="va">n_chimeras</span>, <span class="va">result_dada2</span><span class="op">$</span><span class="va">n_chimeras</span><span class="op">)</span>,</span>
+<span>  `Detection Rate (%)` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">result_vs</span><span class="op">$</span><span class="va">detection_rate</span>, <span class="va">result_dada2</span><span class="op">$</span><span class="va">detection_rate</span><span class="op">)</span>, <span class="fl">1</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  `Total Removed` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="va">result_vs</span><span class="op">$</span><span class="va">total_removed</span>, <span class="va">result_dada2</span><span class="op">$</span><span class="va">total_removed</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  check.names <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span></span>
-<span>  <span class="st">"dada2 detected:"</span>,</span>
-<span>  <span class="va">result_dada2</span><span class="op">$</span><span class="va">n_detected</span>,</span>
-<span>  <span class="st">"/"</span>,</span>
-<span>  <span class="va">result_dada2</span><span class="op">$</span><span class="va">n_chimeras</span>,</span>
-<span>  <span class="st">"("</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">result_dada2</span><span class="op">$</span><span class="va">detection_rate</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>  <span class="st">"%)\n\n"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"vsearch total removed:"</span>, <span class="va">result_vs</span><span class="op">$</span><span class="va">total_removed</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"dada2 total removed:"</span>, <span class="va">result_dada2</span><span class="op">$</span><span class="va">total_removed</span>, <span class="st">"\n"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">eval_summary</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="analyzing-missed-chimeras">Analyzing Missed Chimeras<a class="anchor" aria-label="anchor" href="#analyzing-missed-chimeras"></a>
@@ -252,28 +233,22 @@ detectable.</p>
 <p>Examine which chimeras were missed and their parent sequences:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">result_vs</span><span class="op">$</span><span class="va">missed_names</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\nMissed by vsearch:\n"</span><span class="op">)</span></span>
 <span>  <span class="va">missed_info</span> <span class="op">&lt;-</span> <span class="va">df_chim</span><span class="op">$</span><span class="va">parent_info</span><span class="op">[</span></span>
 <span>    <span class="va">df_chim</span><span class="op">$</span><span class="va">parent_info</span><span class="op">$</span><span class="va">chimera</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">result_vs</span><span class="op">$</span><span class="va">missed_names</span>,</span>
 <span>  <span class="op">]</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">missed_info</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span></span>
-<span>    <span class="st">"\nMean parent distance of missed chimeras:"</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">missed_info</span><span class="op">$</span><span class="va">parent_distance</span><span class="op">)</span>,</span>
-<span>    <span class="st">"\n"</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span></span>
+<span>    <span class="va">missed_info</span>,</span>
+<span>    caption <span class="op">=</span> <span class="st">"Missed by vsearch"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">result_dada2</span><span class="op">$</span><span class="va">missed_names</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\nMissed by dada2:\n"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">result_dada2</span><span class="op">$</span><span class="va">missed_names</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">missed_info</span> <span class="op">&lt;-</span> <span class="va">df_chim</span><span class="op">$</span><span class="va">parent_info</span><span class="op">[</span></span>
 <span>    <span class="va">df_chim</span><span class="op">$</span><span class="va">parent_info</span><span class="op">$</span><span class="va">chimera</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">result_dada2</span><span class="op">$</span><span class="va">missed_names</span>,</span>
 <span>  <span class="op">]</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">missed_info</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span></span>
-<span>    <span class="st">"\nMean parent distance of missed chimeras:"</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">missed_info</span><span class="op">$</span><span class="va">parent_distance</span><span class="op">)</span>,</span>
-<span>    <span class="st">"\n"</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span></span>
+<span>    <span class="va">missed_info</span>,</span>
+<span>    caption <span class="op">=</span> <span class="st">"Missed by dada2"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
@@ -282,7 +257,7 @@ detectable.</p>
 </h2>
 <p>Create different types of synthetic chimeras to test detection
 robustness:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># More variable proportions (harder to detect)</span></span>
 <span><span class="va">result_hard</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_chimera_pq.html">create_chimera_pq</a></span><span class="op">(</span></span>
 <span>  <span class="va">data_fungi_subset</span>,</span>
@@ -306,7 +281,7 @@ robustness:</p>
 <span>  median_abundance_multiplier <span class="op">=</span> <span class="fl">0.01</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Run both detection methods on all chimera types:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run detection on all variants</span></span>
 <span><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  default <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>physeq <span class="op">=</span> <span class="va">data_fungi_test</span>, chimeras <span class="op">=</span> <span class="va">known_chimeras</span><span class="op">)</span>,</span>
@@ -359,12 +334,12 @@ robustness:</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">results</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="summary-table-all-scenarios">Summary Table: All Scenarios<a class="anchor" aria-label="anchor" href="#summary-table-all-scenarios"></a>
 </h2>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Reshape for summary table</span></span>
 <span><span class="va">results_wide</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/reshape.html" class="external-link">reshape</a></span><span class="op">(</span></span>
 <span>  <span class="va">results</span>,</span>
@@ -384,7 +359,7 @@ robustness:</p>
 <div class="section level2">
 <h2 id="visualizing-results">Visualizing Results<a class="anchor" aria-label="anchor" href="#visualizing-results"></a>
 </h2>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Combine parent info from all datasets for histograms</span></span>
 <span><span class="va">prop_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -435,7 +410,7 @@ robustness:</p>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p_hist</span><span class="op">)</span></span>
+<span><span class="va">p_hist</span></span>
 <span></span>
 <span><span class="co"># Barplot comparing all detection rates</span></span>
 <span><span class="va">results</span><span class="op">$</span><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span></span>
@@ -467,14 +442,14 @@ robustness:</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p_bar</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">p_bar</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="effect-of-chimera-abundance-on-detection">Effect of Chimera Abundance on Detection<a class="anchor" aria-label="anchor" href="#effect-of-chimera-abundance-on-detection"></a>
 </h2>
 <p>Chimera abundance relative to parent sequences affects detection
 sensitivity.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">abundance_multipliers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">abundance_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
@@ -518,11 +493,11 @@ sensitivity.</p>
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">abundance_results</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">abundance_results</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="abundance-summary-table">Abundance Summary Table<a class="anchor" aria-label="anchor" href="#abundance-summary-table"></a>
 </h3>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span></span>
 <span>  <span class="va">abundance_results</span>,</span>
 <span>  caption <span class="op">=</span> <span class="st">"Detection by Chimera Abundance Level"</span>,</span>
@@ -532,7 +507,7 @@ sensitivity.</p>
 <div class="section level3">
 <h3 id="visualizing-abundance-effect">Visualizing Abundance Effect<a class="anchor" aria-label="anchor" href="#visualizing-abundance-effect"></a>
 </h3>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Detection rate vs abundance multiplier</span></span>
 <span><span class="va">p_abund_detection</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span></span>
 <span>  <span class="va">abundance_results</span>,</span>
@@ -551,7 +526,7 @@ sensitivity.</p>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p_abund_detection</span><span class="op">)</span></span>
+<span><span class="va">p_abund_detection</span></span>
 <span></span>
 <span><span class="co"># Barplot comparison</span></span>
 <span><span class="va">abundance_results</span><span class="op">$</span><span class="va">multiplier_label</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
@@ -585,7 +560,7 @@ sensitivity.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p_abund_bar</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">p_abund_bar</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -594,7 +569,7 @@ sensitivity.</p>
 <p>Chimeras created from very similar parent sequences are harder to
 detect. The <code>ensure_distinct_parents</code> parameter (default
 TRUE) helps avoid this issue.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compare chimeras with different minimum parent distances</span></span>
 <span><span class="va">distance_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  min_param_distance <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -652,7 +627,7 @@ TRUE) helps avoid this issue.</p>
 <span>  caption <span class="op">=</span> <span class="st">"Detection Rate by Minimum Parent Distance"</span>,</span>
 <span>  digits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot detection rate vs mean parent distance</span></span>
 <span><span class="va">p_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span></span>
 <span>  <span class="va">distance_results</span>,</span>
@@ -670,8 +645,10 @@ TRUE) helps avoid this issue.</p>
 <span>    color <span class="op">=</span> <span class="st">"Method"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggrepel</span><span class="fu">::</span><span class="fu"><a href="https://ggrepel.slowkow.com/reference/geom_text_repel.html" class="external-link">geom_label_repel</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label<span class="op">=</span><span class="va">nb_detected</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">3</span>, show.legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">p_dist</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">ggrepel</span><span class="fu">::</span><span class="fu"><a href="https://ggrepel.slowkow.com/reference/geom_text_repel.html" class="external-link">geom_label_repel</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="va">nb_detected</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">3</span>, show.legend <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="va">p_dist</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

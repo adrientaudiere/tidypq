@@ -38,9 +38,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="sample-scale-verbs">Sample-scale verbs<a class="anchor" aria-label="anchor" href="#sample-scale-verbs"></a></h2>
 
-
+      <div class="section-desc"><p>Filter, select, mutate, slice, arrange, and rename samples.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -49,10 +49,82 @@
 
       <dl><dt>
 
+          <code><a href="filter_samples_pq.html">filter_samples_pq()</a></code>
+
+        </dt>
+        <dd>Filter samples in a phyloseq object</dd>
+
+        <dt>
+
+          <code><a href="select_samdata_pq.html">select_samdata_pq()</a></code>
+
+        </dt>
+        <dd>Select columns from sample_data in a phyloseq object</dd>
+
+        <dt>
+
+          <code><a href="mutate_samdata_pq.html">mutate_samdata_pq()</a></code>
+
+        </dt>
+        <dd>Add or modify columns in sample_data</dd>
+
+        <dt>
+
+          <code><a href="slice_samples_pq.html">slice_samples_pq()</a></code>
+
+        </dt>
+        <dd>Subset samples by position</dd>
+
+        <dt>
+
           <code><a href="arrange_samples_pq.html">arrange_samples_pq()</a></code>
 
         </dt>
         <dd>Arrange samples by column values</dd>
+
+        <dt>
+
+          <code><a href="rename_samples_pq.html">rename_samples_pq()</a></code>
+
+        </dt>
+        <dd>Rename columns in sample_data</dd>
+      </dl></div><div class="section level2">
+      <h2 id="taxa-scale-verbs">Taxa-scale verbs<a class="anchor" aria-label="anchor" href="#taxa-scale-verbs"></a></h2>
+
+      <div class="section-desc"><p>Filter, select, mutate, slice, arrange, and rename taxa.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="filter_taxa_pq.html">filter_taxa_pq()</a></code>
+
+        </dt>
+        <dd>Filter taxa in a phyloseq object</dd>
+
+        <dt>
+
+          <code><a href="select_taxa_pq.html">select_taxa_pq()</a></code>
+
+        </dt>
+        <dd>Select columns from tax_table in a phyloseq object</dd>
+
+        <dt>
+
+          <code><a href="mutate_taxa_pq.html">mutate_taxa_pq()</a></code>
+
+        </dt>
+        <dd>Add or modify columns in tax_table</dd>
+
+        <dt>
+
+          <code><a href="slice_taxa_pq.html">slice_taxa_pq()</a></code>
+
+        </dt>
+        <dd>Subset taxa by position</dd>
 
         <dt>
 
@@ -63,19 +135,76 @@
 
         <dt>
 
-          <code><a href="chimera_removal_dada2.html">chimera_removal_dada2()</a></code>
+          <code><a href="rename_taxa_pq.html">rename_taxa_pq()</a></code>
 
         </dt>
-        <dd>Remove chimeric sequences using dada2</dd>
+        <dd>Rename columns in tax_table</dd>
+      </dl></div><div class="section level2">
+      <h2 id="occurrence-scale-verbs">Occurrence-scale verbs<a class="anchor" aria-label="anchor" href="#occurrence-scale-verbs"></a></h2>
+
+      <div class="section-desc"><p>Filter and transform OTU table values.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="filter_occurrences_pq.html">filter_occurrences_pq()</a></code>
+
+        </dt>
+        <dd>Filter occurrences in the OTU table</dd>
 
         <dt>
 
-          <code><a href="create_chimera_pq.html">create_chimera_pq()</a></code>
+          <code><a href="mutate_occurrences_pq.html">mutate_occurrences_pq()</a></code>
 
         </dt>
-        <dd>Create a phyloseq object with synthetic chimeric sequences</dd>
+        <dd>Transform OTU table values</dd>
+      </dl></div><div class="section level2">
+      <h2 id="tree-scale-verbs">Tree-scale verbs<a class="anchor" aria-label="anchor" href="#tree-scale-verbs"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Filter phylogenetic trees.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="filter_tree_pq.html">filter_tree_pq()</a></code>
+
+        </dt>
+        <dd>Filter phyloseq by tree topology</dd>
+      </dl></div><div class="section level2">
+      <h2 id="helpers">Helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h2>
+
+      <div class="section-desc"><p>Utility functions for common operations.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="taxa_prevalence.html">taxa_prevalence()</a></code>
+
+        </dt>
+        <dd>Calculate taxa prevalence</dd>
+      </dl></div><div class="section level2">
+      <h2 id="decontamination">Decontamination<a class="anchor" aria-label="anchor" href="#decontamination"></a></h2>
+
+      <div class="section-desc"><p>Remove contaminants using negative controls or control taxa.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="decontam_sam_control.html">decontam_sam_control()</a></code>
 
@@ -88,113 +217,48 @@
 
         </dt>
         <dd>Decontaminate based on control taxa</dd>
+      </dl></div><div class="section level2">
+      <h2 id="chimera-detection">Chimera detection<a class="anchor" aria-label="anchor" href="#chimera-detection"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Detect and benchmark chimeric sequences.</p></div>
 
-          <code><a href="filter_occurrences_pq.html">filter_occurrences_pq()</a></code>
+      <dl></dl></div><div class="section level2">
 
-        </dt>
-        <dd>Filter occurrences in the OTU table</dd>
 
-        <dt>
 
-          <code><a href="filter_samples_pq.html">filter_samples_pq()</a></code>
 
-        </dt>
-        <dd>Filter samples in a phyloseq object</dd>
+      <dl><dt>
 
-        <dt>
-
-          <code><a href="filter_taxa_pq.html">filter_taxa_pq()</a></code>
+          <code><a href="chimera_removal_dada2.html">chimera_removal_dada2()</a></code>
 
         </dt>
-        <dd>Filter taxa in a phyloseq object</dd>
+        <dd>Remove chimeric sequences using dada2</dd>
 
         <dt>
 
-          <code><a href="filter_tree_pq.html">filter_tree_pq()</a></code>
+          <code><a href="create_chimera_pq.html">create_chimera_pq()</a></code>
 
         </dt>
-        <dd>Filter phyloseq by tree topology</dd>
+        <dd>Create a phyloseq object with synthetic chimeric sequences</dd>
+      </dl></div><div class="section level2">
+      <h2 id="plots">Plots<a class="anchor" aria-label="anchor" href="#plots"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Diagnostic visualizations.</p></div>
 
-          <code><a href="mutate_occurrences_pq.html">mutate_occurrences_pq()</a></code>
+      <dl></dl></div><div class="section level2">
 
-        </dt>
-        <dd>Transform OTU table values</dd>
 
-        <dt>
 
-          <code><a href="mutate_samdata_pq.html">mutate_samdata_pq()</a></code>
 
-        </dt>
-        <dd>Add or modify columns in sample_data</dd>
-
-        <dt>
-
-          <code><a href="mutate_taxa_pq.html">mutate_taxa_pq()</a></code>
-
-        </dt>
-        <dd>Add or modify columns in tax_table</dd>
-
-        <dt>
+      <dl><dt>
 
           <code><a href="plot_sample_depth_pq.html">plot_sample_depth_pq()</a></code>
 
         </dt>
         <dd>Plot sample depth differences to detect outliers</dd>
-
-        <dt>
-
-          <code><a href="rename_samples_pq.html">rename_samples_pq()</a></code>
-
-        </dt>
-        <dd>Rename columns in sample_data</dd>
-
-        <dt>
-
-          <code><a href="rename_taxa_pq.html">rename_taxa_pq()</a></code>
-
-        </dt>
-        <dd>Rename columns in tax_table</dd>
-
-        <dt>
-
-          <code><a href="select_samdata_pq.html">select_samdata_pq()</a></code>
-
-        </dt>
-        <dd>Select columns from sample_data in a phyloseq object</dd>
-
-        <dt>
-
-          <code><a href="select_taxa_pq.html">select_taxa_pq()</a></code>
-
-        </dt>
-        <dd>Select columns from tax_table in a phyloseq object</dd>
-
-        <dt>
-
-          <code><a href="slice_samples_pq.html">slice_samples_pq()</a></code>
-
-        </dt>
-        <dd>Subset samples by position</dd>
-
-        <dt>
-
-          <code><a href="slice_taxa_pq.html">slice_taxa_pq()</a></code>
-
-        </dt>
-        <dd>Subset taxa by position</dd>
-
-        <dt>
-
-          <code><a href="taxa_prevalence.html">taxa_prevalence()</a></code>
-
-        </dt>
-        <dd>Calculate taxa prevalence</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
