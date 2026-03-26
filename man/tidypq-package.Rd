@@ -11,6 +11,7 @@ Provides tidyverse-style verbs for manipulating 'phyloseq' objects at four scale
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://adrientaudiere.github.io/tidypq/}
   \item \url{https://github.com/adrientaudiere/tidypq}
   \item Report bugs at \url{https://github.com/adrientaudiere/tidypq/issues}
 }

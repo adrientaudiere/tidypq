@@ -3,6 +3,7 @@
 export(arrange_samples_pq)
 export(arrange_taxa_pq)
 export(chimera_removal_dada2)
+export(chimera_removal_vs_ref)
 export(create_chimera_pq)
 export(decontam_sam_control)
 export(decontam_taxa_control)

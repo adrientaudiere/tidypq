@@ -1,3 +1,7 @@
+# tidypq (development version)
+
+* `chimera_removal_vs_ref()` removes chimeric sequences using UCHIME reference-based detection via vsearch.
+
 # tidypq 0.1.0
 
 * Initial CRAN submission.

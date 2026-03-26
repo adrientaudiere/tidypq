@@ -54,6 +54,7 @@ reference:
   desc: Detect and benchmark chimeric sequences.
   contents:
   - chimera_removal_dada2
+  - chimera_removal_vs_ref
   - create_chimera_pq
 
 - title: Plots

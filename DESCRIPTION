@@ -11,7 +11,7 @@ Description: Provides tidyverse-style verbs for manipulating 'phyloseq'
     metabarcoding analyses, it integrates with 'MiscMetabar' and the
     'pqverse' ecosystem.
 License: MIT + file LICENSE
-URL: https://adrientaudiere.github.io/tidypq,
+URL: https://adrientaudiere.github.io/tidypq/,
     https://github.com/adrientaudiere/tidypq
 BugReports: https://github.com/adrientaudiere/tidypq/issues
 Depends:

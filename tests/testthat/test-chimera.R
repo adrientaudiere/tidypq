@@ -93,6 +93,56 @@ test_that("create_chimera_pq errors with invalid prop_min", {
   )
 })
 
+test_that("chimera_removal_vs_ref errors without refseq", {
+  pq_no_ref <- phyloseq::phyloseq(
+    phyloseq::otu_table(data_fungi),
+    phyloseq::tax_table(data_fungi),
+    phyloseq::sample_data(data_fungi)
+  )
+  expect_error(
+    chimera_removal_vs_ref(pq_no_ref, database = "any.fasta"),
+    "refseq"
+  )
+})
+
+test_that("chimera_removal_vs_ref errors when database not found", {
+  expect_error(
+    chimera_removal_vs_ref(data_fungi, database = "/nonexistent/db.fasta"),
+    "not found"
+  )
+})
+
+test_that("chimera_removal_vs_ref detects chimeras with vsearch", {
+  skip_if_not(MiscMetabar::is_vsearch_installed())
+  result <- create_chimera_pq(data_fungi, n_chimeras = 3, seed = 1)
+  pq_chim <- result$physeq
+
+  tmp_db <- file.path(tempdir(), "test_ref_db.fasta")
+  Biostrings::writeXStringSet(data_fungi@refseq, tmp_db)
+  on.exit(unlink(tmp_db))
+
+  out <- chimera_removal_vs_ref(
+    pq_chim,
+    database = tmp_db,
+    return_a_list = TRUE
+  )
+
+  expect_type(out, "list")
+  expect_named(out, c("physeq", "kept_taxa", "chimeric_taxa"))
+  expect_s4_class(out$physeq, "phyloseq")
+  expect_true(phyloseq::ntaxa(out$physeq) <= phyloseq::ntaxa(pq_chim))
+})
+
+test_that("chimera_removal_vs_ref returns phyloseq by default", {
+  skip_if_not(MiscMetabar::is_vsearch_installed())
+  tmp_db <- file.path(tempdir(), "test_ref_db2.fasta")
+  Biostrings::writeXStringSet(data_fungi@refseq, tmp_db)
+  on.exit(unlink(tmp_db))
+
+  out <- chimera_removal_vs_ref(data_fungi, database = tmp_db)
+  expect_s4_class(out, "phyloseq")
+})
+
 test_that("create_chimera_pq errors with invalid min_parent_distance", {
   expect_error(
     create_chimera_pq(data_fungi, n_chimeras = 1, min_parent_distance = -0.1),
