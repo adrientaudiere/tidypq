@@ -228,7 +228,6 @@ slice_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' # Order of columns matters
 #' dfm_arr <- arrange_taxa_pq(data_fungi, Class, Genus)@tax_table[, c("Class", "Genus")]
 #' arrange_taxa_pq(data_fungi, Genus, Class)@tax_table[, c("Class", "Genus")]
-
 arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   MiscMetabar::verify_pq(physeq)
 
@@ -265,8 +264,7 @@ arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   if (tar) {
     new_physeq@otu_table <- phyloseq::otu_table(
       as(phyloseq::otu_table(physeq), "matrix")[
-        rownames(tax_df),
-        ,
+        rownames(tax_df), ,
         drop = FALSE
       ],
       taxa_are_rows = TRUE

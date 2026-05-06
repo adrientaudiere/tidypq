@@ -22,16 +22,14 @@
 #' @author Adrien Taudière
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(MiscMetabar)
-#' # Synchronize tree with OTU table (remove taxa not in tree)
-#' filter_tree_pq(physeq_with_tree)
-#'
-#' # Keep only specific taxa in tree
-#' filter_tree_pq(physeq_with_tree, taxa = c("ASV1", "ASV2", "ASV3"))
-#'
-#' # Filter by tip label pattern
-#' filter_tree_pq(physeq_with_tree, pattern = "^ASV")
+#' library(ape)
+#' data(data_fungi)
+#' pg <- data_fungi
+#' pg@phy_tree <- ape::rtree(phyloseq::ntaxa(data_fungi),
+#'                            tip.label = phyloseq::taxa_names(data_fungi))
+#' filter_tree_pq(pg, taxa = phyloseq::taxa_names(data_fungi)[1:10])
 #' }
 filter_tree_pq <- function(
   physeq,

@@ -11,13 +11,13 @@ Source:
 [`DESCRIPTION`](https://github.com/adrientaudiere/tidypq/blob/HEAD/DESCRIPTION)
 
 Taudière A (2026). *tidypq: Tidyverse-Style Verbs for 'phyloseq'
-Objects*. R package version 0.1.0,
-<https://adrientaudiere.github.io/tidypq>.
+Objects*. R package version 0.1.1,
+<https://adrientaudiere.github.io/tidypq/>.
 
     @Manual{,
       title = {tidypq: Tidyverse-Style Verbs for 'phyloseq' Objects},
       author = {Adrien Taudière},
       year = {2026},
-      note = {R package version 0.1.0},
-      url = {https://adrientaudiere.github.io/tidypq},
+      note = {R package version 0.1.1},
+      url = {https://adrientaudiere.github.io/tidypq/},
     }

@@ -45,7 +45,9 @@ eval_filter_quos <- function(quos, mask) {
     return(TRUE)
   }
   results <- lapply(quos, rlang::eval_tidy, data = mask)
-  Reduce(`&`, results)
+  keep <- Reduce(`&`, results)
+  keep[is.na(keep)] <- FALSE
+  keep
 }
 
 #' Build summary matrices from an OTU matrix (taxa as rows)

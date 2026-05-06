@@ -174,6 +174,7 @@ chimera_removal_dada2 <- function(
 #'
 #' data_nochim <- chimera_removal_vs_ref(data_fungi, database = mini_db)
 #'
+#' \donttest{
 #' # Return detailed output including chimeric taxa names
 #' result <- chimera_removal_vs_ref(
 #'   data_fungi,
@@ -192,9 +193,11 @@ chimera_removal_dada2 <- function(
 #' detected <- pq_chim$chimera_names[
 #'   pq_chim$chimera_names %in% result_bench$chimeric_taxa
 #' ]
-#' cat("Detected", length(detected), "/", length(pq_chim$chimera_names),
-#'     "synthetic chimeras\n")
-#'
+#' cat(
+#'   "Detected", length(detected), "/", length(pq_chim$chimera_names),
+#'   "synthetic chimeras\n"
+#' )
+#' }
 #' @author Adrien Taudière
 chimera_removal_vs_ref <- function(
   physeq,
@@ -218,14 +221,14 @@ chimera_removal_vs_ref <- function(
   dna <- seqs
   names(dna) <- paste0("Taxa", seq_along(seqs))
 
-  tmp_fasta <- file.path(tempdir(), "chimera_ref_input.fasta")
-  tmp_nonchim <- file.path(tempdir(), "chimera_ref_nonchimeras.fasta")
-  tmp_chim <- file.path(tempdir(), "chimera_ref_chimeras.fasta")
-  tmp_border <- file.path(tempdir(), "chimera_ref_borderline.fasta")
+  tmp_fasta <- tempfile(pattern = "chimera_ref_input_", fileext = ".fasta")
+  tmp_nonchim <- tempfile(pattern = "chimera_ref_nonchimeras_", fileext = ".fasta")
+  tmp_chim <- tempfile(pattern = "chimera_ref_chimeras_", fileext = ".fasta")
+  tmp_border <- tempfile(pattern = "chimera_ref_borderline_", fileext = ".fasta")
 
   Biostrings::writeXStringSet(dna, tmp_fasta)
 
-  system2(
+  ret <- system2(
     vsearchpath,
     paste(
       "--uchime_ref",
@@ -243,6 +246,11 @@ chimera_removal_vs_ref <- function(
     stdout = TRUE,
     stderr = TRUE
   )
+
+  exit_status <- attr(ret, "status")
+  if (!is.null(exit_status) && exit_status != 0) {
+    stop("vsearch failed with exit code ", exit_status)
+  }
 
   chim_seqs <- Biostrings::readDNAStringSet(tmp_chim)
 
@@ -352,33 +360,44 @@ chimera_removal_vs_ref <- function(
 #' print(result$parent_info)
 #'
 #' # More variable proportions (wider distribution)
-#' result2 <- create_chimera_pq(data_fungi, n_chimeras = 40,
-#'                              prop_mean = 0.5, prop_sd = 0.25)
+#' result2 <- create_chimera_pq(data_fungi,
+#'   n_chimeras = 40,
+#'   prop_mean = 0.5, prop_sd = 0.25
+#' )
 #'
 #' # Biased toward more of parent1 (e.g., 70/30 splits on average)
-#' result3 <- create_chimera_pq(data_fungi, n_chimeras = 40,
-#'                              prop_mean = 0.7, prop_sd = 0.1)
+#' result3 <- create_chimera_pq(data_fungi,
+#'   n_chimeras = 40,
+#'   prop_mean = 0.7, prop_sd = 0.1
+#' )
 #'
 #' # Benchmark chimera detection methods
 #' if (MiscMetabar::is_vsearch_installed()) {
 #'   nochim_vs <- MiscMetabar::chimera_removal_vs(data_fungi_test)
 #'   detected_vs <- known_chimeras[!known_chimeras %in% phyloseq::taxa_names(nochim_vs)]
-#'   cat("vsearch detected:", length(detected_vs), "/",
-#'       length(known_chimeras), "chimeras\n")
+#'   cat(
+#'     "vsearch detected:", length(detected_vs), "/",
+#'     length(known_chimeras), "chimeras\n"
+#'   )
 #' }
 #'
 #' # Visualize the distribution of proportions
 #' hist(result$parent_info$prop_parent1,
-#'      main = "Distribution of parent1 proportions",
-#'      xlab = "Proportion from parent1", xlim = c(0, 1))
+#'   main = "Distribution of parent1 proportions",
+#'   xlab = "Proportion from parent1", xlim = c(0, 1)
+#' )
 #'
 #' # Ensure parents are at least 15% different (more detectable chimeras)
-#' result4 <- create_chimera_pq(data_fungi, n_chimeras = 40,
-#'                              min_parent_distance = 0.15)
+#' result4 <- create_chimera_pq(data_fungi,
+#'   n_chimeras = 40,
+#'   min_parent_distance = 0.15
+#' )
 #'
 #' # Disable parent distance filtering (allows similar parents)
-#' result5 <- create_chimera_pq(data_fungi, n_chimeras = 40,
-#'                              min_parent_distance = 0)
+#' result5 <- create_chimera_pq(data_fungi,
+#'   n_chimeras = 40,
+#'   min_parent_distance = 0
+#' )
 #'
 #' @author Adrien Taudiere
 create_chimera_pq <- function(
@@ -391,10 +410,12 @@ create_chimera_pq <- function(
   median_abundance_multiplier = 0.1,
   min_parent_distance = 0.1
 ) {
-  set.seed(seed)
-
   if (is.null(phyloseq::refseq(physeq))) {
     stop("phyloseq object must have refseq slot")
+  }
+
+  if (phyloseq::ntaxa(physeq) < 2) {
+    stop("Need at least 2 taxa to create chimeras.")
   }
 
   if (prop_min <= 0 || prop_min >= 0.5) {
@@ -404,6 +425,10 @@ create_chimera_pq <- function(
   if (min_parent_distance < 0 || min_parent_distance >= 1) {
     stop("min_parent_distance must be >= 0 and < 1")
   }
+
+  old_seed <- globalenv()$.Random.seed
+  on.exit(if (!is.null(old_seed)) assign(".Random.seed", old_seed, envir = globalenv()))
+  set.seed(seed)
 
   seqs <- phyloseq::refseq(physeq)
   taxa_nms <- phyloseq::taxa_names(physeq)

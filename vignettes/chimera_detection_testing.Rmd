@@ -621,7 +621,8 @@ p_dist <- ggplot(
   ) +
   theme_bw() +
   ggrepel::geom_label_repel(
-    aes(label = nb_detected), size = 3, show.legend = FALSE
+    aes(label = nb_detected),
+    size = 3, show.legend = FALSE
   )
 
 p_dist

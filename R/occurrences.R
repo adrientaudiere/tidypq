@@ -19,7 +19,7 @@
 #' Values that do not satisfy the condition are set to 0.
 #'
 #' @param physeq (phyloseq, required) A phyloseq object.
-#' @param condition An expression evaluated on the OTU matrix. Values where the
+#' @param condition (required) An expression evaluated on the OTU matrix. Values where the
 #'   condition is FALSE (or NA) are set to 0. Use `.` to refer to cell values.
 #' @param clean_phyloseq_object if TRUE (default), the resulting phyloseq object
 #'  is cleaned using `clean_pq()` to remove empty taxa/samples.
@@ -44,6 +44,9 @@ filter_occurrences_pq <- function(
   clean_phyloseq_object = TRUE
 ) {
   MiscMetabar::verify_pq(physeq)
+  if (missing(condition)) {
+    stop("The 'condition' argument is required.")
+  }
 
   tar <- phyloseq::taxa_are_rows(physeq)
   otu <- as(phyloseq::otu_table(physeq), "matrix")
@@ -58,6 +61,10 @@ filter_occurrences_pq <- function(
   mask_env <- rlang::new_environment(summaries)
   mask <- rlang::new_data_mask(mask_env)
   keep_matrix <- rlang::eval_tidy(condition_quo, data = mask)
+
+  if (!is.matrix(keep_matrix) || !identical(dim(keep_matrix), dim(otu))) {
+    stop("The condition must evaluate to a logical matrix matching OTU table dimensions.")
+  }
 
   # Handle NA as FALSE
   keep_matrix[is.na(keep_matrix)] <- FALSE

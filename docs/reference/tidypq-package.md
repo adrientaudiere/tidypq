@@ -11,6 +11,8 @@ metabarcoding analyses, it integrates with 'MiscMetabar' and the
 
 Useful links:
 
+- <https://adrientaudiere.github.io/tidypq/>
+
 - <https://github.com/adrientaudiere/tidypq>
 
 - Report bugs at <https://github.com/adrientaudiere/tidypq/issues>

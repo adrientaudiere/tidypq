@@ -73,7 +73,7 @@ filter_samples_pq(data_fungi, sample_sums(.) > median(sample_sums(.)))
 #> refseq()      DNAStringSet:      [ 1353 reference sequences ]
 
 # Keep samples above half of the average abundance
-filter_samples_pq(data_fungi, sample_sums(.) > sum(sample_sums(.))/phyloseq::nsamples(.)/2)
+filter_samples_pq(data_fungi, sample_sums(.) > sum(sample_sums(.)) / phyloseq::nsamples(.) / 2)
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 1383 taxa and 108 samples ]
 #> sample_data() Sample Data:       [ 108 samples by 7 sample variables ]

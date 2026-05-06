@@ -45,7 +45,6 @@
 #'
 #' # Without threshold coloring
 #' plot_sample_depth_pq(data_fungi, show_threshold = FALSE)
-
 plot_sample_depth_pq <- function(
   physeq,
   lower_quantile = 0.1,

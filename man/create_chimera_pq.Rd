@@ -79,33 +79,44 @@ known_chimeras <- result$chimera_names
 print(result$parent_info)
 
 # More variable proportions (wider distribution)
-result2 <- create_chimera_pq(data_fungi, n_chimeras = 40,
-                             prop_mean = 0.5, prop_sd = 0.25)
+result2 <- create_chimera_pq(data_fungi,
+  n_chimeras = 40,
+  prop_mean = 0.5, prop_sd = 0.25
+)
 
 # Biased toward more of parent1 (e.g., 70/30 splits on average)
-result3 <- create_chimera_pq(data_fungi, n_chimeras = 40,
-                             prop_mean = 0.7, prop_sd = 0.1)
+result3 <- create_chimera_pq(data_fungi,
+  n_chimeras = 40,
+  prop_mean = 0.7, prop_sd = 0.1
+)
 
 # Benchmark chimera detection methods
 if (MiscMetabar::is_vsearch_installed()) {
   nochim_vs <- MiscMetabar::chimera_removal_vs(data_fungi_test)
   detected_vs <- known_chimeras[!known_chimeras \%in\% phyloseq::taxa_names(nochim_vs)]
-  cat("vsearch detected:", length(detected_vs), "/",
-      length(known_chimeras), "chimeras\n")
+  cat(
+    "vsearch detected:", length(detected_vs), "/",
+    length(known_chimeras), "chimeras\n"
+  )
 }
 
 # Visualize the distribution of proportions
 hist(result$parent_info$prop_parent1,
-     main = "Distribution of parent1 proportions",
-     xlab = "Proportion from parent1", xlim = c(0, 1))
+  main = "Distribution of parent1 proportions",
+  xlab = "Proportion from parent1", xlim = c(0, 1)
+)
 
 # Ensure parents are at least 15\% different (more detectable chimeras)
-result4 <- create_chimera_pq(data_fungi, n_chimeras = 40,
-                             min_parent_distance = 0.15)
+result4 <- create_chimera_pq(data_fungi,
+  n_chimeras = 40,
+  min_parent_distance = 0.15
+)
 
 # Disable parent distance filtering (allows similar parents)
-result5 <- create_chimera_pq(data_fungi, n_chimeras = 40,
-                             min_parent_distance = 0)
+result5 <- create_chimera_pq(data_fungi,
+  n_chimeras = 40,
+  min_parent_distance = 0
+)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

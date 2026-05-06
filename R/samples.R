@@ -32,7 +32,7 @@
 #' filter_samples_pq(data_fungi, sample_sums(.) > median(sample_sums(.)))
 #'
 #' # Keep samples above half of the average abundance
-#' filter_samples_pq(data_fungi, sample_sums(.) > sum(sample_sums(.))/phyloseq::nsamples(.)/2)
+#' filter_samples_pq(data_fungi, sample_sums(.) > sum(sample_sums(.)) / phyloseq::nsamples(.) / 2)
 filter_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   MiscMetabar::verify_pq(physeq)
 

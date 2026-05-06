@@ -6,7 +6,7 @@
 \alias{tidypq-package}
 \title{tidypq: Tidyverse-Style Verbs for 'phyloseq' Objects}
 \description{
-Provides tidyverse-style verbs for manipulating 'phyloseq' objects at four scales: samples, taxa, occurrences, and tree. Functions follow a consistent naming convention and support data masking for intuitive filtering, selection, and mutation operations. Designed for metabarcoding analyses, it integrates with 'MiscMetabar' and the 'pqverse' ecosystem.
+Tidyverse-style verbs for manipulating 'phyloseq' objects at four scales: samples, taxa, occurrences, and tree. Functions follow a consistent naming convention and support data masking for intuitive filtering, selection, and mutation operations. Designed for metabarcoding analyses, it integrates with 'MiscMetabar' and the 'pqverse' ecosystem.
 }
 \seealso{
 Useful links:

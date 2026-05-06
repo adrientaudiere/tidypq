@@ -5,7 +5,7 @@ detection methods like MiscMetabar::chimera_removal_vs() or
 chimera_removal_dada2()."><meta property="og:description" content="This function creates synthetic chimeric sequences by combining parts of
 existing sequences from a phyloseq object. Useful for benchmarking chimera
 detection methods like MiscMetabar::chimera_removal_vs() or
-chimera_removal_dada2()."></head><body>
+chimera_removal_dada2()."><meta property="og:image" content="https://adrientaudiere.github.io/tidypq/logo.svg"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -13,7 +13,7 @@ chimera_removal_dada2()."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">tidypq</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,8 +39,7 @@ chimera_removal_dada2()."></head><body>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-
-      <h1>Create a phyloseq object with synthetic chimeric sequences</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Create a phyloseq object with synthetic chimeric sequences</h1>
       <small class="dont-index">Source: <a href="https://github.com/adrientaudiere/tidypq/blob/HEAD/R/chimera.R" class="external-link"><code>R/chimera.R</code></a></small>
       <div class="d-none name"><code>create_chimera_pq.Rd</code></div>
     </div>
@@ -241,19 +240,25 @@ min_parent_distance)</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 40        300</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># More variable proportions (wider distribution)</span></span></span>
-<span class="r-in"><span><span class="va">result2</span> <span class="op">&lt;-</span> <span class="fu">create_chimera_pq</span><span class="op">(</span><span class="va">data_fungi</span>, n_chimeras <span class="op">=</span> <span class="fl">40</span>,</span></span>
-<span class="r-in"><span>                             prop_mean <span class="op">=</span> <span class="fl">0.5</span>, prop_sd <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">result2</span> <span class="op">&lt;-</span> <span class="fu">create_chimera_pq</span><span class="op">(</span><span class="va">data_fungi</span>,</span></span>
+<span class="r-in"><span>  n_chimeras <span class="op">=</span> <span class="fl">40</span>,</span></span>
+<span class="r-in"><span>  prop_mean <span class="op">=</span> <span class="fl">0.5</span>, prop_sd <span class="op">=</span> <span class="fl">0.25</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Biased toward more of parent1 (e.g., 70/30 splits on average)</span></span></span>
-<span class="r-in"><span><span class="va">result3</span> <span class="op">&lt;-</span> <span class="fu">create_chimera_pq</span><span class="op">(</span><span class="va">data_fungi</span>, n_chimeras <span class="op">=</span> <span class="fl">40</span>,</span></span>
-<span class="r-in"><span>                             prop_mean <span class="op">=</span> <span class="fl">0.7</span>, prop_sd <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">result3</span> <span class="op">&lt;-</span> <span class="fu">create_chimera_pq</span><span class="op">(</span><span class="va">data_fungi</span>,</span></span>
+<span class="r-in"><span>  n_chimeras <span class="op">=</span> <span class="fl">40</span>,</span></span>
+<span class="r-in"><span>  prop_mean <span class="op">=</span> <span class="fl">0.7</span>, prop_sd <span class="op">=</span> <span class="fl">0.1</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Benchmark chimera detection methods</span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu">MiscMetabar</span><span class="fu">::</span><span class="fu"><a href="https://adrientaudiere.github.io/MiscMetabar/reference/is_vsearch_installed.html" class="external-link">is_vsearch_installed</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="va">nochim_vs</span> <span class="op">&lt;-</span> <span class="fu">MiscMetabar</span><span class="fu">::</span><span class="fu"><a href="https://adrientaudiere.github.io/MiscMetabar/reference/chimera_removal_vs.html" class="external-link">chimera_removal_vs</a></span><span class="op">(</span><span class="va">data_fungi_test</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">detected_vs</span> <span class="op">&lt;-</span> <span class="va">known_chimeras</span><span class="op">[</span><span class="op">!</span><span class="va">known_chimeras</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu">phyloseq</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/taxa_names-methods.html" class="external-link">taxa_names</a></span><span class="op">(</span><span class="va">nochim_vs</span><span class="op">)</span><span class="op">]</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"vsearch detected:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">detected_vs</span><span class="op">)</span>, <span class="st">"/"</span>,</span></span>
-<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">known_chimeras</span><span class="op">)</span>, <span class="st">"chimeras\n"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="st">"vsearch detected:"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">detected_vs</span><span class="op">)</span>, <span class="st">"/"</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">known_chimeras</span><span class="op">)</span>, <span class="st">"chimeras\n"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Filtering for sequences under 100 bp remove a total of 0 ( 0 %) unique sequences for a total of 0 sequences removed ( 0 %)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Cleaning suppress 0 taxa (  ) and 0 sample(s) (  ).</span>
@@ -266,17 +271,22 @@ min_parent_distance)</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Visualize the distribution of proportions</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">parent_info</span><span class="op">$</span><span class="va">prop_parent1</span>,</span></span>
-<span class="r-in"><span>     main <span class="op">=</span> <span class="st">"Distribution of parent1 proportions"</span>,</span></span>
-<span class="r-in"><span>     xlab <span class="op">=</span> <span class="st">"Proportion from parent1"</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  main <span class="op">=</span> <span class="st">"Distribution of parent1 proportions"</span>,</span></span>
+<span class="r-in"><span>  xlab <span class="op">=</span> <span class="st">"Proportion from parent1"</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="create_chimera_pq-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Ensure parents are at least 15% different (more detectable chimeras)</span></span></span>
-<span class="r-in"><span><span class="va">result4</span> <span class="op">&lt;-</span> <span class="fu">create_chimera_pq</span><span class="op">(</span><span class="va">data_fungi</span>, n_chimeras <span class="op">=</span> <span class="fl">40</span>,</span></span>
-<span class="r-in"><span>                             min_parent_distance <span class="op">=</span> <span class="fl">0.15</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">result4</span> <span class="op">&lt;-</span> <span class="fu">create_chimera_pq</span><span class="op">(</span><span class="va">data_fungi</span>,</span></span>
+<span class="r-in"><span>  n_chimeras <span class="op">=</span> <span class="fl">40</span>,</span></span>
+<span class="r-in"><span>  min_parent_distance <span class="op">=</span> <span class="fl">0.15</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Disable parent distance filtering (allows similar parents)</span></span></span>
-<span class="r-in"><span><span class="va">result5</span> <span class="op">&lt;-</span> <span class="fu">create_chimera_pq</span><span class="op">(</span><span class="va">data_fungi</span>, n_chimeras <span class="op">=</span> <span class="fl">40</span>,</span></span>
-<span class="r-in"><span>                             min_parent_distance <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">result5</span> <span class="op">&lt;-</span> <span class="fu">create_chimera_pq</span><span class="op">(</span><span class="va">data_fungi</span>,</span></span>
+<span class="r-in"><span>  n_chimeras <span class="op">=</span> <span class="fl">40</span>,</span></span>
+<span class="r-in"><span>  min_parent_distance <span class="op">=</span> <span class="fl">0</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

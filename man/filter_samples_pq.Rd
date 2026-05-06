@@ -38,7 +38,7 @@ filter_samples_pq(data_fungi, Height == "Low", sample_sums(.) > 5000)
 filter_samples_pq(data_fungi, sample_sums(.) > median(sample_sums(.)))
 
 # Keep samples above half of the average abundance
-filter_samples_pq(data_fungi, sample_sums(.) > sum(sample_sums(.))/phyloseq::nsamples(.)/2)
+filter_samples_pq(data_fungi, sample_sums(.) > sum(sample_sums(.)) / phyloseq::nsamples(.) / 2)
 }
 \author{
 Adrien Taudière

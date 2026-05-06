@@ -72,6 +72,8 @@ Detect and benchmark chimeric sequences.
 
 - [`chimera_removal_dada2()`](https://adrientaudiere.github.io/tidypq/reference/chimera_removal_dada2.md)
   : Remove chimeric sequences using dada2
+- [`chimera_removal_vs_ref()`](https://adrientaudiere.github.io/tidypq/reference/chimera_removal_vs_ref.md)
+  : Remove chimeric sequences using vsearch and a reference database
 - [`create_chimera_pq()`](https://adrientaudiere.github.io/tidypq/reference/create_chimera_pq.md)
   : Create a phyloseq object with synthetic chimeric sequences
 

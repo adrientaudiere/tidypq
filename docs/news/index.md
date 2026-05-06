@@ -1,5 +1,11 @@
 # Changelog
 
+## tidypq (development version)
+
+- [`chimera_removal_vs_ref()`](https://adrientaudiere.github.io/tidypq/reference/chimera_removal_vs_ref.md)
+  removes chimeric sequences using UCHIME reference-based detection via
+  vsearch.
+
 ## tidypq 0.1.0
 
 - Initial CRAN submission.

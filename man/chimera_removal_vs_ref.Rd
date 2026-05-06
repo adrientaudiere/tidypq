@@ -60,10 +60,9 @@ default). Temporary files are cleaned up unless \code{keep_temporary_files = TRU
 library(MiscMetabar)
 data(data_fungi)
 
-\donttest{
 # Use the mini UNITE database bundled with MiscMetabar.
 # NOTE: this is a very small subset of the full UNITE database,
-# so a high number of chimeras detected here is expected and does not
+# so a low number of chimeras detected here is expected and does not
 # reflect what you would observe with the complete database.
 mini_db <- system.file(
   "extdata", "mini_UNITE_fungi.fasta.gz",
@@ -90,9 +89,10 @@ result_bench <- chimera_removal_vs_ref(
 detected <- pq_chim$chimera_names[
   pq_chim$chimera_names \%in\% result_bench$chimeric_taxa
 ]
-cat("Detected", length(detected), "/", length(pq_chim$chimera_names),
-    "synthetic chimeras\n")
-}
+cat(
+  "Detected", length(detected), "/", length(pq_chim$chimera_names),
+  "synthetic chimeras\n"
+)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

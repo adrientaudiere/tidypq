@@ -17,6 +17,7 @@ library(tidypq)
 #> 
 #>     intersect, setdiff, setequal, union
 #> Loading required package: purrr
+#> Loading required package: divent
 library(MiscMetabar)
 ```
 
@@ -24,7 +25,7 @@ library(MiscMetabar)
 
 ``` r
 # Filter taxa present in at least 3 samples
-data_fungi |> 
+data_fungi |>
   filter_taxa_pq(taxa_prevalence(.) >= 3)
 #> Taxa are now in rows.
 #> phyloseq-class experiment-level object
@@ -35,7 +36,7 @@ data_fungi |>
 
 # Filter samples with above-median depth
 data_fungi |>
-   filter_samples_pq(sample_sums(.) > median(sample_sums(.)))
+  filter_samples_pq(sample_sums(.) > median(sample_sums(.)))
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 1353 taxa and 92 samples ]
 #> sample_data() Sample Data:       [ 92 samples by 7 sample variables ]
