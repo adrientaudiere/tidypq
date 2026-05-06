@@ -19,6 +19,8 @@ is cleaned using \code{clean_pq()} to remove empty taxa/samples.}
 A phyloseq object with reordered samples.
 }
 \description{
+\lifecycle{experimental}
+
 Reorder samples based on sample_data columns. Supports the \code{.} pronoun
 to refer to the phyloseq object for sorting by computed values.
 }

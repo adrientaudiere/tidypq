@@ -42,6 +42,8 @@ resulting phyloseq object using \code{clean_pq()} to remove empty taxa/samples.}
 A phyloseq object with decontaminated OTU values.
 }
 \description{
+\lifecycle{experimental}
+
 Remove potential contaminants by using known control taxa (e.g., spike-ins,
 synthetic sequences) to estimate background contamination levels. For each
 sample, a threshold is computed from the control taxa using a summary function

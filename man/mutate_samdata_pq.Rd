@@ -20,6 +20,8 @@ A phyloseq object with modified sample_data (same samples, modified
 or new columns).
 }
 \description{
+\lifecycle{experimental}
+
 Create new columns or modify existing ones in sample_data using data masking.
 Supports the \code{.} pronoun to refer to the phyloseq object.
 

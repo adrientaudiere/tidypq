@@ -20,6 +20,8 @@ is cleaned using \code{clean_pq()} to remove empty taxa/samples.}
 A phyloseq object with filtered samples.
 }
 \description{
+\lifecycle{experimental}
+
 Filter samples using data masking on sample_data. Supports the \code{.} pronoun
 to refer to the phyloseq object for use with functions like \code{sample_sums()}.
 }

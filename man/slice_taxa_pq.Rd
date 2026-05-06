@@ -19,6 +19,8 @@ is cleaned using \code{clean_pq()} to remove empty taxa/samples.}
 A phyloseq object with selected taxa.
 }
 \description{
+\lifecycle{experimental}
+
 Select taxa by their integer positions.
 }
 \examples{

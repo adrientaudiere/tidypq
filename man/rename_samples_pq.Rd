@@ -16,6 +16,8 @@ and the value is the old name. Use \code{new_name = old_name} syntax.}
 A phyloseq object with renamed sample_data columns.
 }
 \description{
+\lifecycle{experimental}
+
 Rename columns in sample_data using tidyselect semantics.
 }
 \examples{

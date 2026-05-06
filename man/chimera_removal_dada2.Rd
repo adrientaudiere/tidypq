@@ -29,6 +29,8 @@ chimeric sequences removed. If \code{return_a_list = TRUE}, returns a list with:
 }
 }
 \description{
+\lifecycle{experimental}
+
 Applies \code{dada2::removeBimeraDenovo()} to identify and remove chimeric
 sequences from a phyloseq object based on sequence abundance patterns.
 }

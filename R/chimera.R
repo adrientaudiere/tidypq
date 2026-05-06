@@ -1,5 +1,8 @@
 #' Remove chimeric sequences using dada2
 #'
+#' @description
+#' \lifecycle{experimental}
+#'
 #' Applies `dada2::removeBimeraDenovo()` to identify and remove chimeric
 #' sequences from a phyloseq object based on sequence abundance patterns.
 #'
@@ -119,6 +122,8 @@ chimera_removal_dada2 <- function(
 #' Remove chimeric sequences using vsearch and a reference database
 #'
 #' @description
+#' \lifecycle{experimental}
+#'
 #' Applies UCHIME reference-based chimera detection via
 #' [vsearch](https://github.com/torognes/vsearch) to identify and remove
 #' chimeric sequences from a phyloseq object. Unlike de novo detection
@@ -302,6 +307,8 @@ chimera_removal_vs_ref <- function(
 #' Create a phyloseq object with synthetic chimeric sequences
 #'
 #' @description
+#' \lifecycle{experimental}
+#'
 #' This function creates synthetic chimeric sequences by combining parts of
 #' existing sequences from a phyloseq object. Useful for benchmarking chimera
 #' detection methods like [MiscMetabar::chimera_removal_vs()] or

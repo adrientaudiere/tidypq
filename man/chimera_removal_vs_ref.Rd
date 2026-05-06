@@ -42,6 +42,8 @@ chimeric sequences removed. If \code{return_a_list = TRUE}, returns a list with:
 }
 }
 \description{
+\lifecycle{experimental}
+
 Applies UCHIME reference-based chimera detection via
 \href{https://github.com/torognes/vsearch}{vsearch} to identify and remove
 chimeric sequences from a phyloseq object. Unlike de novo detection
@@ -71,6 +73,7 @@ mini_db <- system.file(
 
 data_nochim <- chimera_removal_vs_ref(data_fungi, database = mini_db)
 
+\donttest{
 # Return detailed output including chimeric taxa names
 result <- chimera_removal_vs_ref(
   data_fungi,
@@ -93,6 +96,7 @@ cat(
   "Detected", length(detected), "/", length(pq_chim$chimera_names),
   "synthetic chimeras\n"
 )
+}
 \dontshow{\}) # examplesIf}
 }
 \seealso{

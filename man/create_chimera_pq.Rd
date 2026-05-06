@@ -60,6 +60,8 @@ min_parent_distance)}
 }
 }
 \description{
+\lifecycle{experimental}
+
 This function creates synthetic chimeric sequences by combining parts of
 existing sequences from a phyloseq object. Useful for benchmarking chimera
 detection methods like \code{\link[MiscMetabar:chimera_removal_vs]{MiscMetabar::chimera_removal_vs()}} or

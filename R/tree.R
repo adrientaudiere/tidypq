@@ -4,6 +4,8 @@
 #' Filter phyloseq by tree topology
 #'
 #' @description
+#' \lifecycle{experimental}
+#'
 #' Filter a phyloseq object to include only taxa that are present in the
 #' phylogenetic tree, or prune the tree to match the taxa in the phyloseq.
 #' Can also filter based on tree properties like tip labels matching a pattern.

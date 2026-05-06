@@ -4,6 +4,8 @@
 #' Filter samples in a phyloseq object
 #'
 #' @description
+#' \lifecycle{experimental}
+#'
 #' Filter samples using data masking on sample_data. Supports the `.` pronoun
 #' to refer to the phyloseq object for use with functions like `sample_sums()`.
 #'
@@ -58,6 +60,8 @@ filter_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' Select columns from sample_data in a phyloseq object
 #'
 #' @description
+#' \lifecycle{experimental}
+#'
 #' Select sample_data columns using tidyselect semantics.
 #'
 #' @param physeq (phyloseq, required) A phyloseq object.
@@ -98,6 +102,8 @@ select_samdata_pq <- function(physeq, ...) {
 #' Add or modify columns in sample_data
 #'
 #' @description
+#' \lifecycle{experimental}
+#'
 #' Create new columns or modify existing ones in sample_data using data masking.
 #' Supports the `.` pronoun to refer to the phyloseq object.
 #'
@@ -161,6 +167,8 @@ mutate_samdata_pq <- function(physeq, ...) {
 #' Subset samples by position
 #'
 #' @description
+#' \lifecycle{experimental}
+#'
 #' Select samples by their integer positions.
 #'
 #' @param physeq (phyloseq, required) A phyloseq object.
@@ -206,6 +214,8 @@ slice_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' Arrange samples by column values
 #'
 #' @description
+#' \lifecycle{experimental}
+#'
 #' Reorder samples based on sample_data columns. Supports the `.` pronoun
 #' to refer to the phyloseq object for sorting by computed values.
 #'
@@ -261,6 +271,8 @@ arrange_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' Rename columns in sample_data
 #'
 #' @description
+#' \lifecycle{experimental}
+#'
 #' Rename columns in sample_data using tidyselect semantics.
 #'
 #' @param physeq (phyloseq, required) A phyloseq object.

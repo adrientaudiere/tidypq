@@ -4,6 +4,8 @@
 #' Filter occurrences in the OTU table
 #'
 #' @description
+#' \lifecycle{experimental}
+#'
 #' Set OTU table values to 0 based on a condition. This is useful for removing
 #' singletons, low-abundance values, or other filtering operations at the
 #' cell level.
@@ -91,6 +93,8 @@ filter_occurrences_pq <- function(
 #' Transform OTU table values
 #'
 #' @description
+#' \lifecycle{experimental}
+#'
 #' Apply a transformation to all values in the OTU table. This is useful for
 #' computing relative abundances, log transformations, or other value-level
 #' operations.

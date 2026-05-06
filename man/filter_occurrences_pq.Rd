@@ -19,6 +19,8 @@ is cleaned using \code{clean_pq()} to remove empty taxa/samples.}
 A phyloseq object with filtered OTU values.
 }
 \description{
+\lifecycle{experimental}
+
 Set OTU table values to 0 based on a condition. This is useful for removing
 singletons, low-abundance values, or other filtering operations at the
 cell level.

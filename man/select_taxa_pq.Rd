@@ -18,6 +18,8 @@ of taxonomic ranks.}
 A phyloseq object with selected tax_table columns.
 }
 \description{
+\lifecycle{experimental}
+
 Select tax_table columns (taxonomic ranks) using tidyselect semantics.
 }
 \examples{

@@ -1,5 +1,8 @@
 #' Plot sample depth differences to detect outliers
 #'
+#' @description
+#' \lifecycle{experimental}
+#'
 #' Creates a diagnostic plot showing the log10 differences between consecutive
 #' sorted sample sums. This helps identify samples with unusually low sequencing
 #' depth by detecting large "jumps" in the distribution.

@@ -18,6 +18,8 @@ variables.}
 A phyloseq object with selected sample_data columns.
 }
 \description{
+\lifecycle{experimental}
+
 Select sample_data columns using tidyselect semantics.
 }
 \examples{
