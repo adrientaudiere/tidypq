@@ -227,9 +227,15 @@ chimera_removal_vs_ref <- function(
   names(dna) <- paste0("Taxa", seq_along(seqs))
 
   tmp_fasta <- tempfile(pattern = "chimera_ref_input_", fileext = ".fasta")
-  tmp_nonchim <- tempfile(pattern = "chimera_ref_nonchimeras_", fileext = ".fasta")
+  tmp_nonchim <- tempfile(
+    pattern = "chimera_ref_nonchimeras_",
+    fileext = ".fasta"
+  )
   tmp_chim <- tempfile(pattern = "chimera_ref_chimeras_", fileext = ".fasta")
-  tmp_border <- tempfile(pattern = "chimera_ref_borderline_", fileext = ".fasta")
+  tmp_border <- tempfile(
+    pattern = "chimera_ref_borderline_",
+    fileext = ".fasta"
+  )
 
   Biostrings::writeXStringSet(dna, tmp_fasta)
 
@@ -434,7 +440,11 @@ create_chimera_pq <- function(
   }
 
   old_seed <- globalenv()$.Random.seed
-  on.exit(if (!is.null(old_seed)) assign(".Random.seed", old_seed, envir = globalenv()))
+  on.exit(
+    if (!is.null(old_seed)) {
+      assign(".Random.seed", old_seed, envir = globalenv())
+    }
+  )
   set.seed(seed)
 
   seqs <- phyloseq::refseq(physeq)

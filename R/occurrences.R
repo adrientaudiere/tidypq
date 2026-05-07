@@ -65,7 +65,9 @@ filter_occurrences_pq <- function(
   keep_matrix <- rlang::eval_tidy(condition_quo, data = mask)
 
   if (!is.matrix(keep_matrix) || !identical(dim(keep_matrix), dim(otu))) {
-    stop("The condition must evaluate to a logical matrix matching OTU table dimensions.")
+    stop(
+      "The condition must evaluate to a logical matrix matching OTU table dimensions."
+    )
   }
 
   # Handle NA as FALSE

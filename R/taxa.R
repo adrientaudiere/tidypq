@@ -274,7 +274,8 @@ arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   if (tar) {
     new_physeq@otu_table <- phyloseq::otu_table(
       as(phyloseq::otu_table(physeq), "matrix")[
-        rownames(tax_df), ,
+        rownames(tax_df),
+        ,
         drop = FALSE
       ],
       taxa_are_rows = TRUE
