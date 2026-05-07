@@ -22,6 +22,7 @@ Imports:
     ape,
     dplyr (>= 1.0.0),
     ggplot2,
+    lifecycle,
     patchwork,
     rlang (>= 1.0.0),
     tibble,
@@ -39,3 +40,4 @@ Encoding: UTF-8
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
+RdMacros: lifecycle

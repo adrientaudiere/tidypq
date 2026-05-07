@@ -160,7 +160,7 @@ neg_control_diag_pq <- function(
       alpha = 0.85,
       show.legend = FALSE
     ) +
-    ggplot2::facet_wrap(~ metric, scales = "free_y") +
+    ggplot2::facet_wrap(~metric, scales = "free_y") +
     fill_scale +
     color_scale +
     ggplot2::labs(
