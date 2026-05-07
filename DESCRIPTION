@@ -22,8 +22,10 @@ Imports:
     ape,
     dplyr (>= 1.0.0),
     ggplot2,
+    patchwork,
     rlang (>= 1.0.0),
     tibble,
+    tidyr,
     tidyselect
 Suggests:
     Biostrings,
