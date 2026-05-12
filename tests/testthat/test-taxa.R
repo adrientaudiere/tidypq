@@ -42,6 +42,13 @@ test_that("select_taxa_pq supports tidyselect range", {
   expect_true("Genus" %in% colnames(phyloseq::tax_table(result)))
 })
 
+test_that("select_taxa_pq errors with no arguments", {
+  expect_error(
+    select_taxa_pq(data_fungi),
+    "No columns selected"
+  )
+})
+
 test_that("mutate_taxa_pq adds new columns", {
   result <- mutate_taxa_pq(data_fungi, total_abundance = taxa_sums(.))
   expect_s4_class(result, "phyloseq")

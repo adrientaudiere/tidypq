@@ -20,6 +20,7 @@ Depends:
     MiscMetabar
 Imports:
     ape,
+    cli,
     dplyr (>= 1.0.0),
     ggplot2,
     lifecycle,

@@ -53,6 +53,13 @@ test_that("select_samdata_pq supports tidyselect", {
   }
 })
 
+test_that("select_samdata_pq errors with no arguments", {
+  expect_error(
+    select_samdata_pq(data_fungi),
+    "No columns selected"
+  )
+})
+
 test_that("mutate_samdata_pq adds new columns", {
   result <- mutate_samdata_pq(data_fungi, log_depth = log(sample_sums(.)))
   expect_s4_class(result, "phyloseq")

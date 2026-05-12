@@ -1,5 +1,6 @@
 # tidypq (development version)
 
+* New function `contam_corr_pq()` detects potential contaminant taxa by examining the correlation between each taxon's relative abundance and total sample reads. Contaminants show a negative correlation (higher proportion in low-biomass samples). Returns per-taxon statistics (`cor_abs`, `cor_rel`, `slope`, `p_value`), a flagged contaminants subset, and a three-panel diagnostic plot. Inspired by the GRIMER tool.
 * `chimera_removal_vs_ref()` removes chimeric sequences using UCHIME reference-based detection via vsearch.
 
 # tidypq 0.1.0

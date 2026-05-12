@@ -87,6 +87,12 @@ select_taxa_pq <- function(physeq, ...) {
   MiscMetabar::verify_pq(physeq)
   new_physeq <- physeq
 
+  if (length(rlang::enquos(...)) == 0) {
+    stop(
+      "No columns selected. Provide at least one column name or tidyselect expression."
+    )
+  }
+
   tax_df <- as.data.frame(phyloseq::tax_table(physeq))
   loc <- tidyselect::eval_select(rlang::expr(c(...)), tax_df)
   tax_df <- tax_df[, loc, drop = FALSE]

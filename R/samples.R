@@ -88,6 +88,12 @@ select_samdata_pq <- function(physeq, ...) {
   MiscMetabar::verify_pq(physeq)
   new_physeq <- physeq
 
+  if (length(rlang::enquos(...)) == 0) {
+    stop(
+      "No columns selected. Provide at least one column name or tidyselect expression."
+    )
+  }
+
   sam_df <- as_tibble(phyloseq::sample_data(physeq))
   loc <- tidyselect::eval_select(rlang::expr(c(...)), sam_df)
   sam_df <- sam_df[, loc, drop = FALSE]

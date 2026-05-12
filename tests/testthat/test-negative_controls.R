@@ -57,7 +57,7 @@ test_that("neg_control_diag_pq errors when no samples match", {
 
 test_that("neg_control_diag_pq errors when condition is not logical", {
   expect_error(
-    neg_control_diag_pq(data_fungi, Length),
+    neg_control_diag_pq(data_fungi, sample_sums(.)),
     "must evaluate to a logical vector"
   )
 })
@@ -206,7 +206,7 @@ test_that("neg_control_clean_pq errors when no samples match", {
 
 test_that("neg_control_clean_pq errors when condition is not logical", {
   expect_error(
-    neg_control_clean_pq(data_fungi, Length, verbose = FALSE),
+    neg_control_clean_pq(data_fungi, sample_sums(.), verbose = FALSE),
     "must evaluate to a logical vector"
   )
 })
