@@ -51,7 +51,7 @@ the figure. The subtitle (real / NC sample counts) is added
 automatically.}
 }
 \value{
-A \link[patchwork:patchwork-package]{patchwork::patchwork} object with the four diagnostic
+A \link[patchwork:patchwork]{patchwork::patchwork} object with the four diagnostic
 panels.
 }
 \description{

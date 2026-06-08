@@ -57,6 +57,16 @@ reference:
   - chimera_removal_vs_ref
   - create_chimera_pq
 
+- title: Contaminant detection & negative controls
+  desc: Flag, classify and diagnose contaminant taxa.
+  contents:
+  - contam_blocklist_pq
+  - contam_corr_pq
+  - known_contaminant_genera
+  - neg_control_classify_pq
+  - neg_control_diag_pq
+  - neg_control_clean_pq
+
 - title: Plots
   desc: Diagnostic visualizations.
   contents:
