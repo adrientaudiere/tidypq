@@ -6,8 +6,6 @@ library(tidypq)
 #> Loading required package: phyloseq
 #> Loading required package: MiscMetabar
 #> Loading required package: ggplot2
-#> Loading required package: dada2
-#> Loading required package: Rcpp
 #> Loading required package: dplyr
 #> 
 #> Attaching package: 'dplyr'
@@ -17,8 +15,6 @@ library(tidypq)
 #> The following objects are masked from 'package:base':
 #> 
 #>     intersect, setdiff, setequal, union
-#> Loading required package: purrr
-#> Loading required package: divent
 library(MiscMetabar)
 ```
 
