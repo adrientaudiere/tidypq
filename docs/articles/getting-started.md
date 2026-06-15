@@ -1,6 +1,7 @@
 # Getting Started with tidypq
 
 ``` r
+
 library(tidypq)
 #> Loading required package: phyloseq
 #> Loading required package: MiscMetabar
@@ -17,6 +18,7 @@ library(tidypq)
 #> 
 #>     intersect, setdiff, setequal, union
 #> Loading required package: purrr
+#> Loading required package: divent
 library(MiscMetabar)
 ```
 
@@ -28,8 +30,9 @@ Use the `.` pronoun to refer to the phyloseq object within expressions.
 ## Filter samples
 
 ``` r
+
 # By metadata
-data_fungi |> 
+data_fungi |>
   filter_samples_pq(Height == "Low")
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 963 taxa and 45 samples ]
@@ -38,7 +41,7 @@ data_fungi |>
 #> refseq()      DNAStringSet:      [ 963 reference sequences ]
 
 # By sequencing depth
-data_fungi |> 
+data_fungi |>
   filter_samples_pq(sample_sums(.) > 5000)
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 1383 taxa and 108 samples ]
@@ -47,7 +50,7 @@ data_fungi |>
 #> refseq()      DNAStringSet:      [ 1383 reference sequences ]
 
 # Both criteria
-data_fungi |> 
+data_fungi |>
   filter_samples_pq(Height == "Low" & sample_sums(.) > 5000)
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 816 taxa and 20 samples ]
@@ -59,8 +62,9 @@ data_fungi |>
 ## Filter taxa
 
 ``` r
+
 # By taxonomy
-data_fungi |> 
+data_fungi |>
   filter_taxa_pq(Phylum == "Basidiomycota")
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 345 taxa and 181 samples ]
@@ -69,7 +73,7 @@ data_fungi |>
 #> refseq()      DNAStringSet:      [ 345 reference sequences ]
 
 # By abundance
-data_fungi |> 
+data_fungi |>
   filter_taxa_pq(taxa_sums(.) > 100)
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 1078 taxa and 185 samples ]
@@ -81,16 +85,19 @@ data_fungi |>
 ## Mutate
 
 ``` r
+
 # Add sample depth
-fungi_modif <- data_fungi |> 
-  mutate_samdata_pq(depth = sample_sums(.), 
+fungi_modif <- data_fungi |>
+  mutate_samdata_pq(
+    depth = sample_sums(.),
     hill_2 = vegan::renyi(.@otu_table, scales = 2, hill = TRUE),
-    )
+  )
 ```
 
 ## Select columns
 
 ``` r
+
 # Select sample metadata
 data_fungi |> select_samdata_pq(Height, Time)
 #> phyloseq-class experiment-level object
@@ -111,6 +118,7 @@ data_fungi |> select_taxa_pq(Phylum:Genus)
 ## Chaining operations
 
 ``` r
+
 data_fungi |>
   filter_samples_pq(Height == "Low") |>
   filter_taxa_pq(taxa_sums(.) > 50) |>

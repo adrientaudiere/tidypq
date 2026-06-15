@@ -4,6 +4,9 @@
 #' Filter taxa in a phyloseq object
 #'
 #' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Filter taxa using data masking on tax_table. Supports the `.` pronoun
 #' to refer to the phyloseq object for use with functions like `taxa_sums()`.
 #'
@@ -28,10 +31,10 @@
 #'
 #' # Combine multiple conditions
 #' filter_taxa_pq(data_fungi, Phylum == "Basidiomycota", taxa_sums(.) > 100)
-#' 
+#'
 #' # Keep taxa above median abundance
 #' filter_taxa_pq(data_fungi, taxa_sums(.) > median(taxa_sums(.)))
-#' 
+#'
 filter_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   MiscMetabar::verify_pq(physeq)
 
@@ -42,9 +45,8 @@ filter_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   taxa_to_keep <- phyloseq::taxa_names(physeq)[keep]
 
   if (length(taxa_to_keep) == 0) {
-    warning("No taxa match the filter criteria.")
+    stop("No taxa match the filter criteria.")
   }
-
 
   new_physeq <- phyloseq::prune_taxa(taxa_to_keep, physeq)
   if (clean_phyloseq_object) {
@@ -58,12 +60,15 @@ filter_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' Select columns from tax_table in a phyloseq object
 #'
 #' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Select tax_table columns (taxonomic ranks) using tidyselect semantics.
 #'
 #' @param physeq (phyloseq, required) A phyloseq object.
 #' @param ... <tidy-select> One or more unquoted expressions separated by
 #'   commas. Variable names can be used as if they were positions in the data
-#'   frame, so expressions like `Kingdom:Genus` can be used to select a range
+#'   frame, so expressions like `Phylum:Genus` can be used to select a range
 #'   of taxonomic ranks.
 #'
 #' @return A phyloseq object with selected tax_table columns.
@@ -73,16 +78,22 @@ filter_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' @examples
 #' library(MiscMetabar)
 #' # Select specific ranks
-#' select_taxa_pq(data_fungi, Kingdom, Phylum, Class)
+#' select_taxa_pq(data_fungi, Phylum, Class)
 #'
 #' # Select a range of ranks
-#' select_taxa_pq(data_fungi, Kingdom:Genus)
+#' select_taxa_pq(data_fungi, Phylum:Genus)
 #'
 #' # Exclude ranks
 #' select_taxa_pq(data_fungi, !Species)
 select_taxa_pq <- function(physeq, ...) {
   MiscMetabar::verify_pq(physeq)
   new_physeq <- physeq
+
+  if (length(rlang::enquos(...)) == 0) {
+    stop(
+      "No columns selected. Provide at least one column name or tidyselect expression."
+    )
+  }
 
   tax_df <- as.data.frame(phyloseq::tax_table(physeq))
   loc <- tidyselect::eval_select(rlang::expr(c(...)), tax_df)
@@ -99,11 +110,18 @@ select_taxa_pq <- function(physeq, ...) {
 #' Add or modify columns in tax_table
 #'
 #' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Create new columns or modify existing ones in tax_table using data masking.
 #' Supports the `.` pronoun to refer to the phyloseq object.
 #'
 #' This function only modifies the tax_table slot (columns/taxonomic ranks). It
 #' cannot add or remove taxa. The number of taxa and taxa names are preserved.
+#'
+#' Unlike `dplyr::mutate()`, columns created in the same call cannot reference
+#' each other (e.g., `mutate_taxa_pq(pq, a = 1, b = a + 1)` will not work
+#' because `a` is not yet available when `b` is evaluated).
 #'
 #' @param physeq (phyloseq, required) A phyloseq object.
 #' @param ... <data-masking> Name-value pairs. The name gives the name of the
@@ -128,7 +146,6 @@ mutate_taxa_pq <- function(physeq, ...) {
   new_physeq <- physeq
 
   tax_df <- as.data.frame(phyloseq::tax_table(physeq))
-  original_taxa <- rownames(tax_df)
   original_ntaxa <- nrow(tax_df)
   mask <- build_taxa_data_mask(physeq)
 
@@ -139,16 +156,13 @@ mutate_taxa_pq <- function(physeq, ...) {
       stop(
         sprintf(
           "Column '%s' has length %d, but must be length 1 or %d (number of taxa).",
-          nm, length(value), original_ntaxa
+          nm,
+          length(value),
+          original_ntaxa
         )
       )
     }
     tax_df[[nm]] <- value
-  }
-
-  # Verify taxa are preserved
-  if (nrow(tax_df) != original_ntaxa || !identical(rownames(tax_df), original_taxa)) {
-    stop("mutate_taxa_pq cannot add or remove taxa. Use filter_taxa_pq or slice_taxa_pq instead.")
   }
 
   new_physeq@tax_table <- phyloseq::tax_table(as.matrix(tax_df))
@@ -162,6 +176,9 @@ mutate_taxa_pq <- function(physeq, ...) {
 #' Subset taxa by position
 #'
 #' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Select taxa by their integer positions.
 #'
 #' @param physeq (phyloseq, required) A phyloseq object.
@@ -190,7 +207,7 @@ slice_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   taxa_to_keep <- rownames(tax_df)
 
   if (length(taxa_to_keep) == 0) {
-    warning("No taxa selected.")
+    stop("No taxa selected.")
   }
 
   new_physeq <- phyloseq::prune_taxa(taxa_to_keep, physeq)
@@ -205,6 +222,9 @@ slice_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' Arrange taxa by column values
 #'
 #' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Reorder taxa based on tax_table columns or computed values. Supports the `.`
 #' pronoun to refer to the phyloseq object for sorting by abundance.
 #'
@@ -225,25 +245,22 @@ slice_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #'
 #' # Arrange by total abundance (descending)
 #' arrange_taxa_pq(data_fungi, dplyr::desc(taxa_sums(.)))
-#' 
-#' # order of columns matters
-#' dfm_arr <- arrange_taxa_pq(data_fungi_mini, Class, Genus)@tax_table[, c("Class", "Genus")]
-#' arrange_taxa_pq(data_fungi_mini, Genus, Class)@tax_table[, c("Class", "Genus")]
-#' 
-#' 
-#' 
+#'
+#' # Order of columns matters
+#' dfm_arr <- arrange_taxa_pq(data_fungi, Class, Genus)@tax_table[, c("Class", "Genus")]
+#' arrange_taxa_pq(data_fungi, Genus, Class)@tax_table[, c("Class", "Genus")]
 arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   MiscMetabar::verify_pq(physeq)
 
   new_physeq <- physeq
+  new_phy_tree <- NULL
 
-  #save the phylogenetic tree if present and reorder it later
-  # set phy_tree to NULL to avoid issues during reordering
- if (!is.null(phyloseq::phy_tree(physeq, errorIfNULL = FALSE))) {
-    new_phy_tree <- physeq@phy_tree 
-   
-   new_physeq@phy_tree <- NULL
- }
+  # Save the phylogenetic tree if present and reorder it later
+  # Set phy_tree to NULL to avoid issues during reordering
+  if (!is.null(phyloseq::phy_tree(physeq, errorIfNULL = FALSE))) {
+    new_phy_tree <- physeq@phy_tree
+    new_physeq@phy_tree <- NULL
+  }
 
   tar <- taxa_are_rows(physeq)
 
@@ -264,16 +281,22 @@ arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   # Remove temporary columns
   tax_df <- tax_df[, !names(tax_df) %in% sort_cols, drop = FALSE]
 
-  
   new_physeq@tax_table <- phyloseq::tax_table(as.matrix(tax_df))
   if (tar) {
     new_physeq@otu_table <- phyloseq::otu_table(
-      as(phyloseq::otu_table(physeq), "matrix")[rownames(tax_df), , drop = FALSE],
+      as(phyloseq::otu_table(physeq), "matrix")[
+        rownames(tax_df),
+        ,
+        drop = FALSE
+      ],
       taxa_are_rows = TRUE
     )
   } else {
     new_physeq@otu_table <- phyloseq::otu_table(
-      as(phyloseq::otu_table(physeq), "matrix")[, rownames(tax_df), drop = FALSE],
+      as(phyloseq::otu_table(physeq), "matrix")[,
+        rownames(tax_df),
+        drop = FALSE
+      ],
       taxa_are_rows = FALSE
     )
   }
@@ -306,6 +329,9 @@ arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' Rename columns in tax_table
 #'
 #' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Rename columns (taxonomic ranks) in tax_table using tidyselect semantics.
 #'
 #' @param physeq (phyloseq, required) A phyloseq object.
@@ -319,10 +345,10 @@ arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' @examples
 #' library(MiscMetabar)
 #' # Rename a single rank
-#' rename_taxa_pq(data_fungi, tax_kingdom = Kingdom)
+#' rename_taxa_pq(data_fungi, tax_domain = Domain)
 #'
 #' # Rename multiple ranks
-#' rename_taxa_pq(data_fungi, tax_kingdom = Kingdom, tax_phylum = Phylum)
+#' rename_taxa_pq(data_fungi, tax_phylum = Phylum, tax_class = Class)
 rename_taxa_pq <- function(physeq, ...) {
   MiscMetabar::verify_pq(physeq)
   new_physeq <- physeq

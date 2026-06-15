@@ -4,6 +4,9 @@
 #' Filter samples in a phyloseq object
 #'
 #' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Filter samples using data masking on sample_data. Supports the `.` pronoun
 #' to refer to the phyloseq object for use with functions like `sample_sums()`.
 #'
@@ -27,12 +30,12 @@
 #'
 #' # Combine multiple conditions
 #' filter_samples_pq(data_fungi, Height == "Low", sample_sums(.) > 5000)
-#' 
+#'
 #' # Keep samples above median abundance
 #' filter_samples_pq(data_fungi, sample_sums(.) > median(sample_sums(.)))
-#' 
+#'
 #' # Keep samples above half of the average abundance
-#' filter_samples_pq(data_fungi, sample_sums(.) > sum(sample_sums(.))/phyloseq::nsamples(.)/2)
+#' filter_samples_pq(data_fungi, sample_sums(.) > sum(sample_sums(.)) / phyloseq::nsamples(.) / 2)
 filter_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   MiscMetabar::verify_pq(physeq)
 
@@ -43,7 +46,7 @@ filter_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   samples_to_keep <- phyloseq::sample_names(physeq)[keep]
 
   if (length(samples_to_keep) == 0) {
-    warning("No samples match the filter criteria.")
+    stop("No samples match the filter criteria.")
   }
 
   new_physeq <- phyloseq::prune_samples(samples_to_keep, physeq)
@@ -58,6 +61,9 @@ filter_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' Select columns from sample_data in a phyloseq object
 #'
 #' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Select sample_data columns using tidyselect semantics.
 #'
 #' @param physeq (phyloseq, required) A phyloseq object.
@@ -84,12 +90,18 @@ select_samdata_pq <- function(physeq, ...) {
   MiscMetabar::verify_pq(physeq)
   new_physeq <- physeq
 
+  if (length(rlang::enquos(...)) == 0) {
+    stop(
+      "No columns selected. Provide at least one column name or tidyselect expression."
+    )
+  }
+
   sam_df <- as_tibble(phyloseq::sample_data(physeq))
   loc <- tidyselect::eval_select(rlang::expr(c(...)), sam_df)
   sam_df <- sam_df[, loc, drop = FALSE]
 
   new_physeq@sam_data <- phyloseq::sample_data(sam_df)
-  sample_names(new_physeq) <- phyloseq::sample_names(physeq)  # Preserve sample names
+  sample_names(new_physeq) <- phyloseq::sample_names(physeq) # Preserve sample names
   MiscMetabar::verify_pq(new_physeq)
   return(new_physeq)
 }
@@ -98,11 +110,18 @@ select_samdata_pq <- function(physeq, ...) {
 #' Add or modify columns in sample_data
 #'
 #' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Create new columns or modify existing ones in sample_data using data masking.
 #' Supports the `.` pronoun to refer to the phyloseq object.
 #'
 #' This function only modifies the sample_data slot (columns/metadata). It cannot
 #' add or remove samples. The number of samples and sample names are preserved.
+#'
+#' Unlike `dplyr::mutate()`, columns created in the same call cannot reference
+#' each other (e.g., `mutate_samdata_pq(pq, a = 1, b = a + 1)` will not work
+#' because `a` is not yet available when `b` is evaluated).
 #'
 #' @param physeq (phyloseq, required) A phyloseq object.
 #' @param ... <data-masking> Name-value pairs. The name gives the name of the
@@ -128,7 +147,6 @@ mutate_samdata_pq <- function(physeq, ...) {
   new_physeq <- physeq
 
   sam_df <- as.data.frame(phyloseq::sample_data(physeq))
-  original_samples <- rownames(sam_df)
   original_nsamples <- nrow(sam_df)
   mask <- build_sample_data_mask(physeq)
 
@@ -139,16 +157,13 @@ mutate_samdata_pq <- function(physeq, ...) {
       stop(
         sprintf(
           "Column '%s' has length %d, but must be length 1 or %d (number of samples).",
-          nm, length(value), original_nsamples
+          nm,
+          length(value),
+          original_nsamples
         )
       )
     }
     sam_df[[nm]] <- value
-  }
-
-  # Verify samples are preserved
- if (nrow(sam_df) != original_nsamples || !identical(rownames(sam_df), original_samples)) {
-    stop("mutate_samdata_pq cannot add or remove samples. Use filter_samples_pq or slice_samples_pq instead.")
   }
 
   new_physeq@sam_data <- phyloseq::sample_data(sam_df)
@@ -161,6 +176,9 @@ mutate_samdata_pq <- function(physeq, ...) {
 #' Subset samples by position
 #'
 #' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Select samples by their integer positions.
 #'
 #' @param physeq (phyloseq, required) A phyloseq object.
@@ -191,7 +209,7 @@ slice_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   samples_to_keep <- sam_df$sample_names__for_slicing
 
   if (length(samples_to_keep) == 0) {
-    warning("No samples selected.")
+    stop("No samples selected.")
   }
 
   new_physeq <- phyloseq::prune_samples(samples_to_keep, physeq)
@@ -206,6 +224,9 @@ slice_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' Arrange samples by column values
 #'
 #' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Reorder samples based on sample_data columns. Supports the `.` pronoun
 #' to refer to the phyloseq object for sorting by computed values.
 #'
@@ -261,6 +282,9 @@ arrange_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' Rename columns in sample_data
 #'
 #' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Rename columns in sample_data using tidyselect semantics.
 #'
 #' @param physeq (phyloseq, required) A phyloseq object.
@@ -286,7 +310,7 @@ rename_samples_pq <- function(physeq, ...) {
   sam_df <- dplyr::rename(sam_df, ...)
 
   new_physeq@sam_data <- phyloseq::sample_data(sam_df)
-  phyloseq::sample_names(new_physeq) <- phyloseq::sample_names(physeq)  
+  phyloseq::sample_names(new_physeq) <- phyloseq::sample_names(physeq)
 
   MiscMetabar::verify_pq(new_physeq)
   return(new_physeq)

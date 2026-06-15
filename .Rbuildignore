@@ -1,3 +1,8 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^cran-comments\.md$
+^CLAUDE\.md$
+^vignettes/\.quarto$
+^\.claude$
+^\vignettes\.quarto$

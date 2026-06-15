@@ -1,5 +1,7 @@
 # Arrange samples by column values
 
+[![lifecycle-experimental](https://img.shields.io/badge/lifecycle-experimental-orange)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
+
 Reorder samples based on sample_data columns. Supports the `.` pronoun
 to refer to the phyloseq object for sorting by computed values.
 
@@ -17,8 +19,9 @@ arrange_samples_pq(physeq, ..., clean_phyloseq_object = TRUE)
 
 - ...:
 
-  Variables to sort by. Use `desc()` for descending order. Use `.` to
-  refer to the phyloseq object.
+  Variables to sort by. Use
+  [`desc()`](https://dplyr.tidyverse.org/reference/desc.html) for
+  descending order. Use `.` to refer to the phyloseq object.
 
 - clean_phyloseq_object:
 

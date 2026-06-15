@@ -71,6 +71,7 @@ Functions use rlang data masking with a special `.` pronoun that refers
 to the phyloseq object:
 
 ``` r
+
 filter_samples_pq(data_fungi, Height == "Low", sample_sums(.) > 1000)
 ```
 

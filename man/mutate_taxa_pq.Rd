@@ -19,11 +19,21 @@ A phyloseq object with modified tax_table (same taxa, modified or
 new columns).
 }
 \description{
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
+
 Create new columns or modify existing ones in tax_table using data masking.
 Supports the \code{.} pronoun to refer to the phyloseq object.
 
 This function only modifies the tax_table slot (columns/taxonomic ranks). It
 cannot add or remove taxa. The number of taxa and taxa names are preserved.
+
+Unlike \code{dplyr::mutate()}, columns created in the same call cannot reference
+each other (e.g., \code{mutate_taxa_pq(pq, a = 1, b = a + 1)} will not work
+because \code{a} is not yet available when \code{b} is evaluated).
 }
 \examples{
 library(MiscMetabar)

@@ -19,6 +19,12 @@ is cleaned using \code{clean_pq()} to remove empty taxa/samples.}
 A phyloseq object with reordered taxa.
 }
 \description{
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
+
 Reorder taxa based on tax_table columns or computed values. Supports the \code{.}
 pronoun to refer to the phyloseq object for sorting by abundance.
 }
@@ -30,12 +36,9 @@ arrange_taxa_pq(data_fungi, Phylum, Class)@tax_table[, "Phylum"]
 # Arrange by total abundance (descending)
 arrange_taxa_pq(data_fungi, dplyr::desc(taxa_sums(.)))
 
-# order of columns matters
-dfm_arr <- arrange_taxa_pq(data_fungi_mini, Class, Genus)@tax_table[, c("Class", "Genus")]
-arrange_taxa_pq(data_fungi_mini, Genus, Class)@tax_table[, c("Class", "Genus")]
-
-
-
+# Order of columns matters
+dfm_arr <- arrange_taxa_pq(data_fungi, Class, Genus)@tax_table[, c("Class", "Genus")]
+arrange_taxa_pq(data_fungi, Genus, Class)@tax_table[, c("Class", "Genus")]
 }
 \author{
 Adrien Taudière

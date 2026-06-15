@@ -31,20 +31,26 @@ is cleaned using \code{clean_pq()} to remove empty taxa/samples.}
 A phyloseq object with filtered tree and matching taxa.
 }
 \description{
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
+
 Filter a phyloseq object to include only taxa that are present in the
 phylogenetic tree, or prune the tree to match the taxa in the phyloseq.
 Can also filter based on tree properties like tip labels matching a pattern.
 }
 \examples{
+\donttest{
 library(MiscMetabar)
-# Synchronize tree with OTU table (remove taxa not in tree)
-# filter_tree_pq(physeq_with_tree)
-
-# Keep only specific taxa in tree
-# filter_tree_pq(physeq_with_tree, taxa = c("ASV1", "ASV2", "ASV3"))
-
-# Filter by tip label pattern
-# filter_tree_pq(physeq_with_tree, pattern = "^ASV")
+library(ape)
+data(data_fungi)
+pg <- data_fungi
+pg@phy_tree <- ape::rtree(phyloseq::ntaxa(data_fungi),
+                           tip.label = phyloseq::taxa_names(data_fungi))
+filter_tree_pq(pg, taxa = phyloseq::taxa_names(data_fungi)[1:10])
+}
 }
 \author{
 Adrien Taudière

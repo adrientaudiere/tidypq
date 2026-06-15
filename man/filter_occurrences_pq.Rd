@@ -9,7 +9,7 @@ filter_occurrences_pq(physeq, condition, clean_phyloseq_object = TRUE)
 \arguments{
 \item{physeq}{(phyloseq, required) A phyloseq object.}
 
-\item{condition}{An expression evaluated on the OTU matrix. Values where the
+\item{condition}{(required) An expression evaluated on the OTU matrix. Values where the
 condition is FALSE (or NA) are set to 0. Use \code{.} to refer to cell values.}
 
 \item{clean_phyloseq_object}{if TRUE (default), the resulting phyloseq object
@@ -19,6 +19,12 @@ is cleaned using \code{clean_pq()} to remove empty taxa/samples.}
 A phyloseq object with filtered OTU values.
 }
 \description{
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
+
 Set OTU table values to 0 based on a condition. This is useful for removing
 singletons, low-abundance values, or other filtering operations at the
 cell level.

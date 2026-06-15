@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Benchmarking Chimera Detection Methods</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Benchmarking Chimera Detection Methods</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(tidypq)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(MiscMetabar)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(phyloseq)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span></code></pre></div>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>This vignette demonstrates how to benchmark chimera detection methods
+using synthetic chimeric sequences. The <code>create_chimera_pq()</code>
+function generates artificial chimeras with known parent sequences,
+allowing you to evaluate detection sensitivity and specificity across
+three methods:</p>
+<ul>
+<li><strong><code>chimera_removal_vs()</code></strong> (MiscMetabar):
+vsearch de novo — infers chimeras from abundance patterns within the
+sample.</li>
+<li><strong><code>chimera_removal_dada2()</code></strong>: dada2 de novo
+— same abundance-based logic, different algorithm.</li>
+<li><strong><code>chimera_removal_vs_ref()</code></strong>: vsearch
+reference-based (UCHIME_ref) — compares each query against a trusted
+reference database, independent of sample composition.</li>
+</ul>
+</div>
+<div id="data-preparation" class="section level2">
+<h2>Data Preparation</h2>
+<p>To reduce computation time, we use a subset of
+<code>data_fungi</code> filtered by taxonomy. You can adjust the
+filtering to test on larger or smaller datasets.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">data</span>(data_fungi)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Filter to a single Class for faster computation</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># Original data_fungi has 1420 taxa - this reduces it to ~200-400 taxa</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>data_fungi_subset <span class="ot">&lt;-</span> <span class="fu">subset_taxa</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  data_fungi,</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  Class <span class="sc">%in%</span> <span class="fu">c</span>(</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>    <span class="st">&quot;Agaricomycetes&quot;</span>, <span class="st">&quot;Dacrymycetes&quot;</span>, <span class="st">&quot;Eurotiomycetes&quot;</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>    <span class="st">&quot;Lecanoromycetes&quot;</span>, <span class="st">&quot;Tremellomycetes&quot;</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>  )</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>)</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>data_fungi_subset</span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co"># Mini UNITE database bundled with MiscMetabar (used for chimera_removal_vs_ref)</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: this is a very small subset of the full UNITE database,</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co"># so detection rates here will be lower than with the complete database.</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>mini_db <span class="ot">&lt;-</span> <span class="fu">system.file</span>(</span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>  <span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;mini_UNITE_fungi.fasta.gz&quot;</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>  <span class="at">package =</span> <span class="st">&quot;MiscMetabar&quot;</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="creating-test-data-with-synthetic-chimeras" class="section level2">
+<h2>Creating Test Data with Synthetic Chimeras</h2>
+<p>Create a phyloseq object with known chimeric sequences.
+<code>min_parent_distance</code> ensures that parent sequences are
+sufficiently different, making chimeras detectable.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>df_chim <span class="ot">&lt;-</span> <span class="fu">create_chimera_pq</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  data_fungi_subset,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">n_chimeras =</span> <span class="dv">50</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">median_abundance_multiplier =</span> <span class="fl">0.05</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="at">min_parent_distance =</span> <span class="fl">0.05</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>)</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>data_fungi_test <span class="ot">&lt;-</span> df_chim<span class="sc">$</span>physeq</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>known_chimeras <span class="ot">&lt;-</span> df_chim<span class="sc">$</span>chimera_names</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>df_chim<span class="sc">$</span>parent_info</span></code></pre></div>
+</div>
+<div id="comparing-detection-methods" class="section level2">
+<h2>Comparing Detection Methods</h2>
+<div id="helper-function-for-benchmarking" class="section level3">
+<h3>Helper function for benchmarking</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>benchmark_detection <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  physeq,</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  method_fn,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  method_name,</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  known_chimeras,</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  ...</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>) {</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  <span class="fu">gc</span>()</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  mem_before <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">gc</span>()[, <span class="dv">2</span>])</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  start_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>  nochim <span class="ot">&lt;-</span> <span class="fu">method_fn</span>(physeq, ...)</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>  end_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>  mem_after <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">gc</span>()[, <span class="dv">2</span>])</span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>  detected <span class="ot">&lt;-</span> known_chimeras[<span class="sc">!</span>known_chimeras <span class="sc">%in%</span> <span class="fu">taxa_names</span>(nochim)]</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>  missed <span class="ot">&lt;-</span> known_chimeras[known_chimeras <span class="sc">%in%</span> <span class="fu">taxa_names</span>(nochim)]</span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>    <span class="at">method =</span> method_name,</span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>    <span class="at">physeq_nochim =</span> nochim,</span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>    <span class="at">n_chimeras =</span> <span class="fu">length</span>(known_chimeras),</span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>    <span class="at">n_detected =</span> <span class="fu">length</span>(detected),</span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a>    <span class="at">n_missed =</span> <span class="fu">length</span>(missed),</span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>    <span class="at">detection_rate =</span> <span class="dv">100</span> <span class="sc">*</span> <span class="fu">length</span>(detected) <span class="sc">/</span> <span class="fu">length</span>(known_chimeras),</span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>    <span class="at">total_removed =</span> <span class="fu">ntaxa</span>(physeq) <span class="sc">-</span> <span class="fu">ntaxa</span>(nochim),</span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>    <span class="at">time_seconds =</span> <span class="fu">as.numeric</span>(<span class="fu">difftime</span>(end_time, start_time, <span class="at">units =</span> <span class="st">&quot;secs&quot;</span>)),</span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a>    <span class="at">memory_mb =</span> mem_after <span class="sc">-</span> mem_before,</span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a>    <span class="at">detected_names =</span> detected,</span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a>    <span class="at">missed_names =</span> missed</span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>  )</span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a>}</span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a>calc_detection_rate <span class="ot">&lt;-</span> <span class="cf">function</span>(physeq_nochim, known_chimeras) {</span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a>  detected <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="sc">!</span>known_chimeras <span class="sc">%in%</span> <span class="fu">taxa_names</span>(physeq_nochim))</span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a>  <span class="dv">100</span> <span class="sc">*</span> detected <span class="sc">/</span> <span class="fu">length</span>(known_chimeras)</span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="run-benchmarks" class="section level3">
+<h3>Run benchmarks</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># vsearch de novo</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>result_vs <span class="ot">&lt;-</span> <span class="fu">benchmark_detection</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  data_fungi_test,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  chimera_removal_vs,</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="st">&quot;vsearch&quot;</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  known_chimeras</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>)</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co"># dada2 de novo</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>result_dada2 <span class="ot">&lt;-</span> <span class="fu">benchmark_detection</span>(</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>  data_fungi_test,</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>  chimera_removal_dada2,</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>  <span class="st">&quot;dada2&quot;</span>,</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>  known_chimeras</span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>)</span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co"># vsearch reference-based</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>result_vs_ref <span class="ot">&lt;-</span> <span class="fu">benchmark_detection</span>(</span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>  data_fungi_test,</span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a>  chimera_removal_vs_ref,</span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a>  <span class="st">&quot;vsearch_ref&quot;</span>,</span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a>  known_chimeras,</span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a>  <span class="at">database =</span> mini_db</span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+</div>
+<div id="benchmark-summary-table" class="section level2">
+<h2>Benchmark Summary Table</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>benchmark_summary <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="at">Method =</span> <span class="fu">c</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>    result_vs<span class="sc">$</span>method,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>    result_dada2<span class="sc">$</span>method,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>    result_vs_ref<span class="sc">$</span>method</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  ),</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="st">`</span><span class="at">N Chimeras</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>    result_vs<span class="sc">$</span>n_chimeras,</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>    result_dada2<span class="sc">$</span>n_chimeras,</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>    result_vs_ref<span class="sc">$</span>n_chimeras</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>  ),</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>  <span class="at">Detected =</span> <span class="fu">c</span>(</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>    result_vs<span class="sc">$</span>n_detected,</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>    result_dada2<span class="sc">$</span>n_detected,</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>    result_vs_ref<span class="sc">$</span>n_detected</span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>  ),</span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>  <span class="st">`</span><span class="at">Detection Rate (%)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">c</span>(</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>    result_vs<span class="sc">$</span>detection_rate,</span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>    result_dada2<span class="sc">$</span>detection_rate,</span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>    result_vs_ref<span class="sc">$</span>detection_rate</span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>  ), <span class="dv">1</span>),</span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a>  <span class="st">`</span><span class="at">Total Removed</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a>    result_vs<span class="sc">$</span>total_removed,</span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a>    result_dada2<span class="sc">$</span>total_removed,</span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a>    result_vs_ref<span class="sc">$</span>total_removed</span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a>  ),</span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a>  <span class="st">`</span><span class="at">Time (s)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">c</span>(</span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a>    result_vs<span class="sc">$</span>time_seconds,</span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a>    result_dada2<span class="sc">$</span>time_seconds,</span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a>    result_vs_ref<span class="sc">$</span>time_seconds</span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a>  ), <span class="dv">2</span>),</span>
+<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a>  <span class="st">`</span><span class="at">Memory (MB)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">c</span>(</span>
+<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a>    result_vs<span class="sc">$</span>memory_mb,</span>
+<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a>    result_dada2<span class="sc">$</span>memory_mb,</span>
+<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a>    result_vs_ref<span class="sc">$</span>memory_mb</span>
+<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a>  ), <span class="dv">1</span>),</span>
+<span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb6-38"><a href="#cb6-38" tabindex="-1"></a>)</span>
+<span id="cb6-39"><a href="#cb6-39" tabindex="-1"></a></span>
+<span id="cb6-40"><a href="#cb6-40" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(benchmark_summary, <span class="at">caption =</span> <span class="st">&quot;Chimera Detection Benchmark Summary&quot;</span>)</span></code></pre></div>
+</div>
+<div id="analyzing-missed-chimeras" class="section level2">
+<h2>Analyzing Missed Chimeras</h2>
+<p>Examine which chimeras were missed and their parent sequences:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(result_vs<span class="sc">$</span>missed_names) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  missed_info <span class="ot">&lt;-</span> df_chim<span class="sc">$</span>parent_info[</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>    df_chim<span class="sc">$</span>parent_info<span class="sc">$</span>chimera <span class="sc">%in%</span> result_vs<span class="sc">$</span>missed_names,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  ]</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(missed_info, <span class="at">caption =</span> <span class="st">&quot;Missed by vsearch (de novo)&quot;</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(result_dada2<span class="sc">$</span>missed_names) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  missed_info <span class="ot">&lt;-</span> df_chim<span class="sc">$</span>parent_info[</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>    df_chim<span class="sc">$</span>parent_info<span class="sc">$</span>chimera <span class="sc">%in%</span> result_dada2<span class="sc">$</span>missed_names,</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  ]</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(missed_info, <span class="at">caption =</span> <span class="st">&quot;Missed by dada2&quot;</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(result_vs_ref<span class="sc">$</span>missed_names) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  missed_info <span class="ot">&lt;-</span> df_chim<span class="sc">$</span>parent_info[</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>    df_chim<span class="sc">$</span>parent_info<span class="sc">$</span>chimera <span class="sc">%in%</span> result_vs_ref<span class="sc">$</span>missed_names,</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  ]</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(missed_info, <span class="at">caption =</span> <span class="st">&quot;Missed by vsearch (reference-based)&quot;</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="comparing-detection-across-different-chimera-types" class="section level2">
+<h2>Comparing Detection Across Different Chimera Types</h2>
+<p>Create different types of synthetic chimeras to test detection
+robustness:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># More variable proportions (harder to detect)</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>result_hard <span class="ot">&lt;-</span> <span class="fu">create_chimera_pq</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  data_fungi_subset,</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  <span class="at">n_chimeras =</span> <span class="dv">50</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  <span class="at">prop_mean =</span> <span class="fl">0.5</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="at">prop_sd =</span> <span class="fl">0.25</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>)</span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co"># Biased proportions (70/30 splits)</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>result_biased <span class="ot">&lt;-</span> <span class="fu">create_chimera_pq</span>(</span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>  data_fungi_subset,</span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a>  <span class="at">n_chimeras =</span> <span class="dv">50</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>  <span class="at">prop_mean =</span> <span class="fl">0.7</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a>  <span class="at">prop_sd =</span> <span class="fl">0.1</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a>)</span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co"># Lower abundance chimeras (harder to detect)</span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a>result_low_abund <span class="ot">&lt;-</span> <span class="fu">create_chimera_pq</span>(</span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a>  data_fungi_subset,</span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a>  <span class="at">n_chimeras =</span> <span class="dv">50</span>,</span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a>  <span class="at">median_abundance_multiplier =</span> <span class="fl">0.01</span></span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a>)</span></code></pre></div>
+<p>Run all three detection methods on all chimera types:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>datasets <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="at">default =</span> <span class="fu">list</span>(<span class="at">physeq =</span> data_fungi_test, <span class="at">chimeras =</span> known_chimeras),</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="at">hard =</span> <span class="fu">list</span>(</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>    <span class="at">physeq =</span> result_hard<span class="sc">$</span>physeq,</span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>    <span class="at">chimeras =</span> result_hard<span class="sc">$</span>chimera_names</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>  ),</span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>  <span class="at">biased =</span> <span class="fu">list</span>(</span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>    <span class="at">physeq =</span> result_biased<span class="sc">$</span>physeq,</span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>    <span class="at">chimeras =</span> result_biased<span class="sc">$</span>chimera_names</span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>  ),</span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>  <span class="at">low_abund =</span> <span class="fu">list</span>(</span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>    <span class="at">physeq =</span> result_low_abund<span class="sc">$</span>physeq,</span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>    <span class="at">chimeras =</span> result_low_abund<span class="sc">$</span>chimera_names</span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a>  )</span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a>)</span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a>  <span class="at">dataset =</span> <span class="fu">character</span>(),</span>
+<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">character</span>(),</span>
+<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a>  <span class="at">detection_rate =</span> <span class="fu">numeric</span>(),</span>
+<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a>  <span class="at">time_seconds =</span> <span class="fu">numeric</span>(),</span>
+<span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a>)</span>
+<span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" tabindex="-1"></a><span class="cf">for</span> (name <span class="cf">in</span> <span class="fu">names</span>(datasets)) {</span>
+<span id="cb11-26"><a href="#cb11-26" tabindex="-1"></a>  ds <span class="ot">&lt;-</span> datasets[[name]]</span>
+<span id="cb11-27"><a href="#cb11-27" tabindex="-1"></a></span>
+<span id="cb11-28"><a href="#cb11-28" tabindex="-1"></a>  start_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb11-29"><a href="#cb11-29" tabindex="-1"></a>  nochim_vs <span class="ot">&lt;-</span> <span class="fu">chimera_removal_vs</span>(ds<span class="sc">$</span>physeq)</span>
+<span id="cb11-30"><a href="#cb11-30" tabindex="-1"></a>  time_vs <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">difftime</span>(<span class="fu">Sys.time</span>(), start_time, <span class="at">units =</span> <span class="st">&quot;secs&quot;</span>))</span>
+<span id="cb11-31"><a href="#cb11-31" tabindex="-1"></a>  rate_vs <span class="ot">&lt;-</span> <span class="fu">calc_detection_rate</span>(nochim_vs, ds<span class="sc">$</span>chimeras)</span>
+<span id="cb11-32"><a href="#cb11-32" tabindex="-1"></a></span>
+<span id="cb11-33"><a href="#cb11-33" tabindex="-1"></a>  start_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb11-34"><a href="#cb11-34" tabindex="-1"></a>  nochim_dada2 <span class="ot">&lt;-</span> <span class="fu">chimera_removal_dada2</span>(ds<span class="sc">$</span>physeq)</span>
+<span id="cb11-35"><a href="#cb11-35" tabindex="-1"></a>  time_dada2 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">difftime</span>(<span class="fu">Sys.time</span>(), start_time, <span class="at">units =</span> <span class="st">&quot;secs&quot;</span>))</span>
+<span id="cb11-36"><a href="#cb11-36" tabindex="-1"></a>  rate_dada2 <span class="ot">&lt;-</span> <span class="fu">calc_detection_rate</span>(nochim_dada2, ds<span class="sc">$</span>chimeras)</span>
+<span id="cb11-37"><a href="#cb11-37" tabindex="-1"></a></span>
+<span id="cb11-38"><a href="#cb11-38" tabindex="-1"></a>  start_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a>  nochim_vs_ref <span class="ot">&lt;-</span> <span class="fu">chimera_removal_vs_ref</span>(ds<span class="sc">$</span>physeq, <span class="at">database =</span> mini_db)</span>
+<span id="cb11-40"><a href="#cb11-40" tabindex="-1"></a>  time_vs_ref <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">difftime</span>(<span class="fu">Sys.time</span>(), start_time, <span class="at">units =</span> <span class="st">&quot;secs&quot;</span>))</span>
+<span id="cb11-41"><a href="#cb11-41" tabindex="-1"></a>  rate_vs_ref <span class="ot">&lt;-</span> <span class="fu">calc_detection_rate</span>(nochim_vs_ref, ds<span class="sc">$</span>chimeras)</span>
+<span id="cb11-42"><a href="#cb11-42" tabindex="-1"></a></span>
+<span id="cb11-43"><a href="#cb11-43" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb11-44"><a href="#cb11-44" tabindex="-1"></a>    results,</span>
+<span id="cb11-45"><a href="#cb11-45" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
+<span id="cb11-46"><a href="#cb11-46" tabindex="-1"></a>      <span class="at">dataset =</span> name,</span>
+<span id="cb11-47"><a href="#cb11-47" tabindex="-1"></a>      <span class="at">method =</span> <span class="fu">c</span>(<span class="st">&quot;vsearch&quot;</span>, <span class="st">&quot;dada2&quot;</span>, <span class="st">&quot;vsearch_ref&quot;</span>),</span>
+<span id="cb11-48"><a href="#cb11-48" tabindex="-1"></a>      <span class="at">detection_rate =</span> <span class="fu">c</span>(rate_vs, rate_dada2, rate_vs_ref),</span>
+<span id="cb11-49"><a href="#cb11-49" tabindex="-1"></a>      <span class="at">time_seconds =</span> <span class="fu">c</span>(time_vs, time_dada2, time_vs_ref),</span>
+<span id="cb11-50"><a href="#cb11-50" tabindex="-1"></a>      <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb11-51"><a href="#cb11-51" tabindex="-1"></a>    )</span>
+<span id="cb11-52"><a href="#cb11-52" tabindex="-1"></a>  )</span>
+<span id="cb11-53"><a href="#cb11-53" tabindex="-1"></a>}</span>
+<span id="cb11-54"><a href="#cb11-54" tabindex="-1"></a></span>
+<span id="cb11-55"><a href="#cb11-55" tabindex="-1"></a>results</span></code></pre></div>
+</div>
+<div id="summary-table-all-scenarios" class="section level2">
+<h2>Summary Table: All Scenarios</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>results_wide <span class="ot">&lt;-</span> <span class="fu">reshape</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  results,</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="at">direction =</span> <span class="st">&quot;wide&quot;</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="at">idvar =</span> <span class="st">&quot;dataset&quot;</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>  <span class="at">timevar =</span> <span class="st">&quot;method&quot;</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>  <span class="at">v.names =</span> <span class="fu">c</span>(<span class="st">&quot;detection_rate&quot;</span>, <span class="st">&quot;time_seconds&quot;</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>)</span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="fu">names</span>(results_wide) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot;</span><span class="sc">\\</span><span class="st">.&quot;</span>, <span class="st">&quot; &quot;</span>, <span class="fu">names</span>(results_wide))</span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>  results_wide,</span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&quot;Detection Rate and Time Across Scenarios&quot;</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>  <span class="at">digits =</span> <span class="dv">1</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="visualizing-results" class="section level2">
+<h2>Visualizing Results</h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>METHOD_COLORS <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="st">&quot;vsearch&quot;</span> <span class="ot">=</span> <span class="st">&quot;steelblue&quot;</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="st">&quot;dada2&quot;</span> <span class="ot">=</span> <span class="st">&quot;coral&quot;</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>  <span class="st">&quot;vsearch_ref&quot;</span> <span class="ot">=</span> <span class="st">&quot;mediumseagreen&quot;</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>)</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co"># Distribution of parent1 proportions for each dataset</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>prop_data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>    <span class="at">dataset =</span> <span class="st">&quot;Default (sd=0.15)&quot;</span>,</span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a>    <span class="at">prop =</span> df_chim<span class="sc">$</span>parent_info<span class="sc">$</span>prop_parent1</span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a>  ),</span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a>    <span class="at">dataset =</span> <span class="st">&quot;Hard (sd=0.25)&quot;</span>,</span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a>    <span class="at">prop =</span> result_hard<span class="sc">$</span>parent_info<span class="sc">$</span>prop_parent1</span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a>  ),</span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a>    <span class="at">dataset =</span> <span class="st">&quot;Biased (mean=0.7)&quot;</span>,</span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a>    <span class="at">prop =</span> result_biased<span class="sc">$</span>parent_info<span class="sc">$</span>prop_parent1</span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a>  ),</span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a>    <span class="at">dataset =</span> <span class="st">&quot;Low abundance&quot;</span>,</span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a>    <span class="at">prop =</span> result_low_abund<span class="sc">$</span>parent_info<span class="sc">$</span>prop_parent1</span>
+<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a>  )</span>
+<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a>)</span>
+<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a>prop_data<span class="sc">$</span>dataset <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
+<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a>  prop_data<span class="sc">$</span>dataset,</span>
+<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(</span>
+<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a>    <span class="st">&quot;Default (sd=0.15)&quot;</span>, <span class="st">&quot;Hard (sd=0.25)&quot;</span>,</span>
+<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a>    <span class="st">&quot;Biased (mean=0.7)&quot;</span>, <span class="st">&quot;Low abundance&quot;</span></span>
+<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a>  )</span>
+<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a>)</span>
+<span id="cb13-33"><a href="#cb13-33" tabindex="-1"></a></span>
+<span id="cb13-34"><a href="#cb13-34" tabindex="-1"></a>p_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(prop_data, <span class="fu">aes</span>(<span class="at">x =</span> prop)) <span class="sc">+</span></span>
+<span id="cb13-35"><a href="#cb13-35" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(</span>
+<span id="cb13-36"><a href="#cb13-36" tabindex="-1"></a>    <span class="at">binwidth =</span> <span class="fl">0.05</span>, <span class="at">fill =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">color =</span> <span class="st">&quot;white&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.7</span></span>
+<span id="cb13-37"><a href="#cb13-37" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-38"><a href="#cb13-38" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>dataset, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb13-39"><a href="#cb13-39" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb13-40"><a href="#cb13-40" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb13-41"><a href="#cb13-41" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Proportion from parent1&quot;</span>,</span>
+<span id="cb13-42"><a href="#cb13-42" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Count&quot;</span>,</span>
+<span id="cb13-43"><a href="#cb13-43" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Distribution of Parent1 Proportions&quot;</span></span>
+<span id="cb13-44"><a href="#cb13-44" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-45"><a href="#cb13-45" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb13-46"><a href="#cb13-46" tabindex="-1"></a></span>
+<span id="cb13-47"><a href="#cb13-47" tabindex="-1"></a>p_hist</span>
+<span id="cb13-48"><a href="#cb13-48" tabindex="-1"></a></span>
+<span id="cb13-49"><a href="#cb13-49" tabindex="-1"></a><span class="co"># Detection rate per dataset and method</span></span>
+<span id="cb13-50"><a href="#cb13-50" tabindex="-1"></a>results<span class="sc">$</span>method <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
+<span id="cb13-51"><a href="#cb13-51" tabindex="-1"></a>  results<span class="sc">$</span>method,</span>
+<span id="cb13-52"><a href="#cb13-52" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;vsearch&quot;</span>, <span class="st">&quot;dada2&quot;</span>, <span class="st">&quot;vsearch_ref&quot;</span>)</span>
+<span id="cb13-53"><a href="#cb13-53" tabindex="-1"></a>)</span>
+<span id="cb13-54"><a href="#cb13-54" tabindex="-1"></a></span>
+<span id="cb13-55"><a href="#cb13-55" tabindex="-1"></a>p_bar <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb13-56"><a href="#cb13-56" tabindex="-1"></a>  results,</span>
+<span id="cb13-57"><a href="#cb13-57" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> dataset, <span class="at">y =</span> detection_rate, <span class="at">fill =</span> method)</span>
+<span id="cb13-58"><a href="#cb13-58" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb13-59"><a href="#cb13-59" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.8</span>), <span class="at">width =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb13-60"><a href="#cb13-60" tabindex="-1"></a>  <span class="fu">geom_hline</span>(</span>
+<span id="cb13-61"><a href="#cb13-61" tabindex="-1"></a>    <span class="at">yintercept =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="dv">20</span>),</span>
+<span id="cb13-62"><a href="#cb13-62" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.5</span></span>
+<span id="cb13-63"><a href="#cb13-63" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-64"><a href="#cb13-64" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> METHOD_COLORS) <span class="sc">+</span></span>
+<span id="cb13-65"><a href="#cb13-65" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb13-66"><a href="#cb13-66" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb13-67"><a href="#cb13-67" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Dataset&quot;</span>,</span>
+<span id="cb13-68"><a href="#cb13-68" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Detection rate (%)&quot;</span>,</span>
+<span id="cb13-69"><a href="#cb13-69" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Chimera Detection Across Different Scenarios&quot;</span>,</span>
+<span id="cb13-70"><a href="#cb13-70" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">&quot;Method&quot;</span></span>
+<span id="cb13-71"><a href="#cb13-71" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb13-72"><a href="#cb13-72" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb13-73"><a href="#cb13-73" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
+<span id="cb13-74"><a href="#cb13-74" tabindex="-1"></a></span>
+<span id="cb13-75"><a href="#cb13-75" tabindex="-1"></a>p_bar</span></code></pre></div>
+</div>
+<div id="effect-of-chimera-abundance-on-detection" class="section level2">
+<h2>Effect of Chimera Abundance on Detection</h2>
+<p>Chimera abundance relative to parent sequences affects detection
+sensitivity.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>abundance_multipliers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.5</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>abundance_results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>  <span class="at">multiplier =</span> <span class="fu">numeric</span>(),</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">character</span>(),</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>  <span class="at">detection_rate =</span> <span class="fu">numeric</span>(),</span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>  <span class="at">time_seconds =</span> <span class="fu">numeric</span>(),</span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>)</span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="cf">for</span> (mult <span class="cf">in</span> abundance_multipliers) {</span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a>  result_abund <span class="ot">&lt;-</span> <span class="fu">create_chimera_pq</span>(</span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a>    data_fungi_subset,</span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a>    <span class="at">n_chimeras =</span> <span class="dv">50</span>,</span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a>    <span class="at">median_abundance_multiplier =</span> mult,</span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">123</span></span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a>  )</span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a></span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a>  start_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a>  nochim_vs <span class="ot">&lt;-</span> <span class="fu">chimera_removal_vs</span>(result_abund<span class="sc">$</span>physeq)</span>
+<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a>  time_vs <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">difftime</span>(<span class="fu">Sys.time</span>(), start_time, <span class="at">units =</span> <span class="st">&quot;secs&quot;</span>))</span>
+<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a>  rate_vs <span class="ot">&lt;-</span> <span class="fu">calc_detection_rate</span>(nochim_vs, result_abund<span class="sc">$</span>chimera_names)</span>
+<span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a></span>
+<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a>  start_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a>  nochim_dada2 <span class="ot">&lt;-</span> <span class="fu">chimera_removal_dada2</span>(result_abund<span class="sc">$</span>physeq)</span>
+<span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a>  time_dada2 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">difftime</span>(<span class="fu">Sys.time</span>(), start_time, <span class="at">units =</span> <span class="st">&quot;secs&quot;</span>))</span>
+<span id="cb14-27"><a href="#cb14-27" tabindex="-1"></a>  rate_dada2 <span class="ot">&lt;-</span> <span class="fu">calc_detection_rate</span>(nochim_dada2, result_abund<span class="sc">$</span>chimera_names)</span>
+<span id="cb14-28"><a href="#cb14-28" tabindex="-1"></a></span>
+<span id="cb14-29"><a href="#cb14-29" tabindex="-1"></a>  start_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb14-30"><a href="#cb14-30" tabindex="-1"></a>  nochim_vs_ref <span class="ot">&lt;-</span> <span class="fu">chimera_removal_vs_ref</span>(result_abund<span class="sc">$</span>physeq, <span class="at">database =</span> mini_db)</span>
+<span id="cb14-31"><a href="#cb14-31" tabindex="-1"></a>  time_vs_ref <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">difftime</span>(<span class="fu">Sys.time</span>(), start_time, <span class="at">units =</span> <span class="st">&quot;secs&quot;</span>))</span>
+<span id="cb14-32"><a href="#cb14-32" tabindex="-1"></a>  rate_vs_ref <span class="ot">&lt;-</span> <span class="fu">calc_detection_rate</span>(nochim_vs_ref, result_abund<span class="sc">$</span>chimera_names)</span>
+<span id="cb14-33"><a href="#cb14-33" tabindex="-1"></a></span>
+<span id="cb14-34"><a href="#cb14-34" tabindex="-1"></a>  abundance_results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb14-35"><a href="#cb14-35" tabindex="-1"></a>    abundance_results,</span>
+<span id="cb14-36"><a href="#cb14-36" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
+<span id="cb14-37"><a href="#cb14-37" tabindex="-1"></a>      <span class="at">multiplier =</span> mult,</span>
+<span id="cb14-38"><a href="#cb14-38" tabindex="-1"></a>      <span class="at">method =</span> <span class="fu">c</span>(<span class="st">&quot;vsearch&quot;</span>, <span class="st">&quot;dada2&quot;</span>, <span class="st">&quot;vsearch_ref&quot;</span>),</span>
+<span id="cb14-39"><a href="#cb14-39" tabindex="-1"></a>      <span class="at">detection_rate =</span> <span class="fu">c</span>(rate_vs, rate_dada2, rate_vs_ref),</span>
+<span id="cb14-40"><a href="#cb14-40" tabindex="-1"></a>      <span class="at">time_seconds =</span> <span class="fu">c</span>(time_vs, time_dada2, time_vs_ref),</span>
+<span id="cb14-41"><a href="#cb14-41" tabindex="-1"></a>      <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb14-42"><a href="#cb14-42" tabindex="-1"></a>    )</span>
+<span id="cb14-43"><a href="#cb14-43" tabindex="-1"></a>  )</span>
+<span id="cb14-44"><a href="#cb14-44" tabindex="-1"></a>}</span>
+<span id="cb14-45"><a href="#cb14-45" tabindex="-1"></a></span>
+<span id="cb14-46"><a href="#cb14-46" tabindex="-1"></a>abundance_results</span></code></pre></div>
+<div id="abundance-summary-table" class="section level3">
+<h3>Abundance Summary Table</h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  abundance_results,</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&quot;Detection by Chimera Abundance Level&quot;</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>  <span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="visualizing-abundance-effect" class="section level3">
+<h3>Visualizing Abundance Effect</h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>p_abund_detection <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>  abundance_results,</span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> multiplier, <span class="at">y =</span> detection_rate, <span class="at">color =</span> method)</span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> METHOD_COLORS) <span class="sc">+</span></span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;median_abundance_multiplier&quot;</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Detection rate (%)&quot;</span>,</span>
+<span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Detection vs Chimera Abundance&quot;</span>,</span>
+<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">&quot;Method&quot;</span></span>
+<span id="cb16-15"><a href="#cb16-15" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-16"><a href="#cb16-16" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb16-17"><a href="#cb16-17" tabindex="-1"></a></span>
+<span id="cb16-18"><a href="#cb16-18" tabindex="-1"></a>p_abund_detection</span>
+<span id="cb16-19"><a href="#cb16-19" tabindex="-1"></a></span>
+<span id="cb16-20"><a href="#cb16-20" tabindex="-1"></a>abundance_results<span class="sc">$</span>multiplier_label <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb16-21"><a href="#cb16-21" tabindex="-1"></a>  abundance_results<span class="sc">$</span>multiplier <span class="sc">*</span> <span class="dv">100</span>, <span class="st">&quot;%&quot;</span></span>
+<span id="cb16-22"><a href="#cb16-22" tabindex="-1"></a>)</span>
+<span id="cb16-23"><a href="#cb16-23" tabindex="-1"></a>abundance_results<span class="sc">$</span>multiplier_label <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
+<span id="cb16-24"><a href="#cb16-24" tabindex="-1"></a>  abundance_results<span class="sc">$</span>multiplier_label,</span>
+<span id="cb16-25"><a href="#cb16-25" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">paste0</span>(<span class="fu">sort</span>(<span class="fu">unique</span>(abundance_results<span class="sc">$</span>multiplier)) <span class="sc">*</span> <span class="dv">100</span>, <span class="st">&quot;%&quot;</span>)</span>
+<span id="cb16-26"><a href="#cb16-26" tabindex="-1"></a>)</span>
+<span id="cb16-27"><a href="#cb16-27" tabindex="-1"></a></span>
+<span id="cb16-28"><a href="#cb16-28" tabindex="-1"></a>p_abund_bar <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb16-29"><a href="#cb16-29" tabindex="-1"></a>  abundance_results,</span>
+<span id="cb16-30"><a href="#cb16-30" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> multiplier_label, <span class="at">y =</span> detection_rate, <span class="at">fill =</span> method)</span>
+<span id="cb16-31"><a href="#cb16-31" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb16-32"><a href="#cb16-32" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.8</span>), <span class="at">width =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb16-33"><a href="#cb16-33" tabindex="-1"></a>  <span class="fu">geom_hline</span>(</span>
+<span id="cb16-34"><a href="#cb16-34" tabindex="-1"></a>    <span class="at">yintercept =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="dv">20</span>),</span>
+<span id="cb16-35"><a href="#cb16-35" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">&quot;gray&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.5</span></span>
+<span id="cb16-36"><a href="#cb16-36" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-37"><a href="#cb16-37" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> METHOD_COLORS) <span class="sc">+</span></span>
+<span id="cb16-38"><a href="#cb16-38" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb16-39"><a href="#cb16-39" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb16-40"><a href="#cb16-40" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Chimera abundance (% of median)&quot;</span>,</span>
+<span id="cb16-41"><a href="#cb16-41" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Detection rate (%)&quot;</span>,</span>
+<span id="cb16-42"><a href="#cb16-42" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Detection Rate by Chimera Abundance Level&quot;</span>,</span>
+<span id="cb16-43"><a href="#cb16-43" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">&quot;Method&quot;</span></span>
+<span id="cb16-44"><a href="#cb16-44" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-45"><a href="#cb16-45" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb16-46"><a href="#cb16-46" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
+<span id="cb16-47"><a href="#cb16-47" tabindex="-1"></a></span>
+<span id="cb16-48"><a href="#cb16-48" tabindex="-1"></a>p_abund_bar</span></code></pre></div>
+</div>
+</div>
+<div id="effect-of-parent-sequence-distance" class="section level2">
+<h2>Effect of Parent Sequence Distance</h2>
+<p>Chimeras created from very similar parent sequences are harder to
+detect.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>distance_results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  <span class="at">min_param_distance =</span> <span class="fu">numeric</span>(),</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">character</span>(),</span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>  <span class="at">mean_parent_distance =</span> <span class="fu">numeric</span>(),</span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>  <span class="at">min_parent_distance =</span> <span class="fu">numeric</span>(),</span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a>  <span class="at">max_parent_distance =</span> <span class="fu">numeric</span>(),</span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a>  <span class="at">detection_rate =</span> <span class="fu">numeric</span>(),</span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a>  <span class="at">nb_detected =</span> <span class="fu">numeric</span>(),</span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a>)</span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a><span class="cf">for</span> (min_dist <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.001</span>, <span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.4</span>)) {</span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a>  result_dist <span class="ot">&lt;-</span> <span class="fu">create_chimera_pq</span>(</span>
+<span id="cb17-14"><a href="#cb17-14" tabindex="-1"></a>    data_fungi_subset,</span>
+<span id="cb17-15"><a href="#cb17-15" tabindex="-1"></a>    <span class="at">n_chimeras =</span> <span class="dv">50</span>,</span>
+<span id="cb17-16"><a href="#cb17-16" tabindex="-1"></a>    <span class="at">min_parent_distance =</span> min_dist,</span>
+<span id="cb17-17"><a href="#cb17-17" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">456</span></span>
+<span id="cb17-18"><a href="#cb17-18" tabindex="-1"></a>  )</span>
+<span id="cb17-19"><a href="#cb17-19" tabindex="-1"></a></span>
+<span id="cb17-20"><a href="#cb17-20" tabindex="-1"></a>  mean_dist <span class="ot">&lt;-</span> <span class="fu">mean</span>(result_dist<span class="sc">$</span>parent_info<span class="sc">$</span>parent_distance)</span>
+<span id="cb17-21"><a href="#cb17-21" tabindex="-1"></a>  min_dist_parent <span class="ot">&lt;-</span> <span class="fu">min</span>(result_dist<span class="sc">$</span>parent_info<span class="sc">$</span>parent_distance)</span>
+<span id="cb17-22"><a href="#cb17-22" tabindex="-1"></a>  max_dist_parent <span class="ot">&lt;-</span> <span class="fu">max</span>(result_dist<span class="sc">$</span>parent_info<span class="sc">$</span>parent_distance)</span>
+<span id="cb17-23"><a href="#cb17-23" tabindex="-1"></a></span>
+<span id="cb17-24"><a href="#cb17-24" tabindex="-1"></a>  nochim_vs <span class="ot">&lt;-</span> <span class="fu">chimera_removal_vs</span>(result_dist<span class="sc">$</span>physeq)</span>
+<span id="cb17-25"><a href="#cb17-25" tabindex="-1"></a>  rate_vs <span class="ot">&lt;-</span> <span class="fu">calc_detection_rate</span>(nochim_vs, result_dist<span class="sc">$</span>chimera_names)</span>
+<span id="cb17-26"><a href="#cb17-26" tabindex="-1"></a></span>
+<span id="cb17-27"><a href="#cb17-27" tabindex="-1"></a>  nochim_dada2 <span class="ot">&lt;-</span> <span class="fu">chimera_removal_dada2</span>(result_dist<span class="sc">$</span>physeq)</span>
+<span id="cb17-28"><a href="#cb17-28" tabindex="-1"></a>  rate_dada2 <span class="ot">&lt;-</span> <span class="fu">calc_detection_rate</span>(nochim_dada2, result_dist<span class="sc">$</span>chimera_names)</span>
+<span id="cb17-29"><a href="#cb17-29" tabindex="-1"></a></span>
+<span id="cb17-30"><a href="#cb17-30" tabindex="-1"></a>  nochim_vs_ref <span class="ot">&lt;-</span> <span class="fu">chimera_removal_vs_ref</span>(result_dist<span class="sc">$</span>physeq, <span class="at">database =</span> mini_db)</span>
+<span id="cb17-31"><a href="#cb17-31" tabindex="-1"></a>  rate_vs_ref <span class="ot">&lt;-</span> <span class="fu">calc_detection_rate</span>(nochim_vs_ref, result_dist<span class="sc">$</span>chimera_names)</span>
+<span id="cb17-32"><a href="#cb17-32" tabindex="-1"></a></span>
+<span id="cb17-33"><a href="#cb17-33" tabindex="-1"></a>  distance_results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb17-34"><a href="#cb17-34" tabindex="-1"></a>    distance_results,</span>
+<span id="cb17-35"><a href="#cb17-35" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
+<span id="cb17-36"><a href="#cb17-36" tabindex="-1"></a>      <span class="at">min_param_distance =</span> min_dist,</span>
+<span id="cb17-37"><a href="#cb17-37" tabindex="-1"></a>      <span class="at">method =</span> <span class="fu">c</span>(<span class="st">&quot;vsearch&quot;</span>, <span class="st">&quot;dada2&quot;</span>, <span class="st">&quot;vsearch_ref&quot;</span>),</span>
+<span id="cb17-38"><a href="#cb17-38" tabindex="-1"></a>      <span class="at">mean_parent_distance =</span> mean_dist,</span>
+<span id="cb17-39"><a href="#cb17-39" tabindex="-1"></a>      <span class="at">min_parent_distance =</span> min_dist_parent,</span>
+<span id="cb17-40"><a href="#cb17-40" tabindex="-1"></a>      <span class="at">max_parent_distance =</span> max_dist_parent,</span>
+<span id="cb17-41"><a href="#cb17-41" tabindex="-1"></a>      <span class="at">detection_rate =</span> <span class="fu">c</span>(rate_vs, rate_dada2, rate_vs_ref),</span>
+<span id="cb17-42"><a href="#cb17-42" tabindex="-1"></a>      <span class="at">nb_detected =</span> <span class="fu">c</span>(</span>
+<span id="cb17-43"><a href="#cb17-43" tabindex="-1"></a>        <span class="fu">ntaxa</span>(result_dist<span class="sc">$</span>physeq) <span class="sc">-</span> <span class="fu">ntaxa</span>(nochim_vs),</span>
+<span id="cb17-44"><a href="#cb17-44" tabindex="-1"></a>        <span class="fu">ntaxa</span>(result_dist<span class="sc">$</span>physeq) <span class="sc">-</span> <span class="fu">ntaxa</span>(nochim_dada2),</span>
+<span id="cb17-45"><a href="#cb17-45" tabindex="-1"></a>        <span class="fu">ntaxa</span>(result_dist<span class="sc">$</span>physeq) <span class="sc">-</span> <span class="fu">ntaxa</span>(nochim_vs_ref)</span>
+<span id="cb17-46"><a href="#cb17-46" tabindex="-1"></a>      ),</span>
+<span id="cb17-47"><a href="#cb17-47" tabindex="-1"></a>      <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb17-48"><a href="#cb17-48" tabindex="-1"></a>    )</span>
+<span id="cb17-49"><a href="#cb17-49" tabindex="-1"></a>  )</span>
+<span id="cb17-50"><a href="#cb17-50" tabindex="-1"></a>}</span>
+<span id="cb17-51"><a href="#cb17-51" tabindex="-1"></a></span>
+<span id="cb17-52"><a href="#cb17-52" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb17-53"><a href="#cb17-53" tabindex="-1"></a>  distance_results,</span>
+<span id="cb17-54"><a href="#cb17-54" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&quot;Detection Rate by Minimum Parent Distance&quot;</span>,</span>
+<span id="cb17-55"><a href="#cb17-55" tabindex="-1"></a>  <span class="at">digits =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">0</span>)</span>
+<span id="cb17-56"><a href="#cb17-56" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>p_dist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>  distance_results,</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> min_param_distance, <span class="at">y =</span> detection_rate, <span class="at">color =</span> method)</span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>)) <span class="sc">+</span></span>
+<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> METHOD_COLORS) <span class="sc">+</span></span>
+<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb18-11"><a href="#cb18-11" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Min parameter distance&quot;</span>,</span>
+<span id="cb18-12"><a href="#cb18-12" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;Detection rate (%)&quot;</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Detection vs Min Parent Distance&quot;</span>,</span>
+<span id="cb18-14"><a href="#cb18-14" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">&quot;Method&quot;</span></span>
+<span id="cb18-15"><a href="#cb18-15" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb18-16"><a href="#cb18-16" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb18-17"><a href="#cb18-17" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_label_repel</span>(</span>
+<span id="cb18-18"><a href="#cb18-18" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> nb_detected),</span>
+<span id="cb18-19"><a href="#cb18-19" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">3</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span></span>
+<span id="cb18-20"><a href="#cb18-20" tabindex="-1"></a>  )</span>
+<span id="cb18-21"><a href="#cb18-21" tabindex="-1"></a></span>
+<span id="cb18-22"><a href="#cb18-22" tabindex="-1"></a>p_dist</span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

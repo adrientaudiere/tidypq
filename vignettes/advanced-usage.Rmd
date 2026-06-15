@@ -23,12 +23,12 @@ library(MiscMetabar)
 
 ```{r}
 # Filter taxa present in at least 3 samples
-data_fungi |> 
+data_fungi |>
   filter_taxa_pq(taxa_prevalence(.) >= 3)
 
 # Filter samples with above-median depth
 data_fungi |>
-   filter_samples_pq(sample_sums(.) > median(sample_sums(.)))
+  filter_samples_pq(sample_sums(.) > median(sample_sums(.)))
 ```
 
 ## Custom functions in mutate

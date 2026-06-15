@@ -16,6 +16,12 @@ the original values. Use \code{.} to refer to cell values.}
 A phyloseq object with transformed OTU values.
 }
 \description{
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
+
 Apply a transformation to all values in the OTU table. This is useful for
 computing relative abundances, log transformations, or other value-level
 operations.

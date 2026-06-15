@@ -4,20 +4,28 @@
 \name{tidypq-package}
 \alias{tidypq}
 \alias{tidypq-package}
-\title{tidypq: Tidyverse-Style Verbs for Phyloseq Objects}
+\title{tidypq: Tidyverse-Style Verbs for 'phyloseq' Objects}
 \description{
-Provides tidyverse-style verbs for manipulating phyloseq objects at four scales: samples, taxa, occurrences, and tree. Functions follow a consistent naming convention ({verb}_{scale}_pq) and support data masking for intuitive filtering, selection, and mutation operations.
+\if{html}{\figure{logo.svg}{options: style='float: right' alt='logo' width='120'}}
+
+Tidyverse-style verbs for manipulating 'phyloseq' objects at four scales: samples, taxa, occurrences, and tree. Functions follow a consistent naming convention and support data masking for intuitive filtering, selection, and mutation operations. Designed for metabarcoding analyses, it integrates with 'MiscMetabar' and the 'pqverse' ecosystem.
 }
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://adrientaudiere.github.io/tidypq/}
   \item \url{https://github.com/adrientaudiere/tidypq}
   \item Report bugs at \url{https://github.com/adrientaudiere/tidypq/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Adrien Taudière \email{adrien.taudiere@zaclys.net} (\href{https://orcid.org/0000-0003-1088-1182}{ORCID})
+\strong{Maintainer}: Adrien Taudière \email{adrien.taudiere@zaclys.net} (\href{https://orcid.org/0000-0003-1088-1182}{ORCID}) [copyright holder]
+
+Authors:
+\itemize{
+  \item Adrien Taudière \email{adrien.taudiere@zaclys.net} (\href{https://orcid.org/0000-0003-1088-1182}{ORCID}) [copyright holder]
+}
 
 }
 \keyword{internal}

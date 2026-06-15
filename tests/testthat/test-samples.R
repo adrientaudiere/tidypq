@@ -15,7 +15,11 @@ test_that("filter_samples_pq filters using . pronoun", {
 })
 
 test_that("filter_samples_pq combines multiple conditions", {
-  result <- filter_samples_pq(data_fungi, Height == "Low", sample_sums(.) > 5000)
+  result <- filter_samples_pq(
+    data_fungi,
+    Height == "Low",
+    sample_sums(.) > 5000
+  )
   expect_s4_class(result, "phyloseq")
   sam <- phyloseq::sample_data(result)
   expect_true(all(sam$Height == "Low"))
@@ -33,7 +37,10 @@ test_that("select_samdata_pq selects 2 columns", {
   result <- select_samdata_pq(data_fungi, Height, Sample_names)
   expect_s4_class(result, "phyloseq")
   expect_equal(ncol(phyloseq::sample_data(result)), 2)
-  expect_equal(colnames(phyloseq::sample_data(result)), c("Height", "Sample_names"))
+  expect_equal(
+    colnames(phyloseq::sample_data(result)),
+    c("Height", "Sample_names")
+  )
 })
 
 
@@ -46,19 +53,28 @@ test_that("select_samdata_pq supports tidyselect", {
   }
 })
 
+test_that("select_samdata_pq errors with no arguments", {
+  expect_error(
+    select_samdata_pq(data_fungi),
+    "No columns selected"
+  )
+})
+
 test_that("mutate_samdata_pq adds new columns", {
   result <- mutate_samdata_pq(data_fungi, log_depth = log(sample_sums(.)))
   expect_s4_class(result, "phyloseq")
   expect_true("log_depth" %in% colnames(phyloseq::sample_data(result)))
-  expected <- log(phyloseq::sample_sums(data_fungi))
+  expected <- unname(log(phyloseq::sample_sums(data_fungi)))
   actual <- phyloseq::sample_data(result)$log_depth
-  expect_equal(sum(expected-actual!=0), 0)
+  expect_equal(actual, expected)
 })
 
 test_that("mutate_samdata_pq modifies existing columns", {
   result <- mutate_samdata_pq(data_fungi, Height = toupper(Height))
   expect_s4_class(result, "phyloseq")
-  expect_true(all(phyloseq::sample_data(result)$Height %in% c("LOW", "MIDDLE", "HIGH", NA)))
+  expect_true(all(
+    phyloseq::sample_data(result)$Height %in% c("LOW", "MIDDLE", "HIGH", NA)
+  ))
 })
 
 test_that("slice_samples_pq selects by position", {

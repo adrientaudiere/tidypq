@@ -1,11 +1,19 @@
 # Add or modify columns in tax_table
 
+[![lifecycle-experimental](https://img.shields.io/badge/lifecycle-experimental-orange)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
+
 Create new columns or modify existing ones in tax_table using data
 masking. Supports the `.` pronoun to refer to the phyloseq object.
 
 This function only modifies the tax_table slot (columns/taxonomic
 ranks). It cannot add or remove taxa. The number of taxa and taxa names
 are preserved.
+
+Unlike
+[`dplyr::mutate()`](https://dplyr.tidyverse.org/reference/mutate.html),
+columns created in the same call cannot reference each other (e.g.,
+`mutate_taxa_pq(pq, a = 1, b = a + 1)` will not work because `a` is not
+yet available when `b` is evaluated).
 
 ## Usage
 

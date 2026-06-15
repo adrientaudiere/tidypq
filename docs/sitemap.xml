@@ -12,6 +12,9 @@
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/arrange_samples_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/arrange_taxa_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/chimera_removal_dada2.html</loc></url>
+<url><loc>https://adrientaudiere.github.io/tidypq/reference/chimera_removal_vs_ref.html</loc></url>
+<url><loc>https://adrientaudiere.github.io/tidypq/reference/contam_blocklist_pq.html</loc></url>
+<url><loc>https://adrientaudiere.github.io/tidypq/reference/contam_corr_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/create_chimera_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/decontam_sam_control.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/decontam_taxa_control.html</loc></url>
@@ -20,10 +23,15 @@
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/filter_taxa_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/filter_tree_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/index.html</loc></url>
+<url><loc>https://adrientaudiere.github.io/tidypq/reference/known_contaminant_genera.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/mutate_occurrences_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/mutate_samdata_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/mutate_taxa_pq.html</loc></url>
+<url><loc>https://adrientaudiere.github.io/tidypq/reference/neg_control_classify_pq.html</loc></url>
+<url><loc>https://adrientaudiere.github.io/tidypq/reference/neg_control_clean_pq.html</loc></url>
+<url><loc>https://adrientaudiere.github.io/tidypq/reference/neg_control_diag_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/plot_sample_depth_pq.html</loc></url>
+<url><loc>https://adrientaudiere.github.io/tidypq/reference/print.wrapped_pheatmap.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/rename_samples_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/rename_taxa_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/select_samdata_pq.html</loc></url>

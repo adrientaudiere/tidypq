@@ -1,5 +1,9 @@
 #' Plot sample depth differences to detect outliers
 #'
+#' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Creates a diagnostic plot showing the log10 differences between consecutive
 #' sorted sample sums. This helps identify samples with unusually low sequencing
 #' depth by detecting large "jumps" in the distribution.
@@ -45,11 +49,18 @@
 #'
 #' # Without threshold coloring
 #' plot_sample_depth_pq(data_fungi, show_threshold = FALSE)
+plot_sample_depth_pq <- function(
+  physeq,
+  lower_quantile = 0.1,
+  threshold_quantile = 0.05,
+  show_threshold = TRUE
+) {
+  MiscMetabar::verify_pq(physeq)
 
-plot_sample_depth_pq <- function(physeq,
-                                  lower_quantile = 0.1,
-                                  threshold_quantile = 0.05,
-                                  show_threshold = TRUE) {
+  if (phyloseq::nsamples(physeq) < 3) {
+    stop("plot_sample_depth_pq() requires at least 3 samples.")
+  }
+
   res_tib <-
     phyloseq::sample_sums(physeq) |>
     sort() |>
@@ -59,9 +70,16 @@ plot_sample_depth_pq <- function(physeq,
       rank = dplyr::row_number()
     )
 
-  # Compute differences excluding the lower quantile
-
-diff_filtered <- res_tib$diff[res_tib$diff > stats::quantile(res_tib$diff, lower_quantile)]
+  # Compute differences excluding the lower quantile and zeros (log10(0) = -Inf)
+  diff_filtered <- res_tib$diff[
+    res_tib$diff > stats::quantile(res_tib$diff, lower_quantile) &
+      res_tib$diff > 0
+  ]
+  if (length(diff_filtered) == 0) {
+    stop(
+      "All sample depth differences are zero; cannot compute log10 statistics."
+    )
+  }
   mean_diff <- mean(log10(diff_filtered))
   lower_line <- stats::quantile(log10(diff_filtered), threshold_quantile)
   upper_line <- stats::quantile(log10(diff_filtered), 1 - threshold_quantile)
@@ -89,11 +107,23 @@ diff_filtered <- res_tib$diff[res_tib$diff > stats::quantile(res_tib$diff, lower
         labels = c("FALSE" = "No", "TRUE" = "Yes")
       ) +
       ggplot2::labs(
-        title = sprintf("Selected samples have rank >= %d", threshold_rank)
+        title = sprintf(
+          "Selected samples have rank >= %d",
+          as.integer(threshold_rank)
+        )
       ) +
-      geom_vline(xintercept = threshold_rank, linetype = 4, color="grey") +
-      geom_point(data = res_tib[threshold_rank, ], aes(y = log10(.data$diff), x = .data$rank), color="black", pch=21, size=4)
-
+      ggplot2::geom_vline(
+        xintercept = threshold_rank,
+        linetype = 4,
+        color = "grey"
+      ) +
+      ggplot2::geom_point(
+        data = res_tib[threshold_rank, ],
+        ggplot2::aes(y = log10(.data$diff), x = .data$rank),
+        color = "black",
+        pch = 21,
+        size = 4
+      )
   }
 
   p

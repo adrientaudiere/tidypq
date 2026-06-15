@@ -29,6 +29,12 @@ chimeric sequences removed. If \code{return_a_list = TRUE}, returns a list with:
 }
 }
 \description{
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
+
 Applies \code{dada2::removeBimeraDenovo()} to identify and remove chimeric
 sequences from a phyloseq object based on sequence abundance patterns.
 }
@@ -42,10 +48,11 @@ assuming that chimeric sequences are less abundant than their parent
 sequences.
 }
 \examples{
-\dontrun{
+\dontshow{if (rlang::is_installed("dada2")) withAutoprint(\{ # examplesIf}
 library(MiscMetabar)
 data(data_fungi)
 
+\donttest{
 # Basic usage
 data_nochim <- chimera_removal_dada2(data_fungi)
 
@@ -56,6 +63,7 @@ cat("Removed", length(result$chimeric_taxa), "chimeric ASVs\n")
 # Use pooled method
 data_nochim <- chimera_removal_dada2(data_fungi, method = "pooled")
 }
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[MiscMetabar:chimera_removal_vs]{MiscMetabar::chimera_removal_vs()}} for vsearch-based chimera

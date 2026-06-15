@@ -20,11 +20,21 @@ A phyloseq object with modified sample_data (same samples, modified
 or new columns).
 }
 \description{
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
+
 Create new columns or modify existing ones in sample_data using data masking.
 Supports the \code{.} pronoun to refer to the phyloseq object.
 
 This function only modifies the sample_data slot (columns/metadata). It cannot
 add or remove samples. The number of samples and sample names are preserved.
+
+Unlike \code{dplyr::mutate()}, columns created in the same call cannot reference
+each other (e.g., \code{mutate_samdata_pq(pq, a = 1, b = a + 1)} will not work
+because \code{a} is not yet available when \code{b} is evaluated).
 }
 \examples{
 library(MiscMetabar)

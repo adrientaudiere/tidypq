@@ -16,6 +16,12 @@ and the value is the old name. Use \code{new_name = old_name} syntax.}
 A phyloseq object with renamed sample_data columns.
 }
 \description{
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
+
 Rename columns in sample_data using tidyselect semantics.
 }
 \examples{

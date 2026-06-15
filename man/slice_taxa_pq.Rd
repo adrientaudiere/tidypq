@@ -19,6 +19,12 @@ is cleaned using \code{clean_pq()} to remove empty taxa/samples.}
 A phyloseq object with selected taxa.
 }
 \description{
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
+
 Select taxa by their integer positions.
 }
 \examples{

@@ -16,15 +16,21 @@ and the value is the old name. Use \code{new_name = old_name} syntax.}
 A phyloseq object with renamed tax_table columns.
 }
 \description{
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
+
 Rename columns (taxonomic ranks) in tax_table using tidyselect semantics.
 }
 \examples{
 library(MiscMetabar)
 # Rename a single rank
-rename_taxa_pq(data_fungi, tax_kingdom = Kingdom)
+rename_taxa_pq(data_fungi, tax_domain = Domain)
 
 # Rename multiple ranks
-rename_taxa_pq(data_fungi, tax_kingdom = Kingdom, tax_phylum = Phylum)
+rename_taxa_pq(data_fungi, tax_phylum = Phylum, tax_class = Class)
 }
 \author{
 Adrien Taudière

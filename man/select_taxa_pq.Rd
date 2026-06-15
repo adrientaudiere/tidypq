@@ -11,22 +11,28 @@ select_taxa_pq(physeq, ...)
 
 \item{...}{\if{html}{\out{<tidy-select>}} One or more unquoted expressions separated by
 commas. Variable names can be used as if they were positions in the data
-frame, so expressions like \code{Kingdom:Genus} can be used to select a range
+frame, so expressions like \code{Phylum:Genus} can be used to select a range
 of taxonomic ranks.}
 }
 \value{
 A phyloseq object with selected tax_table columns.
 }
 \description{
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
+
 Select tax_table columns (taxonomic ranks) using tidyselect semantics.
 }
 \examples{
 library(MiscMetabar)
 # Select specific ranks
-select_taxa_pq(data_fungi, Kingdom, Phylum, Class)
+select_taxa_pq(data_fungi, Phylum, Class)
 
 # Select a range of ranks
-select_taxa_pq(data_fungi, Kingdom:Genus)
+select_taxa_pq(data_fungi, Phylum:Genus)
 
 # Exclude ranks
 select_taxa_pq(data_fungi, !Species)

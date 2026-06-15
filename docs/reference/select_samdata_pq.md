@@ -1,5 +1,7 @@
 # Select columns from sample_data in a phyloseq object
 
+[![lifecycle-experimental](https://img.shields.io/badge/lifecycle-experimental-orange)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
+
 Select sample_data columns using tidyselect semantics.
 
 ## Usage

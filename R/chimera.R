@@ -1,5 +1,9 @@
 #' Remove chimeric sequences using dada2
 #'
+#' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Applies `dada2::removeBimeraDenovo()` to identify and remove chimeric
 #' sequences from a phyloseq object based on sequence abundance patterns.
 #'
@@ -35,11 +39,11 @@
 #'   removal, [create_chimera_pq()] for creating test data with synthetic
 #'   chimeras.
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf rlang::is_installed("dada2")
 #' library(MiscMetabar)
 #' data(data_fungi)
 #'
+#' \donttest{
 #' # Basic usage
 #' data_nochim <- chimera_removal_dada2(data_fungi)
 #'
@@ -50,28 +54,54 @@
 #' # Use pooled method
 #' data_nochim <- chimera_removal_dada2(data_fungi, method = "pooled")
 #' }
-chimera_removal_dada2 <- function(physeq, method = "consensus", return_a_list = FALSE, ...) {
+chimera_removal_dada2 <- function(
+  physeq,
+  method = "consensus",
+  return_a_list = FALSE,
+  ...
+) {
+  MiscMetabar::verify_pq(physeq)
+  if (is.null(phyloseq::refseq(physeq, errorIfNULL = FALSE))) {
+    stop("phyloseq object must have a refseq slot containing DNA sequences.")
+  }
+
   df_seq_ab <- data.frame(
     sequence = as.character(phyloseq::refseq(physeq)),
     abundance = phyloseq::taxa_sums(physeq)
   )
 
   # Run dada2 chimera removal
-  otu_nochim <- dada2::removeBimeraDenovo(df_seq_ab, method = method, verbose = TRUE, ...)
+  otu_nochim <- dada2::removeBimeraDenovo(
+    df_seq_ab,
+    method = method,
+    verbose = TRUE,
+    ...
+  )
 
   # Find which ASVs were kept (compare sequences)
   kept_seqs <- rownames(otu_nochim)
-  kept_taxa <- names(phyloseq::refseq(physeq))[names(phyloseq::refseq(physeq)) %in% kept_seqs]
+  kept_taxa <- names(phyloseq::refseq(physeq))[
+    names(phyloseq::refseq(physeq)) %in% kept_seqs
+  ]
 
   if (length(kept_taxa) == 0) {
-    stop("No non-chimeric ASVs detected by dada2::removeBimeraDenovo(). This is unexpected.")
+    stop(
+      "No non-chimeric ASVs detected by dada2::removeBimeraDenovo(). This is unexpected."
+    )
   }
 
-  discard_taxa <- phyloseq::taxa_names(physeq)[!phyloseq::taxa_names(physeq) %in% kept_taxa]
-  discard_taxa_collapsed <- paste(discard_taxa[seq_len(min(10, length(discard_taxa)))], collapse = ";")
+  discard_taxa <- phyloseq::taxa_names(physeq)[
+    !phyloseq::taxa_names(physeq) %in% kept_taxa
+  ]
+  discard_taxa_collapsed <- paste(
+    discard_taxa[seq_len(min(10, length(discard_taxa)))],
+    collapse = ";"
+  )
 
   message(
-    "Discard ", phyloseq::ntaxa(physeq) - length(kept_taxa), " chimeric ASVs including:\n",
+    "Discard ",
+    phyloseq::ntaxa(physeq) - length(kept_taxa),
+    " chimeric ASVs including:\n",
     discard_taxa_collapsed,
     "... \nTry return_a_list=TRUE to see all discarded ASVs in the `chimeric_taxa` element."
   )
@@ -80,7 +110,203 @@ chimera_removal_dada2 <- function(physeq, method = "consensus", return_a_list = 
   physeq_nochim <- phyloseq::prune_taxa(kept_taxa, physeq)
 
   if (return_a_list) {
-    return(list(physeq = physeq_nochim, kept_taxa = kept_taxa, chimeric_taxa = discard_taxa))
+    return(list(
+      physeq = physeq_nochim,
+      kept_taxa = kept_taxa,
+      chimeric_taxa = discard_taxa
+    ))
+  }
+  physeq_nochim
+}
+
+
+#' Remove chimeric sequences using vsearch and a reference database
+#'
+#' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
+#' Applies UCHIME reference-based chimera detection via
+#' [vsearch](https://github.com/torognes/vsearch) to identify and remove
+#' chimeric sequences from a phyloseq object. Unlike de novo detection
+#' ([MiscMetabar::chimera_removal_vs()]), this method compares each query
+#' sequence against a trusted reference database rather than inferring chimeras
+#' from abundance patterns within the sample.
+#'
+#' @param physeq (phyloseq, required) A phyloseq object with a refseq slot
+#'   containing DNA sequences.
+#' @param database (character, required) Path to the reference FASTA database
+#'   used by vsearch for chimera detection (e.g. a curated ITS or 16S database).
+#' @param vsearchpath (character, default: `"vsearch"`) Path to the vsearch
+#'   executable. Defaults to `"vsearch"` assuming it is on the system PATH.
+#' @param vsearch_args (character, default: `"--fasta_width 0"`) Additional
+#'   arguments passed verbatim to the vsearch command line.
+#' @param return_a_list (logical, default: FALSE) If TRUE, returns a list with
+#'   the filtered phyloseq, kept taxa names, and chimeric taxa names.
+#' @param keep_temporary_files (logical, default: FALSE) If TRUE, temporary
+#'   FASTA files written to `tempdir()` are kept after the function returns.
+#'
+#' @return If `return_a_list = FALSE` (default), returns a phyloseq object with
+#'   chimeric sequences removed. If `return_a_list = TRUE`, returns a list with:
+#'   \describe{
+#'     \item{physeq}{The filtered phyloseq object}
+#'     \item{kept_taxa}{Character vector of retained taxa names}
+#'     \item{chimeric_taxa}{Character vector of removed chimeric taxa names}
+#'   }
+#'
+#' @details
+#' Sequences are written to a temporary FASTA file and passed to vsearch using
+#' the `--uchime_ref` algorithm. Sequences classified as chimeras are removed;
+#' sequences classified as non-chimeric or borderline are retained (conservative
+#' default). Temporary files are cleaned up unless `keep_temporary_files = TRUE`.
+#'
+#' @export
+#'
+#' @seealso [MiscMetabar::chimera_removal_vs()] for de novo vsearch-based
+#'   chimera removal, [chimera_removal_dada2()] for dada2-based chimera removal,
+#'   [create_chimera_pq()] for creating test data with synthetic chimeras.
+#'
+#' @examplesIf MiscMetabar::is_vsearch_installed()
+#' library(MiscMetabar)
+#' data(data_fungi)
+#'
+#' # Use the mini UNITE database bundled with MiscMetabar.
+#' # NOTE: this is a very small subset of the full UNITE database,
+#' # so a low number of chimeras detected here is expected and does not
+#' # reflect what you would observe with the complete database.
+#' mini_db <- system.file(
+#'   "extdata", "mini_UNITE_fungi.fasta.gz",
+#'   package = "MiscMetabar"
+#' )
+#'
+#' data_nochim <- chimera_removal_vs_ref(data_fungi, database = mini_db)
+#'
+#' \donttest{
+#' # Return detailed output including chimeric taxa names
+#' result <- chimera_removal_vs_ref(
+#'   data_fungi,
+#'   database = mini_db,
+#'   return_a_list = TRUE
+#' )
+#' cat("Removed", length(result$chimeric_taxa), "chimeric ASVs\n")
+#'
+#' # Benchmark against synthetic chimeras created with create_chimera_pq()
+#' pq_chim <- create_chimera_pq(data_fungi, n_chimeras = 10)
+#' result_bench <- chimera_removal_vs_ref(
+#'   pq_chim$physeq,
+#'   database = mini_db,
+#'   return_a_list = TRUE
+#' )
+#' detected <- pq_chim$chimera_names[
+#'   pq_chim$chimera_names %in% result_bench$chimeric_taxa
+#' ]
+#' cat(
+#'   "Detected", length(detected), "/", length(pq_chim$chimera_names),
+#'   "synthetic chimeras\n"
+#' )
+#' }
+#' @author Adrien Taudière
+chimera_removal_vs_ref <- function(
+  physeq,
+  database,
+  vsearchpath = "vsearch",
+  vsearch_args = "--fasta_width 0",
+  return_a_list = FALSE,
+  keep_temporary_files = FALSE
+) {
+  MiscMetabar::verify_pq(physeq)
+  if (is.null(phyloseq::refseq(physeq, errorIfNULL = FALSE))) {
+    stop("phyloseq object must have a refseq slot containing DNA sequences.")
+  }
+  if (!file.exists(database)) {
+    stop("Reference database file not found: ", database)
+  }
+
+  seqs <- phyloseq::refseq(physeq)
+  taxa_nms <- phyloseq::taxa_names(physeq)
+
+  dna <- seqs
+  names(dna) <- paste0("Taxa", seq_along(seqs))
+
+  tmp_fasta <- tempfile(pattern = "chimera_ref_input_", fileext = ".fasta")
+  tmp_nonchim <- tempfile(
+    pattern = "chimera_ref_nonchimeras_",
+    fileext = ".fasta"
+  )
+  tmp_chim <- tempfile(pattern = "chimera_ref_chimeras_", fileext = ".fasta")
+  tmp_border <- tempfile(
+    pattern = "chimera_ref_borderline_",
+    fileext = ".fasta"
+  )
+
+  Biostrings::writeXStringSet(dna, tmp_fasta)
+
+  ret <- system2(
+    vsearchpath,
+    paste(
+      "--uchime_ref",
+      tmp_fasta,
+      "--db",
+      database,
+      "--nonchimeras",
+      tmp_nonchim,
+      "--chimeras",
+      tmp_chim,
+      "--borderline",
+      tmp_border,
+      vsearch_args
+    ),
+    stdout = TRUE,
+    stderr = TRUE
+  )
+
+  exit_status <- attr(ret, "status")
+  if (!is.null(exit_status) && exit_status != 0) {
+    stop("vsearch failed with exit code ", exit_status)
+  }
+
+  chim_seqs <- Biostrings::readDNAStringSet(tmp_chim)
+
+  extract_idx <- \(nms) as.integer(sub("^Taxa", "", nms))
+
+  chimeric_idx <- extract_idx(names(chim_seqs))
+  chimeric_taxa <- taxa_nms[chimeric_idx]
+  kept_taxa <- taxa_nms[!taxa_nms %in% chimeric_taxa]
+
+  if (length(kept_taxa) == 0) {
+    stop(
+      "All sequences were classified as chimeric. Check your reference database."
+    )
+  }
+
+  discard_taxa_collapsed <- paste(
+    chimeric_taxa[seq_len(min(10, length(chimeric_taxa)))],
+    collapse = ";"
+  )
+
+  message(
+    "Discard ",
+    length(chimeric_taxa),
+    " chimeric ASVs including:\n",
+    discard_taxa_collapsed,
+    if (length(chimeric_taxa) > 10) "...",
+    "\nTry return_a_list=TRUE to see all discarded ASVs in the `chimeric_taxa` element."
+  )
+
+  if (keep_temporary_files) {
+    message("Temporary files are located at ", tempdir())
+  } else {
+    unlink(c(tmp_fasta, tmp_nonchim, tmp_chim, tmp_border))
+  }
+
+  physeq_nochim <- phyloseq::prune_taxa(kept_taxa, physeq)
+
+  if (return_a_list) {
+    return(list(
+      physeq = physeq_nochim,
+      kept_taxa = kept_taxa,
+      chimeric_taxa = chimeric_taxa
+    ))
   }
   physeq_nochim
 }
@@ -89,6 +315,9 @@ chimera_removal_dada2 <- function(physeq, method = "consensus", return_a_list = 
 #' Create a phyloseq object with synthetic chimeric sequences
 #'
 #' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' This function creates synthetic chimeric sequences by combining parts of
 #' existing sequences from a phyloseq object. Useful for benchmarking chimera
 #' detection methods like [MiscMetabar::chimera_removal_vs()] or
@@ -113,11 +342,11 @@ chimera_removal_dada2 <- function(physeq, method = "consensus", return_a_list = 
 #'   existing sequences. A value of 0.1 means chimeras will have approximately
 #'   10% of the median abundance.
 #' @param min_parent_distance (numeric, default: 0.1) Minimum sequence distance
-#'   (proportion of differing positions) between parent1 and parent2. 
+#'   (proportion of differing positions) between parent1 and parent2.
 #'   If 0, chimeras can be created from very similar
 #'   parents, which may be harder to detect. In some cases, with min_parent_distance = 0,
 #'   you may end up with chimeras that are identical to one of the parents.
-#' 
+#'
 #'
 #' @return A list containing:
 #' \describe{
@@ -134,7 +363,7 @@ chimera_removal_dada2 <- function(physeq, method = "consensus", return_a_list = 
 #'
 #' @seealso [MiscMetabar::chimera_removal_vs()], [chimera_removal_dada2()]
 #'
-#' @examples
+#' @examplesIf rlang::is_installed("Biostrings")
 #' library(MiscMetabar)
 #' data(data_fungi)
 #'
@@ -147,63 +376,88 @@ chimera_removal_dada2 <- function(physeq, method = "consensus", return_a_list = 
 #' print(result$parent_info)
 #'
 #' # More variable proportions (wider distribution)
-#' result2 <- create_chimera_pq(data_fungi, n_chimeras = 40,
-#'                              prop_mean = 0.5, prop_sd = 0.25)
+#' result2 <- create_chimera_pq(data_fungi,
+#'   n_chimeras = 40,
+#'   prop_mean = 0.5, prop_sd = 0.25
+#' )
 #'
 #' # Biased toward more of parent1 (e.g., 70/30 splits on average)
-#' result3 <- create_chimera_pq(data_fungi, n_chimeras = 40,
-#'                              prop_mean = 0.7, prop_sd = 0.1)
+#' result3 <- create_chimera_pq(data_fungi,
+#'   n_chimeras = 40,
+#'   prop_mean = 0.7, prop_sd = 0.1
+#' )
 #'
 #' # Benchmark chimera detection methods
 #' if (MiscMetabar::is_vsearch_installed()) {
 #'   nochim_vs <- MiscMetabar::chimera_removal_vs(data_fungi_test)
 #'   detected_vs <- known_chimeras[!known_chimeras %in% phyloseq::taxa_names(nochim_vs)]
-#'   cat("vsearch detected:", length(detected_vs), "/",
-#'       length(known_chimeras), "chimeras\n")
+#'   cat(
+#'     "vsearch detected:", length(detected_vs), "/",
+#'     length(known_chimeras), "chimeras\n"
+#'   )
 #' }
 #'
 #' # Visualize the distribution of proportions
 #' hist(result$parent_info$prop_parent1,
-#'      main = "Distribution of parent1 proportions",
-#'      xlab = "Proportion from parent1", xlim = c(0, 1))
+#'   main = "Distribution of parent1 proportions",
+#'   xlab = "Proportion from parent1", xlim = c(0, 1)
+#' )
 #'
 #' # Ensure parents are at least 15% different (more detectable chimeras)
-#' result4 <- create_chimera_pq(data_fungi, n_chimeras = 40,
-#'                              min_parent_distance = 0.15)
+#' result4 <- create_chimera_pq(data_fungi,
+#'   n_chimeras = 40,
+#'   min_parent_distance = 0.15
+#' )
 #'
 #' # Disable parent distance filtering (allows similar parents)
-#' result5 <- create_chimera_pq(data_fungi, n_chimeras = 40,
-#'                              min_parent_distance = 0)
+#' result5 <- create_chimera_pq(data_fungi,
+#'   n_chimeras = 40,
+#'   min_parent_distance = 0
+#' )
 #'
 #' @author Adrien Taudiere
-create_chimera_pq <- function(physeq,
-                              n_chimeras = 5,
-                              prop_mean = 0.5,
-                              prop_sd = 0.15,
-                              prop_min = 0.1,
-                              seed = 123,
-                              median_abundance_multiplier = 0.1,
-                              min_parent_distance = 0.1) {
-  set.seed(seed)
-
+create_chimera_pq <- function(
+  physeq,
+  n_chimeras = 5,
+  prop_mean = 0.5,
+  prop_sd = 0.15,
+  prop_min = 0.1,
+  seed = 123,
+  median_abundance_multiplier = 0.1,
+  min_parent_distance = 0.1
+) {
   if (is.null(phyloseq::refseq(physeq))) {
     stop("phyloseq object must have refseq slot")
+  }
+
+  if (phyloseq::ntaxa(physeq) < 2) {
+    stop("Need at least 2 taxa to create chimeras.")
   }
 
   if (prop_min <= 0 || prop_min >= 0.5) {
     stop("prop_min must be between 0 and 0.5 (exclusive)")
   }
 
-  if (min_parent_distance <= 0 || min_parent_distance >= 1) {
-    stop("min_parent_distance must be between 0 and 1 (inclusive)")
+  if (min_parent_distance < 0 || min_parent_distance >= 1) {
+    stop("min_parent_distance must be >= 0 and < 1")
   }
+
+  old_seed <- globalenv()$.Random.seed
+  on.exit(
+    if (!is.null(old_seed)) {
+      assign(".Random.seed", old_seed, envir = globalenv())
+    }
+  )
+  set.seed(seed)
 
   seqs <- phyloseq::refseq(physeq)
   taxa_nms <- phyloseq::taxa_names(physeq)
 
   # Select parent sequences (use abundant ones)
   n_candidates <- min(20, phyloseq::ntaxa(physeq))
-  abundant_idx <- order(phyloseq::taxa_sums(physeq), decreasing = TRUE)[1:n_candidates]
+  abundant_idx <- order(phyloseq::taxa_sums(physeq), decreasing = TRUE)[
+    seq_len(n_candidates)
+  ]
 
   # Helper function to compute sequence distance (proportion of differing positions)
   compute_seq_distance <- function(seq1, seq2) {
@@ -215,18 +469,9 @@ create_chimera_pq <- function(physeq,
     sum(chars1 != chars2) / len
   }
 
-  chimera_list <- list()
-  chimera_names <- c()
-  parent_info <- data.frame(
-    chimera = character(),
-    parent1 = character(),
-    parent2 = character(),
-    parent_distance = numeric(),
-    prop_parent1 = numeric(),
-    breakpoint = integer(),
-    seq_length = integer(),
-    stringsAsFactors = FALSE
-  )
+  chimera_list <- vector("list", n_chimeras)
+  chimera_names <- character(n_chimeras)
+  parent_info_rows <- vector("list", n_chimeras)
 
   # Function to sample proportion with minimum threshold
   sample_proportion <- function(mean, sd, min_prop) {
@@ -270,8 +515,11 @@ create_chimera_pq <- function(physeq,
 
       if (is.null(p2_idx)) {
         warning(
-          "Could not find parent2 with distance >= ", min_parent_distance,
-          " for chimera ", i, ". Using closest available candidate."
+          "Could not find parent2 with distance >= ",
+          min_parent_distance,
+          " for chimera ",
+          i,
+          ". Using closest available candidate."
         )
         p2_idx <- sample(setdiff(abundant_idx, p1_idx), 1)
       }
@@ -303,10 +551,10 @@ create_chimera_pq <- function(physeq,
 
     chim_name <- paste0("CHIMERA_", i)
     chimera_list[[i]] <- chim
-    chimera_names <- c(chimera_names, chim_name)
+    chimera_names[[i]] <- chim_name
 
     # Store parent information
-    parent_info <- rbind(parent_info, data.frame(
+    parent_info_rows[[i]] <- data.frame(
       chimera = chim_name,
       parent1 = taxa_nms[parents[1]],
       parent2 = taxa_nms[parents[2]],
@@ -315,8 +563,9 @@ create_chimera_pq <- function(physeq,
       breakpoint = bp,
       seq_length = Biostrings::width(chim),
       stringsAsFactors = FALSE
-    ))
+    )
   }
+  parent_info <- do.call(rbind, parent_info_rows)
 
   # Combine chimeras
   chimera_seqs <- do.call(c, chimera_list)
@@ -327,12 +576,17 @@ create_chimera_pq <- function(physeq,
 
   # Add to OTU table with moderate abundance
   otu <- as(phyloseq::otu_table(physeq), "matrix")
-  if (!phyloseq::taxa_are_rows(physeq)) otu <- t(otu)
+  if (!phyloseq::taxa_are_rows(physeq)) {
+    otu <- t(otu)
+  }
 
   # Give chimeras ~10% of median abundance
   med_abund <- stats::median(rowSums(otu))
   chim_counts <- matrix(
-    stats::rpois(n_chimeras * ncol(otu), med_abund * median_abundance_multiplier / ncol(otu)),
+    stats::rpois(
+      n_chimeras * ncol(otu),
+      med_abund * median_abundance_multiplier / ncol(otu)
+    ),
     nrow = n_chimeras,
     dimnames = list(chimera_names, colnames(otu))
   )
@@ -342,8 +596,12 @@ create_chimera_pq <- function(physeq,
   new_taxtab <- phyloseq::tax_table(physeq)
   new_taxtab <- rbind(
     as(new_taxtab, "matrix"),
-    matrix(NA, nrow = n_chimeras, ncol = ncol(new_taxtab),
-           dimnames = list(chimera_names, colnames(new_taxtab)))
+    matrix(
+      NA,
+      nrow = n_chimeras,
+      ncol = ncol(new_taxtab),
+      dimnames = list(chimera_names, colnames(new_taxtab))
+    )
   )
 
   # Rebuild phyloseq

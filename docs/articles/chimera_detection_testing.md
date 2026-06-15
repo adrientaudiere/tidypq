@@ -1,6 +1,7 @@
 # Benchmarking Chimera Detection Methods
 
 ``` r
+
 library(tidypq)
 library(MiscMetabar)
 library(phyloseq)
@@ -14,7 +15,17 @@ This vignette demonstrates how to benchmark chimera detection methods
 using synthetic chimeric sequences. The
 [`create_chimera_pq()`](https://adrientaudiere.github.io/tidypq/reference/create_chimera_pq.md)
 function generates artificial chimeras with known parent sequences,
-allowing you to evaluate detection sensitivity and specificity.
+allowing you to evaluate detection sensitivity and specificity across
+three methods:
+
+- **[`chimera_removal_vs()`](https://adrientaudiere.github.io/MiscMetabar/reference/chimera_removal_vs.html)**
+  (MiscMetabar): vsearch de novo — infers chimeras from abundance
+  patterns within the sample.
+- **[`chimera_removal_dada2()`](https://adrientaudiere.github.io/tidypq/reference/chimera_removal_dada2.md)**:
+  dada2 de novo — same abundance-based logic, different algorithm.
+- **[`chimera_removal_vs_ref()`](https://adrientaudiere.github.io/tidypq/reference/chimera_removal_vs_ref.md)**:
+  vsearch reference-based (UCHIME_ref) — compares each query against a
+  trusted reference database, independent of sample composition.
 
 ## Data Preparation
 
@@ -23,26 +34,38 @@ taxonomy. You can adjust the filtering to test on larger or smaller
 datasets.
 
 ``` r
+
 data(data_fungi)
 
 # Filter to a single Class for faster computation
 # Original data_fungi has 1420 taxa - this reduces it to ~200-400 taxa
 data_fungi_subset <- subset_taxa(
   data_fungi,
-  Class %in% c("Agaricomycetes", "Dacrymycetes","Eurotiomycetes", "Lecanoromycetes", "Tremellomycetes")
+  Class %in% c(
+    "Agaricomycetes", "Dacrymycetes", "Eurotiomycetes",
+    "Lecanoromycetes", "Tremellomycetes"
+  )
 )
 
-cat("Original taxa:", ntaxa(data_fungi), "\n")
-cat("Subset taxa:", ntaxa(data_fungi_subset), "\n")
+data_fungi_subset
+
+# Mini UNITE database bundled with MiscMetabar (used for chimera_removal_vs_ref)
+# NOTE: this is a very small subset of the full UNITE database,
+# so detection rates here will be lower than with the complete database.
+mini_db <- system.file(
+  "extdata", "mini_UNITE_fungi.fasta.gz",
+  package = "MiscMetabar"
+)
 ```
 
 ## Creating Test Data with Synthetic Chimeras
 
-Create a phyloseq object with known chimeric sequences. The
-`ensure_distinct_parents = TRUE` (default) ensures that parent sequences
-are sufficiently different, making the chimeras detectable.
+Create a phyloseq object with known chimeric sequences.
+`min_parent_distance` ensures that parent sequences are sufficiently
+different, making chimeras detectable.
 
 ``` r
+
 df_chim <- create_chimera_pq(
   data_fungi_subset,
   n_chimeras = 50,
@@ -52,14 +75,7 @@ df_chim <- create_chimera_pq(
 data_fungi_test <- df_chim$physeq
 known_chimeras <- df_chim$chimera_names
 
-# View parent information including sequence distance
-print(df_chim$parent_info)
-cat(
-  "\nMinimum parent distance:",
-  min(df_chim$parent_info$parent_distance),
-  "\n"
-)
-cat("\nMean parent distance:", mean(df_chim$parent_info$parent_distance), "\n")
+df_chim$parent_info
 ```
 
 ## Comparing Detection Methods
@@ -67,7 +83,7 @@ cat("\nMean parent distance:", mean(df_chim$parent_info$parent_distance), "\n")
 ### Helper function for benchmarking
 
 ``` r
-# Helper function to benchmark a detection method
+
 benchmark_detection <- function(
   physeq,
   method_fn,
@@ -75,8 +91,7 @@ benchmark_detection <- function(
   known_chimeras,
   ...
 ) {
-  # Measure time and memory
-  gc() # Clean up before measurement
+  gc()
   mem_before <- sum(gc()[, 2])
 
   start_time <- Sys.time()
@@ -85,7 +100,6 @@ benchmark_detection <- function(
 
   mem_after <- sum(gc()[, 2])
 
-  # Calculate detection metrics
   detected <- known_chimeras[!known_chimeras %in% taxa_names(nochim)]
   missed <- known_chimeras[known_chimeras %in% taxa_names(nochim)]
 
@@ -104,7 +118,6 @@ benchmark_detection <- function(
   )
 }
 
-# Helper function to calculate detection rate
 calc_detection_rate <- function(physeq_nochim, known_chimeras) {
   detected <- sum(!known_chimeras %in% taxa_names(physeq_nochim))
   100 * detected / length(known_chimeras)
@@ -114,7 +127,8 @@ calc_detection_rate <- function(physeq_nochim, known_chimeras) {
 ### Run benchmarks
 
 ``` r
-# vsearch-based detection
+
+# vsearch de novo
 result_vs <- benchmark_detection(
   data_fungi_test,
   chimera_removal_vs,
@@ -122,62 +136,68 @@ result_vs <- benchmark_detection(
   known_chimeras
 )
 
-# dada2-based detection
+# dada2 de novo
 result_dada2 <- benchmark_detection(
   data_fungi_test,
   chimera_removal_dada2,
   "dada2",
   known_chimeras
 )
+
+# vsearch reference-based
+result_vs_ref <- benchmark_detection(
+  data_fungi_test,
+  chimera_removal_vs_ref,
+  "vsearch_ref",
+  known_chimeras,
+  database = mini_db
+)
 ```
 
 ## Benchmark Summary Table
 
 ``` r
-# Create summary table
+
 benchmark_summary <- data.frame(
-  Method = c(result_vs$method, result_dada2$method),
-  `N Chimeras` = c(result_vs$n_chimeras, result_dada2$n_chimeras),
-  Detected = c(result_vs$n_detected, result_dada2$n_detected),
-  `Detection Rate (%)` = round(
-    c(result_vs$detection_rate, result_dada2$detection_rate),
-    1
+  Method = c(
+    result_vs$method,
+    result_dada2$method,
+    result_vs_ref$method
   ),
-  `Total Removed` = c(result_vs$total_removed, result_dada2$total_removed),
-  `Time (s)` = round(c(result_vs$time_seconds, result_dada2$time_seconds), 2),
-  `Memory (MB)` = round(c(result_vs$memory_mb, result_dada2$memory_mb), 1),
+  `N Chimeras` = c(
+    result_vs$n_chimeras,
+    result_dada2$n_chimeras,
+    result_vs_ref$n_chimeras
+  ),
+  Detected = c(
+    result_vs$n_detected,
+    result_dada2$n_detected,
+    result_vs_ref$n_detected
+  ),
+  `Detection Rate (%)` = round(c(
+    result_vs$detection_rate,
+    result_dada2$detection_rate,
+    result_vs_ref$detection_rate
+  ), 1),
+  `Total Removed` = c(
+    result_vs$total_removed,
+    result_dada2$total_removed,
+    result_vs_ref$total_removed
+  ),
+  `Time (s)` = round(c(
+    result_vs$time_seconds,
+    result_dada2$time_seconds,
+    result_vs_ref$time_seconds
+  ), 2),
+  `Memory (MB)` = round(c(
+    result_vs$memory_mb,
+    result_dada2$memory_mb,
+    result_vs_ref$memory_mb
+  ), 1),
   check.names = FALSE
 )
 
 knitr::kable(benchmark_summary, caption = "Chimera Detection Benchmark Summary")
-```
-
-## Evaluating Detection Performance
-
-``` r
-cat("=== Chimera Detection Benchmark ===\n")
-cat("Known chimeras:", length(known_chimeras), "\n\n")
-cat(
-  "vsearch detected:",
-  result_vs$n_detected,
-  "/",
-  result_vs$n_chimeras,
-  "(",
-  round(result_vs$detection_rate, 1),
-  "%)\n"
-)
-cat(
-  "dada2 detected:",
-  result_dada2$n_detected,
-  "/",
-  result_dada2$n_chimeras,
-  "(",
-  round(result_dada2$detection_rate, 1),
-  "%)\n\n"
-)
-
-cat("vsearch total removed:", result_vs$total_removed, "\n")
-cat("dada2 total removed:", result_dada2$total_removed, "\n")
 ```
 
 ## Analyzing Missed Chimeras
@@ -185,30 +205,32 @@ cat("dada2 total removed:", result_dada2$total_removed, "\n")
 Examine which chimeras were missed and their parent sequences:
 
 ``` r
+
 if (length(result_vs$missed_names) > 0) {
-  cat("\nMissed by vsearch:\n")
   missed_info <- df_chim$parent_info[
     df_chim$parent_info$chimera %in% result_vs$missed_names,
   ]
-  print(missed_info)
-  cat(
-    "\nMean parent distance of missed chimeras:",
-    mean(missed_info$parent_distance),
-    "\n"
-  )
+  knitr::kable(missed_info, caption = "Missed by vsearch (de novo)")
 }
+```
+
+``` r
 
 if (length(result_dada2$missed_names) > 0) {
-  cat("\nMissed by dada2:\n")
   missed_info <- df_chim$parent_info[
     df_chim$parent_info$chimera %in% result_dada2$missed_names,
   ]
-  print(missed_info)
-  cat(
-    "\nMean parent distance of missed chimeras:",
-    mean(missed_info$parent_distance),
-    "\n"
-  )
+  knitr::kable(missed_info, caption = "Missed by dada2")
+}
+```
+
+``` r
+
+if (length(result_vs_ref$missed_names) > 0) {
+  missed_info <- df_chim$parent_info[
+    df_chim$parent_info$chimera %in% result_vs_ref$missed_names,
+  ]
+  knitr::kable(missed_info, caption = "Missed by vsearch (reference-based)")
 }
 ```
 
@@ -218,12 +240,13 @@ Create different types of synthetic chimeras to test detection
 robustness:
 
 ``` r
+
 # More variable proportions (harder to detect)
 result_hard <- create_chimera_pq(
   data_fungi_subset,
   n_chimeras = 50,
   prop_mean = 0.5,
-  prop_sd = 0.25 # wider distribution
+  prop_sd = 0.25
 )
 
 # Biased proportions (70/30 splits)
@@ -242,10 +265,10 @@ result_low_abund <- create_chimera_pq(
 )
 ```
 
-Run both detection methods on all chimera types:
+Run all three detection methods on all chimera types:
 
 ``` r
-# Run detection on all variants
+
 datasets <- list(
   default = list(physeq = data_fungi_test, chimeras = known_chimeras),
   hard = list(
@@ -273,37 +296,40 @@ results <- data.frame(
 for (name in names(datasets)) {
   ds <- datasets[[name]]
 
-  # vsearch detection
   start_time <- Sys.time()
   nochim_vs <- chimera_removal_vs(ds$physeq)
   time_vs <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
   rate_vs <- calc_detection_rate(nochim_vs, ds$chimeras)
 
-  # dada2 detection
   start_time <- Sys.time()
   nochim_dada2 <- chimera_removal_dada2(ds$physeq)
   time_dada2 <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
   rate_dada2 <- calc_detection_rate(nochim_dada2, ds$chimeras)
 
+  start_time <- Sys.time()
+  nochim_vs_ref <- chimera_removal_vs_ref(ds$physeq, database = mini_db)
+  time_vs_ref <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
+  rate_vs_ref <- calc_detection_rate(nochim_vs_ref, ds$chimeras)
+
   results <- rbind(
     results,
     data.frame(
       dataset = name,
-      method = c("vsearch", "dada2"),
-      detection_rate = c(rate_vs, rate_dada2),
-      time_seconds = c(time_vs, time_dada2),
+      method = c("vsearch", "dada2", "vsearch_ref"),
+      detection_rate = c(rate_vs, rate_dada2, rate_vs_ref),
+      time_seconds = c(time_vs, time_dada2, time_vs_ref),
       stringsAsFactors = FALSE
     )
   )
 }
 
-print(results)
+results
 ```
 
 ## Summary Table: All Scenarios
 
 ``` r
-# Reshape for summary table
+
 results_wide <- reshape(
   results,
   direction = "wide",
@@ -323,46 +349,43 @@ knitr::kable(
 ## Visualizing Results
 
 ``` r
-# Combine parent info from all datasets for histograms
+
+METHOD_COLORS <- c(
+  "vsearch" = "steelblue",
+  "dada2" = "coral",
+  "vsearch_ref" = "mediumseagreen"
+)
+
+# Distribution of parent1 proportions for each dataset
 prop_data <- rbind(
   data.frame(
     dataset = "Default (sd=0.15)",
-    prop = df_chim$parent_info$prop_parent1,
-    min_dist = min(df_chim$parent_info$parent_distance)
+    prop = df_chim$parent_info$prop_parent1
   ),
   data.frame(
     dataset = "Hard (sd=0.25)",
-    prop = result_hard$parent_info$prop_parent1,
-    min_dist = min(result_hard$parent_info$parent_distance)
+    prop = result_hard$parent_info$prop_parent1
   ),
   data.frame(
     dataset = "Biased (mean=0.7)",
-    prop = result_biased$parent_info$prop_parent1,
-    min_dist = min(result_biased$parent_info$parent_distance)
+    prop = result_biased$parent_info$prop_parent1
   ),
   data.frame(
     dataset = "Low abundance",
-    prop = result_low_abund$parent_info$prop_parent1,
-    min_dist = min(result_low_abund$parent_info$parent_distance)
+    prop = result_low_abund$parent_info$prop_parent1
   )
 )
 prop_data$dataset <- factor(
   prop_data$dataset,
   levels = c(
-    "Default (sd=0.15)",
-    "Hard (sd=0.25)",
-    "Biased (mean=0.7)",
-    "Low abundance"
+    "Default (sd=0.15)", "Hard (sd=0.25)",
+    "Biased (mean=0.7)", "Low abundance"
   )
 )
 
-# Distribution of parent1 proportions for each dataset
 p_hist <- ggplot(prop_data, aes(x = prop)) +
   geom_histogram(
-    binwidth = 0.05,
-    fill = "steelblue",
-    color = "white",
-    alpha = 0.7
+    binwidth = 0.05, fill = "steelblue", color = "white", alpha = 0.7
   ) +
   facet_wrap(~dataset, ncol = 2) +
   scale_x_continuous(limits = c(0, 1)) +
@@ -373,28 +396,24 @@ p_hist <- ggplot(prop_data, aes(x = prop)) +
   ) +
   theme_bw()
 
-print(p_hist)
+p_hist
 
-# Barplot comparing all detection rates
-results$dataset <- factor(
-  results$dataset,
-  levels = c(
-    "Default (sd=0.15)",
-    "Hard (sd=0.25)",
-    "Biased (mean=0.7)",
-    "Low abundance"
-  )
+# Detection rate per dataset and method
+results$method <- factor(
+  results$method,
+  levels = c("vsearch", "dada2", "vsearch_ref")
 )
 
-p_bar <- ggplot(results, aes(x = dataset, y = detection_rate, fill = method)) +
-  geom_violin(position = position_dodge(width = 0.8), width = 0.7) +
+p_bar <- ggplot(
+  results,
+  aes(x = dataset, y = detection_rate, fill = method)
+) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
   geom_hline(
     yintercept = seq(0, 100, 20),
-    color = "gray",
-    linetype = "dashed",
-    alpha = 0.5
+    color = "gray", linetype = "dashed", alpha = 0.5
   ) +
-  scale_fill_manual(values = c("vsearch" = "steelblue", "dada2" = "coral")) +
+  scale_fill_manual(values = METHOD_COLORS) +
   scale_y_continuous(limits = c(0, 100), expand = c(0, 0)) +
   labs(
     x = "Dataset",
@@ -405,7 +424,7 @@ p_bar <- ggplot(results, aes(x = dataset, y = detection_rate, fill = method)) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-print(p_bar)
+p_bar
 ```
 
 ## Effect of Chimera Abundance on Detection
@@ -414,6 +433,7 @@ Chimera abundance relative to parent sequences affects detection
 sensitivity.
 
 ``` r
+
 abundance_multipliers <- c(0.01, 0.05, 0.1, 0.5)
 
 abundance_results <- data.frame(
@@ -425,7 +445,6 @@ abundance_results <- data.frame(
 )
 
 for (mult in abundance_multipliers) {
-  # Create chimeras with this abundance level
   result_abund <- create_chimera_pq(
     data_fungi_subset,
     n_chimeras = 50,
@@ -433,36 +452,40 @@ for (mult in abundance_multipliers) {
     seed = 123
   )
 
-  # vsearch detection
   start_time <- Sys.time()
   nochim_vs <- chimera_removal_vs(result_abund$physeq)
   time_vs <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
   rate_vs <- calc_detection_rate(nochim_vs, result_abund$chimera_names)
 
-  # dada2 detection
   start_time <- Sys.time()
   nochim_dada2 <- chimera_removal_dada2(result_abund$physeq)
   time_dada2 <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
   rate_dada2 <- calc_detection_rate(nochim_dada2, result_abund$chimera_names)
 
+  start_time <- Sys.time()
+  nochim_vs_ref <- chimera_removal_vs_ref(result_abund$physeq, database = mini_db)
+  time_vs_ref <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
+  rate_vs_ref <- calc_detection_rate(nochim_vs_ref, result_abund$chimera_names)
+
   abundance_results <- rbind(
     abundance_results,
     data.frame(
-      multiplier = c(mult, mult),
-      method = c("vsearch", "dada2"),
-      detection_rate = c(rate_vs, rate_dada2),
-      time_seconds = c(time_vs, time_dada2),
+      multiplier = mult,
+      method = c("vsearch", "dada2", "vsearch_ref"),
+      detection_rate = c(rate_vs, rate_dada2, rate_vs_ref),
+      time_seconds = c(time_vs, time_dada2, time_vs_ref),
       stringsAsFactors = FALSE
     )
   )
 }
 
-print(abundance_results)
+abundance_results
 ```
 
 ### Abundance Summary Table
 
 ``` r
+
 knitr::kable(
   abundance_results,
   caption = "Detection by Chimera Abundance Level",
@@ -473,7 +496,7 @@ knitr::kable(
 ### Visualizing Abundance Effect
 
 ``` r
-# Detection rate vs abundance multiplier
+
 p_abund_detection <- ggplot(
   abundance_results,
   aes(x = multiplier, y = detection_rate, color = method)
@@ -482,7 +505,7 @@ p_abund_detection <- ggplot(
   geom_point(size = 3) +
   scale_x_log10() +
   scale_y_continuous(limits = c(0, 100)) +
-  scale_color_manual(values = c("vsearch" = "steelblue", "dada2" = "coral")) +
+  scale_color_manual(values = METHOD_COLORS) +
   labs(
     x = "median_abundance_multiplier",
     y = "Detection rate (%)",
@@ -491,12 +514,10 @@ p_abund_detection <- ggplot(
   ) +
   theme_bw()
 
-print(p_abund_detection)
+p_abund_detection
 
-# Barplot comparison
 abundance_results$multiplier_label <- paste0(
-  abundance_results$multiplier * 100,
-  "%"
+  abundance_results$multiplier * 100, "%"
 )
 abundance_results$multiplier_label <- factor(
   abundance_results$multiplier_label,
@@ -510,11 +531,9 @@ p_abund_bar <- ggplot(
   geom_col(position = position_dodge(width = 0.8), width = 0.7) +
   geom_hline(
     yintercept = seq(0, 100, 20),
-    color = "gray",
-    linetype = "dashed",
-    alpha = 0.5
+    color = "gray", linetype = "dashed", alpha = 0.5
   ) +
-  scale_fill_manual(values = c("vsearch" = "steelblue", "dada2" = "coral")) +
+  scale_fill_manual(values = METHOD_COLORS) +
   scale_y_continuous(limits = c(0, 100), expand = c(0, 0)) +
   labs(
     x = "Chimera abundance (% of median)",
@@ -525,17 +544,16 @@ p_abund_bar <- ggplot(
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-print(p_abund_bar)
+p_abund_bar
 ```
 
 ## Effect of Parent Sequence Distance
 
 Chimeras created from very similar parent sequences are harder to
-detect. The `ensure_distinct_parents` parameter (default TRUE) helps
-avoid this issue.
+detect.
 
 ``` r
-# Compare chimeras with different minimum parent distances
+
 distance_results <- data.frame(
   min_param_distance = numeric(),
   method = character(),
@@ -557,30 +575,30 @@ for (min_dist in c(0, 0.001, 0.01, 0.05, 0.1, 0.2, 0.4)) {
 
   mean_dist <- mean(result_dist$parent_info$parent_distance)
   min_dist_parent <- min(result_dist$parent_info$parent_distance)
+  max_dist_parent <- max(result_dist$parent_info$parent_distance)
 
-  # vsearch detection
   nochim_vs <- chimera_removal_vs(result_dist$physeq)
   rate_vs <- calc_detection_rate(nochim_vs, result_dist$chimera_names)
 
-  # dada2 detection
   nochim_dada2 <- chimera_removal_dada2(result_dist$physeq)
   rate_dada2 <- calc_detection_rate(nochim_dada2, result_dist$chimera_names)
+
+  nochim_vs_ref <- chimera_removal_vs_ref(result_dist$physeq, database = mini_db)
+  rate_vs_ref <- calc_detection_rate(nochim_vs_ref, result_dist$chimera_names)
 
   distance_results <- rbind(
     distance_results,
     data.frame(
       min_param_distance = min_dist,
-      method = c("vsearch", "dada2"),
-      mean_parent_distance = c(mean_dist, mean_dist),
-      min_parent_distance = c(min_dist_parent, min_dist_parent),
-      max_parent_distance = c(
-        max(result_dist$parent_info$parent_distance),
-        max(result_dist$parent_info$parent_distance)
-      ),
-      detection_rate = c(rate_vs, rate_dada2),
+      method = c("vsearch", "dada2", "vsearch_ref"),
+      mean_parent_distance = mean_dist,
+      min_parent_distance = min_dist_parent,
+      max_parent_distance = max_dist_parent,
+      detection_rate = c(rate_vs, rate_dada2, rate_vs_ref),
       nb_detected = c(
-       ntaxa(result_dist$physeq) - ntaxa(nochim_vs),
-        ntaxa(result_dist$physeq) - ntaxa(nochim_dada2)
+        ntaxa(result_dist$physeq) - ntaxa(nochim_vs),
+        ntaxa(result_dist$physeq) - ntaxa(nochim_dada2),
+        ntaxa(result_dist$physeq) - ntaxa(nochim_vs_ref)
       ),
       stringsAsFactors = FALSE
     )
@@ -595,7 +613,7 @@ knitr::kable(
 ```
 
 ``` r
-# Plot detection rate vs mean parent distance
+
 p_dist <- ggplot(
   distance_results,
   aes(x = min_param_distance, y = detection_rate, color = method)
@@ -603,15 +621,19 @@ p_dist <- ggplot(
   geom_line(linewidth = 1) +
   geom_point(size = 3) +
   scale_x_continuous(limits = c(0, 0.5)) +
-  scale_y_continuous(limits = c(0, 100)) +  
-  scale_color_manual(values = c("vsearch" = "steelblue", "dada2" = "coral")) +
+  scale_y_continuous(limits = c(0, 100)) +
+  scale_color_manual(values = METHOD_COLORS) +
   labs(
     x = "Min parameter distance",
     y = "Detection rate (%)",
-    title = "Detection vs Min Parameter  Distance",
+    title = "Detection vs Min Parent Distance",
     color = "Method"
   ) +
   theme_bw() +
-  ggrepel::geom_label_repel(aes(label=nb_detected), size = 3, show.legend = FALSE)
-print(p_dist)
+  ggrepel::geom_label_repel(
+    aes(label = nb_detected),
+    size = 3, show.legend = FALSE
+  )
+
+p_dist
 ```

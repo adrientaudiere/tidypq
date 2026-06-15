@@ -1,6 +1,10 @@
 test_that("filter_occurrences_pq removes values below threshold", {
   # Remove singletons
-  result <- filter_occurrences_pq(data_fungi_mini, . > 1, clean_phyloseq_object = FALSE)
+  result <- filter_occurrences_pq(
+    data_fungi_mini,
+    . > 1,
+    clean_phyloseq_object = FALSE
+  )
   expect_s4_class(result, "phyloseq")
 
   otu_orig <- as(phyloseq::otu_table(data_fungi_mini), "matrix")
@@ -10,14 +14,23 @@ test_that("filter_occurrences_pq removes values below threshold", {
   singleton_positions <- which(otu_orig == 1, arr.ind = TRUE)
   if (nrow(singleton_positions) > 0) {
     for (i in seq_len(nrow(singleton_positions))) {
-      expect_equal(otu_new[singleton_positions[i, 1], singleton_positions[i, 2]], 0)
+      expect_equal(
+        otu_new[singleton_positions[i, 1], singleton_positions[i, 2]],
+        0
+      )
     }
   }
 
-  result_clean <- filter_occurrences_pq(data_fungi_mini, . > 1, clean_phyloseq_object = TRUE)
-  
-  expect_equal(sum(data_fungi_mini@otu_table)-sum(result_clean@otu_table), 
-    sum(otu_orig)-sum(otu_new))
+  result_clean <- filter_occurrences_pq(
+    data_fungi_mini,
+    . > 1,
+    clean_phyloseq_object = TRUE
+  )
+
+  expect_equal(
+    sum(data_fungi_mini@otu_table) - sum(result_clean@otu_table),
+    sum(otu_orig) - sum(otu_new)
+  )
 })
 
 test_that("filter_occurrences_pq works with sample_total", {
@@ -76,5 +89,8 @@ test_that("mutate_occurrences_pq handles taxa_are_rows correctly", {
   otu_new <- as(phyloseq::otu_table(result), "matrix")
 
   expect_equal(otu_new, otu_orig * 2)
-  expect_equal(phyloseq::taxa_are_rows(result), phyloseq::taxa_are_rows(data_fungi))
+  expect_equal(
+    phyloseq::taxa_are_rows(result),
+    phyloseq::taxa_are_rows(data_fungi)
+  )
 })

@@ -20,6 +20,12 @@ is cleaned using \code{clean_pq()} to remove empty taxa/samples.}
 A phyloseq object with filtered samples.
 }
 \description{
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
+
 Filter samples using data masking on sample_data. Supports the \code{.} pronoun
 to refer to the phyloseq object for use with functions like \code{sample_sums()}.
 }
@@ -38,7 +44,7 @@ filter_samples_pq(data_fungi, Height == "Low", sample_sums(.) > 5000)
 filter_samples_pq(data_fungi, sample_sums(.) > median(sample_sums(.)))
 
 # Keep samples above half of the average abundance
-filter_samples_pq(data_fungi, sample_sums(.) > sum(sample_sums(.))/phyloseq::nsamples(.)/2)
+filter_samples_pq(data_fungi, sample_sums(.) > sum(sample_sums(.)) / phyloseq::nsamples(.) / 2)
 }
 \author{
 Adrien Taudière

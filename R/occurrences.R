@@ -4,6 +4,9 @@
 #' Filter occurrences in the OTU table
 #'
 #' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Set OTU table values to 0 based on a condition. This is useful for removing
 #' singletons, low-abundance values, or other filtering operations at the
 #' cell level.
@@ -19,7 +22,7 @@
 #' Values that do not satisfy the condition are set to 0.
 #'
 #' @param physeq (phyloseq, required) A phyloseq object.
-#' @param condition An expression evaluated on the OTU matrix. Values where the
+#' @param condition (required) An expression evaluated on the OTU matrix. Values where the
 #'   condition is FALSE (or NA) are set to 0. Use `.` to refer to cell values.
 #' @param clean_phyloseq_object if TRUE (default), the resulting phyloseq object
 #'  is cleaned using `clean_pq()` to remove empty taxa/samples.
@@ -38,33 +41,35 @@
 #'
 #' # Keep only values above taxon mean
 #' filter_occurrences_pq(data_fungi, . > taxon_mean)
-filter_occurrences_pq <- function(physeq, condition, clean_phyloseq_object = TRUE) {
+filter_occurrences_pq <- function(
+  physeq,
+  condition,
+  clean_phyloseq_object = TRUE
+) {
   MiscMetabar::verify_pq(physeq)
+  if (missing(condition)) {
+    stop("The 'condition' argument is required.")
+  }
 
   tar <- phyloseq::taxa_are_rows(physeq)
   otu <- as(phyloseq::otu_table(physeq), "matrix")
-  if (!tar) otu <- t(otu)
+  if (!tar) {
+    otu <- t(otu)
+  }
 
-  nrow_otu <- nrow(otu)
-  ncol_otu <- ncol(otu)
-
-  # Build matrices for vectorized evaluation
-  sample_total <- matrix(colSums(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = TRUE)
-  taxon_total <- matrix(rowSums(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = FALSE)
-  sample_mean <- matrix(colMeans(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = TRUE)
-  taxon_mean <- matrix(rowMeans(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = FALSE)
+  summaries <- build_otu_summary_matrices(otu)
 
   # Evaluate condition vectorized
   condition_quo <- rlang::enquo(condition)
-  mask_env <- rlang::new_environment(list(
-    `.` = otu,
-    sample_total = sample_total,
-    taxon_total = taxon_total,
-    sample_mean = sample_mean,
-    taxon_mean = taxon_mean
-  ))
+  mask_env <- rlang::new_environment(summaries)
   mask <- rlang::new_data_mask(mask_env)
   keep_matrix <- rlang::eval_tidy(condition_quo, data = mask)
+
+  if (!is.matrix(keep_matrix) || !identical(dim(keep_matrix), dim(otu))) {
+    stop(
+      "The condition must evaluate to a logical matrix matching OTU table dimensions."
+    )
+  }
 
   # Handle NA as FALSE
   keep_matrix[is.na(keep_matrix)] <- FALSE
@@ -91,6 +96,9 @@ filter_occurrences_pq <- function(physeq, condition, clean_phyloseq_object = TRU
 #' Transform OTU table values
 #'
 #' @description
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+#'
 #' Apply a transformation to all values in the OTU table. This is useful for
 #' computing relative abundances, log transformations, or other value-level
 #' operations.
@@ -128,30 +136,15 @@ mutate_occurrences_pq <- function(physeq, expr) {
 
   tar <- phyloseq::taxa_are_rows(physeq)
   otu <- as(phyloseq::otu_table(physeq), "matrix")
-  if (!tar) otu <- t(otu)
+  if (!tar) {
+    otu <- t(otu)
+  }
 
-  nrow_otu <- nrow(otu)
-  ncol_otu <- ncol(otu)
-
-  # Build matrices for vectorized evaluation
-  sample_total <- matrix(colSums(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = TRUE)
-  taxon_total <- matrix(rowSums(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = FALSE)
-  sample_mean <- matrix(colMeans(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = TRUE)
-  taxon_mean <- matrix(rowMeans(otu), nrow = nrow_otu, ncol = ncol_otu, byrow = FALSE)
-  sample_median <- matrix(apply(otu, 2, stats::median), nrow = nrow_otu, ncol = ncol_otu, byrow = TRUE)
-  taxon_median <- matrix(apply(otu, 1, stats::median), nrow = nrow_otu, ncol = ncol_otu, byrow = FALSE)
+  summaries <- build_otu_summary_matrices(otu, include_median = TRUE)
 
   # Evaluate expression vectorized
   expr_quo <- rlang::enquo(expr)
-  mask_env <- rlang::new_environment(list(
-    `.` = otu,
-    sample_total = sample_total,
-    taxon_total = taxon_total,
-    sample_mean = sample_mean,
-    taxon_mean = taxon_mean,
-    sample_median = sample_median,
-    taxon_median = taxon_median
-  ))
+  mask_env <- rlang::new_environment(summaries)
   mask <- rlang::new_data_mask(mask_env)
   new_otu <- rlang::eval_tidy(expr_quo, data = mask)
 
@@ -160,7 +153,9 @@ mutate_occurrences_pq <- function(physeq, expr) {
   colnames(new_otu) <- colnames(otu)
 
   # Restore original orientation
-  if (!tar) new_otu <- t(new_otu)
+  if (!tar) {
+    new_otu <- t(new_otu)
+  }
 
   new_physeq <- physeq
   new_physeq@otu_table <- phyloseq::otu_table(new_otu, taxa_are_rows = tar)

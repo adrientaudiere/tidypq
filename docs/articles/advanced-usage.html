@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidypq</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,8 +57,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-
-      <h1>Advanced Usage</h1>
+      <img src="../logo.svg" class="logo" alt=""><h1>Advanced Usage</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/adrientaudiere/tidypq/blob/HEAD/vignettes/advanced-usage.Rmd" class="external-link"><code>vignettes/advanced-usage.Rmd</code></a></small>
@@ -68,7 +67,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/adrientaudiere/tidypq" class="external-link">tidypq</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://adrientaudiere.github.io/tidypq/">tidypq</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: phyloseq</span></span>
 <span><span class="co">#&gt; Loading required package: MiscMetabar</span></span>
 <span><span class="co">#&gt; Loading required package: ggplot2</span></span>
@@ -84,13 +83,14 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
 <span><span class="co">#&gt; Loading required package: purrr</span></span>
+<span><span class="co">#&gt; Loading required package: divent</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/adrientaudiere/MiscMetabar" class="external-link">MiscMetabar</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="custom-functions-in-filter">Custom functions in filter<a class="anchor" aria-label="anchor" href="#custom-functions-in-filter"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Filter taxa present in at least 3 samples</span></span>
-<span><span class="va">data_fungi</span> <span class="op">|&gt;</span> </span>
+<span><span class="va">data_fungi</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/filter_taxa_pq.html">filter_taxa_pq</a></span><span class="op">(</span><span class="fu"><a href="../reference/taxa_prevalence.html">taxa_prevalence</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Taxa are now in rows.</span></span>
 <span><span class="co">#&gt; phyloseq-class experiment-level object</span></span>
@@ -101,7 +101,7 @@
 <span></span>
 <span><span class="co"># Filter samples with above-median depth</span></span>
 <span><span class="va">data_fungi</span> <span class="op">|&gt;</span></span>
-<span>   <span class="fu"><a href="../reference/filter_samples_pq.html">filter_samples_pq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/sample_sums.html" class="external-link">sample_sums</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/sample_sums.html" class="external-link">sample_sums</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/filter_samples_pq.html">filter_samples_pq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/sample_sums.html" class="external-link">sample_sums</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/phyloseq/man/sample_sums.html" class="external-link">sample_sums</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; phyloseq-class experiment-level object</span></span>
 <span><span class="co">#&gt; otu_table()   OTU Table:         [ 1353 taxa and 92 samples ]</span></span>
 <span><span class="co">#&gt; sample_data() Sample Data:       [ 92 samples by 7 sample variables ]</span></span>
