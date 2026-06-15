@@ -1,5 +1,7 @@
 # Remove chimeric sequences using dada2
 
+[![lifecycle-experimental](https://img.shields.io/badge/lifecycle-experimental-orange)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
+
 Applies
 [`dada2::removeBimeraDenovo()`](https://rdrr.io/pkg/dada2/man/removeBimeraDenovo.html)
 to identify and remove chimeric sequences from a phyloseq object based

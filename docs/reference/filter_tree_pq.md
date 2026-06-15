@@ -1,5 +1,7 @@
 # Filter phyloseq by tree topology
 
+[![lifecycle-experimental](https://img.shields.io/badge/lifecycle-experimental-orange)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
+
 Filter a phyloseq object to include only taxa that are present in the
 phylogenetic tree, or prune the tree to match the taxa in the phyloseq.
 Can also filter based on tree properties like tip labels matching a
@@ -55,15 +57,24 @@ Adrien Taudière
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 library(MiscMetabar)
-# Synchronize tree with OTU table (remove taxa not in tree)
-filter_tree_pq(physeq_with_tree)
-
-# Keep only specific taxa in tree
-filter_tree_pq(physeq_with_tree, taxa = c("ASV1", "ASV2", "ASV3"))
-
-# Filter by tip label pattern
-filter_tree_pq(physeq_with_tree, pattern = "^ASV")
-} # }
+library(ape)
+#> 
+#> Attaching package: ‘ape’
+#> The following object is masked from ‘package:dplyr’:
+#> 
+#>     where
+data(data_fungi)
+pg <- data_fungi
+pg@phy_tree <- ape::rtree(phyloseq::ntaxa(data_fungi),
+                           tip.label = phyloseq::taxa_names(data_fungi))
+filter_tree_pq(pg, taxa = phyloseq::taxa_names(data_fungi)[1:10])
+#> phyloseq-class experiment-level object
+#> otu_table()   OTU Table:         [ 10 taxa and 155 samples ]
+#> sample_data() Sample Data:       [ 155 samples by 7 sample variables ]
+#> tax_table()   Taxonomy Table:    [ 10 taxa by 12 taxonomic ranks ]
+#> phy_tree()    Phylogenetic Tree: [ 10 tips and 9 internal nodes ]
+#> refseq()      DNAStringSet:      [ 10 reference sequences ]
+# }
 ```

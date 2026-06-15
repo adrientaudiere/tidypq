@@ -77,6 +77,25 @@ Detect and benchmark chimeric sequences.
 - [`create_chimera_pq()`](https://adrientaudiere.github.io/tidypq/reference/create_chimera_pq.md)
   : Create a phyloseq object with synthetic chimeric sequences
 
+## Contaminant detection & negative controls
+
+Flag, classify and diagnose contaminant taxa.
+
+- [`contam_blocklist_pq()`](https://adrientaudiere.github.io/tidypq/reference/contam_blocklist_pq.md)
+  : Flag taxa whose genus belongs to a known-contaminant blocklist
+- [`contam_corr_pq()`](https://adrientaudiere.github.io/tidypq/reference/contam_corr_pq.md)
+  : Detect contaminants by correlating taxon reads with total sample
+  depth
+- [`known_contaminant_genera()`](https://adrientaudiere.github.io/tidypq/reference/known_contaminant_genera.md)
+  : Known reagent- and laboratory-contaminant genera
+- [`neg_control_classify_pq()`](https://adrientaudiere.github.io/tidypq/reference/neg_control_classify_pq.md)
+  : Classify taxa found in negative controls into contamination
+  categories
+- [`neg_control_diag_pq()`](https://adrientaudiere.github.io/tidypq/reference/neg_control_diag_pq.md)
+  : Diagnose contamination from negative controls
+- [`neg_control_clean_pq()`](https://adrientaudiere.github.io/tidypq/reference/neg_control_clean_pq.md)
+  : Remove negative-control contaminants from a phyloseq object
+
 ## Plots
 
 Diagnostic visualizations.

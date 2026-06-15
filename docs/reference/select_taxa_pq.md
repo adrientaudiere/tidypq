@@ -1,5 +1,7 @@
 # Select columns from tax_table in a phyloseq object
 
+[![lifecycle-experimental](https://img.shields.io/badge/lifecycle-experimental-orange)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
+
 Select tax_table columns (taxonomic ranks) using tidyselect semantics.
 
 ## Usage

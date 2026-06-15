@@ -24,6 +24,7 @@ All functions follow the pattern: `{verb}_{scale}_pq()`
 development version from GitHub with:
 
 ``` r
+
 # Install from GitHub (development version)
 if (!require("devtools", quietly = TRUE)) {
   install.packages("devtools")
@@ -37,6 +38,7 @@ You can install the unstable development version from
 [GitHub](https://github.com/) with:
 
 ``` r
+
 if (!require("devtools", quietly = TRUE)) {
   install.packages("devtools")
 }
@@ -46,6 +48,7 @@ devtools::install_github("adrientaudiere/tidypq", ref = "dev")
 ## Usage
 
 ``` r
+
 library(tidypq)
 library(MiscMetabar)
 

@@ -1,5 +1,7 @@
 # Decontaminate based on negative/blank control samples
 
+[![lifecycle-experimental](https://img.shields.io/badge/lifecycle-experimental-orange)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
+
 Remove potential contaminants by setting OTU values to 0 when they are
 at or below the level observed in negative/blank control samples for
 that particular OTU. If multiple control are available, for each taxon a
@@ -83,17 +85,13 @@ pq <- mutate_samdata_pq(data_fungi, is_control = sample_sums(.) < sort(sample_su
 decontam_sam_control(pq, is_control)
 #> Decontamination complete.
 #> Threshold type: per-taxon
-#> Number of control samples: 2
-#> Number of non-control samples: 183
-#> Function used for threshold: max
-#> Remove control samples: FALSE
-#> Number of sequences before: 1839124
-#> Number of sequences after: 1838970
-#> Number of sequences discarded: 154
-#> Number of occurrences discarded: 137
-#> Number of taxa before: 1420
-#> Number of taxa after: 1420
-#> Number of discarded taxa: 0
+#> Control samples: 2
+#> Non-control samples: 183
+#> Threshold function: max
+#> Controls removed: FALSE
+#> Sequences: 1839124 -> 1838970 (-154)
+#> Occurrences: 12499 -> 12362 (-137)
+#> Taxa: 1420 -> 1420 (-0)
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 1420 taxa and 185 samples ]
 #> sample_data() Sample Data:       [ 185 samples by 8 sample variables ]
@@ -104,18 +102,14 @@ decontam_sam_control(pq, is_control)
 decontam_sam_control(pq, is_control, global_threshold = TRUE)
 #> Decontamination complete.
 #> Threshold type: global
-#> Number of control samples: 2
-#> Number of non-control samples: 183
-#> Function used for threshold: max
+#> Control samples: 2
+#> Non-control samples: 183
+#> Threshold function: max
 #> Global threshold value: 4
-#> Remove control samples: FALSE
-#> Number of sequences before: 1839124
-#> Number of sequences after: 1828239
-#> Number of sequences discarded: 10885
-#> Number of occurrences discarded: 5799
-#> Number of taxa before: 1420
-#> Number of taxa after: 1410
-#> Number of discarded taxa: 10
+#> Controls removed: FALSE
+#> Sequences: 1839124 -> 1828239 (-10885)
+#> Occurrences: 12499 -> 6700 (-5799)
+#> Taxa: 1420 -> 1410 (-10)
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 1410 taxa and 185 samples ]
 #> sample_data() Sample Data:       [ 185 samples by 8 sample variables ]
@@ -126,17 +120,13 @@ decontam_sam_control(pq, is_control, global_threshold = TRUE)
 decontam_sam_control(pq, is_control, fun = mean)
 #> Decontamination complete.
 #> Threshold type: per-taxon
-#> Number of control samples: 2
-#> Number of non-control samples: 183
-#> Function used for threshold: mean
-#> Remove control samples: FALSE
-#> Number of sequences before: 1839124
-#> Number of sequences after: 1839052
-#> Number of sequences discarded: 72
-#> Number of occurrences discarded: 69
-#> Number of taxa before: 1420
-#> Number of taxa after: 1420
-#> Number of discarded taxa: 0
+#> Control samples: 2
+#> Non-control samples: 183
+#> Threshold function: mean
+#> Controls removed: FALSE
+#> Sequences: 1839124 -> 1839052 (-72)
+#> Occurrences: 12499 -> 12430 (-69)
+#> Taxa: 1420 -> 1420 (-0)
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 1420 taxa and 185 samples ]
 #> sample_data() Sample Data:       [ 185 samples by 8 sample variables ]
@@ -147,17 +137,13 @@ decontam_sam_control(pq, is_control, fun = mean)
 decontam_sam_control(pq, is_control, remove_controls = FALSE)
 #> Decontamination complete.
 #> Threshold type: per-taxon
-#> Number of control samples: 2
-#> Number of non-control samples: 183
-#> Function used for threshold: max
-#> Remove control samples: FALSE
-#> Number of sequences before: 1839124
-#> Number of sequences after: 1838970
-#> Number of sequences discarded: 154
-#> Number of occurrences discarded: 137
-#> Number of taxa before: 1420
-#> Number of taxa after: 1420
-#> Number of discarded taxa: 0
+#> Control samples: 2
+#> Non-control samples: 183
+#> Threshold function: max
+#> Controls removed: FALSE
+#> Sequences: 1839124 -> 1838970 (-154)
+#> Occurrences: 12499 -> 12362 (-137)
+#> Taxa: 1420 -> 1420 (-0)
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 1420 taxa and 185 samples ]
 #> sample_data() Sample Data:       [ 185 samples by 8 sample variables ]
@@ -168,17 +154,13 @@ decontam_sam_control(pq, is_control, remove_controls = FALSE)
 decontam_sam_control(pq, is_control, fun = \(x) 2 * max(x))
 #> Decontamination complete.
 #> Threshold type: per-taxon
-#> Number of control samples: 2
-#> Number of non-control samples: 183
-#> Function used for threshold: function(x) 2 * max(x)
-#> Remove control samples: FALSE
-#> Number of sequences before: 1839124
-#> Number of sequences after: 1838804
-#> Number of sequences discarded: 320
-#> Number of occurrences discarded: 205
-#> Number of taxa before: 1420
-#> Number of taxa after: 1420
-#> Number of discarded taxa: 0
+#> Control samples: 2
+#> Non-control samples: 183
+#> Threshold function: function(x) 2 * max(x)
+#> Controls removed: FALSE
+#> Sequences: 1839124 -> 1838804 (-320)
+#> Occurrences: 12499 -> 12294 (-205)
+#> Taxa: 1420 -> 1420 (-0)
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 1420 taxa and 185 samples ]
 #> sample_data() Sample Data:       [ 185 samples by 8 sample variables ]

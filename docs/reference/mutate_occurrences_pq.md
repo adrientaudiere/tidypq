@@ -1,5 +1,7 @@
 # Transform OTU table values
 
+[![lifecycle-experimental](https://img.shields.io/badge/lifecycle-experimental-orange)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
+
 Apply a transformation to all values in the OTU table. This is useful
 for computing relative abundances, log transformations, or other
 value-level operations.

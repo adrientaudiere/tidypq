@@ -1,5 +1,7 @@
 # Add or modify columns in tax_table
 
+[![lifecycle-experimental](https://img.shields.io/badge/lifecycle-experimental-orange)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
+
 Create new columns or modify existing ones in tax_table using data
 masking. Supports the `.` pronoun to refer to the phyloseq object.
 

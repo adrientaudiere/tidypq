@@ -1,6 +1,7 @@
 # Getting Started with tidypq
 
 ``` r
+
 library(tidypq)
 #> Loading required package: phyloseq
 #> Loading required package: MiscMetabar
@@ -29,6 +30,7 @@ Use the `.` pronoun to refer to the phyloseq object within expressions.
 ## Filter samples
 
 ``` r
+
 # By metadata
 data_fungi |>
   filter_samples_pq(Height == "Low")
@@ -60,6 +62,7 @@ data_fungi |>
 ## Filter taxa
 
 ``` r
+
 # By taxonomy
 data_fungi |>
   filter_taxa_pq(Phylum == "Basidiomycota")
@@ -82,18 +85,19 @@ data_fungi |>
 ## Mutate
 
 ``` r
+
 # Add sample depth
 fungi_modif <- data_fungi |>
   mutate_samdata_pq(
     depth = sample_sums(.),
-    hill_2_vegan = vegan::renyi(.@otu_table, scales = 2, hill = TRUE),
-    hill_2_divent = divent::div_hill(as.matrix(unclass(.@otu_table)), scales = 2, hill = TRUE)
+    hill_2 = vegan::renyi(.@otu_table, scales = 2, hill = TRUE),
   )
 ```
 
 ## Select columns
 
 ``` r
+
 # Select sample metadata
 data_fungi |> select_samdata_pq(Height, Time)
 #> phyloseq-class experiment-level object
@@ -114,6 +118,7 @@ data_fungi |> select_taxa_pq(Phylum:Genus)
 ## Chaining operations
 
 ``` r
+
 data_fungi |>
   filter_samples_pq(Height == "Low") |>
   filter_taxa_pq(taxa_sums(.) > 50) |>

@@ -1,5 +1,7 @@
 # Decontaminate based on control taxa
 
+[![lifecycle-experimental](https://img.shields.io/badge/lifecycle-experimental-orange)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
+
 Remove potential contaminants by using known control taxa (e.g.,
 spike-ins, synthetic sequences) to estimate background contamination
 levels. For each sample, a threshold is computed from the control taxa
@@ -76,17 +78,13 @@ library(MiscMetabar)
 decontam_taxa_control(data_fungi, Genus == "Tintelnotia")
 #> Decontamination complete.
 #> Threshold type: per-sample
-#> Number of control taxa: 1
-#> Number of non-control taxa: 1419
-#> Function used for threshold: max
-#> Remove control taxa: TRUE
-#> Number of sequences before: 1839124
-#> Number of sequences after: 1835765
-#> Number of sequences discarded: 3359
-#> Number of occurrences discarded: 182
-#> Number of taxa before: 1420
-#> Number of taxa after: 1417
-#> Number of discarded taxa: 3
+#> Control taxa: 1
+#> Non-control taxa: 1419
+#> Threshold function: max
+#> Controls removed: TRUE
+#> Sequences: 1839124 -> 1835765 (-3359)
+#> Occurrences: 12499 -> 12317 (-182)
+#> Taxa: 1420 -> 1417 (-3)
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 1417 taxa and 185 samples ]
 #> sample_data() Sample Data:       [ 185 samples by 7 sample variables ]
@@ -98,17 +96,13 @@ control_taxa <- phyloseq::taxa_names(data_fungi)[1:2]
 decontam_taxa_control(data_fungi, taxa_names(.) %in% control_taxa)
 #> Decontamination complete.
 #> Threshold type: per-sample
-#> Number of control taxa: 2
-#> Number of non-control taxa: 1418
-#> Function used for threshold: max
-#> Remove control taxa: TRUE
-#> Number of sequences before: 1839124
-#> Number of sequences after: 1578082
-#> Number of sequences discarded: 261042
-#> Number of occurrences discarded: 6193
-#> Number of taxa before: 1420
-#> Number of taxa after: 1351
-#> Number of discarded taxa: 69
+#> Control taxa: 2
+#> Non-control taxa: 1418
+#> Threshold function: max
+#> Controls removed: TRUE
+#> Sequences: 1839124 -> 1578082 (-261042)
+#> Occurrences: 12499 -> 6306 (-6193)
+#> Taxa: 1420 -> 1351 (-69)
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 1351 taxa and 169 samples ]
 #> sample_data() Sample Data:       [ 169 samples by 7 sample variables ]
@@ -119,18 +113,14 @@ decontam_taxa_control(data_fungi, taxa_names(.) %in% control_taxa)
 decontam_taxa_control(data_fungi, Genus == "Tintelnotia", global_threshold = TRUE)
 #> Decontamination complete.
 #> Threshold type: global
-#> Number of control taxa: 1
-#> Number of non-control taxa: 1419
-#> Function used for threshold: max
+#> Control taxa: 1
+#> Non-control taxa: 1419
+#> Threshold function: max
 #> Global threshold value: 210
-#> Remove control taxa: TRUE
-#> Number of sequences before: 1839124
-#> Number of sequences after: 1615276
-#> Number of sequences discarded: 223848
-#> Number of occurrences discarded: 11470
-#> Number of taxa before: 1420
-#> Number of taxa after: 582
-#> Number of discarded taxa: 838
+#> Controls removed: TRUE
+#> Sequences: 1839124 -> 1615276 (-223848)
+#> Occurrences: 12499 -> 1029 (-11470)
+#> Taxa: 1420 -> 582 (-838)
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 582 taxa and 146 samples ]
 #> sample_data() Sample Data:       [ 146 samples by 7 sample variables ]
@@ -141,17 +131,13 @@ decontam_taxa_control(data_fungi, Genus == "Tintelnotia", global_threshold = TRU
 decontam_taxa_control(data_fungi, Genus == "Tintelnotia", remove_control_taxa = FALSE)
 #> Decontamination complete.
 #> Threshold type: per-sample
-#> Number of control taxa: 1
-#> Number of non-control taxa: 1419
-#> Function used for threshold: max
-#> Remove control taxa: FALSE
-#> Number of sequences before: 1839124
-#> Number of sequences after: 1835977
-#> Number of sequences discarded: 3147
-#> Number of occurrences discarded: 180
-#> Number of taxa before: 1420
-#> Number of taxa after: 1418
-#> Number of discarded taxa: 2
+#> Control taxa: 1
+#> Non-control taxa: 1419
+#> Threshold function: max
+#> Controls removed: FALSE
+#> Sequences: 1839124 -> 1835977 (-3147)
+#> Occurrences: 12499 -> 12319 (-180)
+#> Taxa: 1420 -> 1418 (-2)
 #> phyloseq-class experiment-level object
 #> otu_table()   OTU Table:         [ 1418 taxa and 185 samples ]
 #> sample_data() Sample Data:       [ 185 samples by 7 sample variables ]

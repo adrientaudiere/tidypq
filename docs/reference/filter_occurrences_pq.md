@@ -1,5 +1,7 @@
 # Filter occurrences in the OTU table
 
+[![lifecycle-experimental](https://img.shields.io/badge/lifecycle-experimental-orange)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
+
 Set OTU table values to 0 based on a condition. This is useful for
 removing singletons, low-abundance values, or other filtering operations
 at the cell level.
@@ -33,8 +35,9 @@ filter_occurrences_pq(physeq, condition, clean_phyloseq_object = TRUE)
 
 - condition:
 
-  An expression evaluated on the OTU matrix. Values where the condition
-  is FALSE (or NA) are set to 0. Use `.` to refer to cell values.
+  (required) An expression evaluated on the OTU matrix. Values where the
+  condition is FALSE (or NA) are set to 0. Use `.` to refer to cell
+  values.
 
 - clean_phyloseq_object:
 

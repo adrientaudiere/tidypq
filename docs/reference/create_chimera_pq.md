@@ -1,5 +1,7 @@
 # Create a phyloseq object with synthetic chimeric sequences
 
+[![lifecycle-experimental](https://img.shields.io/badge/lifecycle-experimental-orange)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
+
 This function creates synthetic chimeric sequences by combining parts of
 existing sequences from a phyloseq object. Useful for benchmarking
 chimera detection methods like

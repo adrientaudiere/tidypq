@@ -1,5 +1,7 @@
 # Filter taxa in a phyloseq object
 
+[![lifecycle-experimental](https://img.shields.io/badge/lifecycle-experimental-orange)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
+
 Filter taxa using data masking on tax_table. Supports the `.` pronoun to
 refer to the phyloseq object for use with functions like
 [`taxa_sums()`](https://rdrr.io/pkg/phyloseq/man/taxa_sums.html).

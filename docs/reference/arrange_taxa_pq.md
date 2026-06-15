@@ -1,5 +1,7 @@
 # Arrange taxa by column values
 
+[![lifecycle-experimental](https://img.shields.io/badge/lifecycle-experimental-orange)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
+
 Reorder taxa based on tax_table columns or computed values. Supports the
 `.` pronoun to refer to the phyloseq object for sorting by abundance.
 

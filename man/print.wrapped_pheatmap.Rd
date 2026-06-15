@@ -27,3 +27,4 @@ the \code{heatmap_by_category} slot of \code{\link[=neg_control_classify_pq]{neg
 \author{
 Adrien Taudière
 }
+\keyword{internal}

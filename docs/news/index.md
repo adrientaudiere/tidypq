@@ -5,6 +5,26 @@
 - [`chimera_removal_vs_ref()`](https://adrientaudiere.github.io/tidypq/reference/chimera_removal_vs_ref.md)
   removes chimeric sequences using UCHIME reference-based detection via
   vsearch.
+- [`contam_blocklist_pq()`](https://adrientaudiere.github.io/tidypq/reference/contam_blocklist_pq.md)
+  flags taxa whose genus belongs to a curated blocklist of known reagent
+  and laboratory contaminants (compiled from Salter et al. 2014,
+  micRoclean and GRIMER), a taxonomy-only method requiring no negative
+  controls; the accompanying
+  [`known_contaminant_genera()`](https://adrientaudiere.github.io/tidypq/reference/known_contaminant_genera.md)
+  returns the default blocklist for inspection or extension.
+- [`contam_corr_pq()`](https://adrientaudiere.github.io/tidypq/reference/contam_corr_pq.md)
+  detects potential contaminant taxa by examining the correlation
+  between each taxon’s relative abundance and total sample reads.
+  Contaminants show a negative correlation (higher proportion in
+  low-biomass samples). Returns per-taxon statistics (`cor_abs`,
+  `cor_rel`, `slope`, `p_value`), a flagged contaminants subset, and a
+  three-panel diagnostic plot. Inspired by the GRIMER tool.
+- [`neg_control_classify_pq()`](https://adrientaudiere.github.io/tidypq/reference/neg_control_classify_pq.md)
+  classifies taxa found in negative controls into `artifact`,
+  `lab_contaminant` and `sample_contaminant` categories based on read
+  abundance and occurrence patterns, returning the per-taxon
+  classification together with summary, distribution, heatmap and
+  ordination plots.
 
 ## tidypq 0.1.0
 

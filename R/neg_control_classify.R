@@ -422,6 +422,7 @@ neg_control_classify_pq <- function(
 #'
 #' @author Adrien Taudière
 #' @export
+#' @keywords internal
 print.wrapped_pheatmap <- function(x, ...) {
   grid::grid.newpage()
   grid::grid.draw(x$gtable)

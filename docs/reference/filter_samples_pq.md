@@ -1,5 +1,7 @@
 # Filter samples in a phyloseq object
 
+[![lifecycle-experimental](https://img.shields.io/badge/lifecycle-experimental-orange)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
+
 Filter samples using data masking on sample_data. Supports the `.`
 pronoun to refer to the phyloseq object for use with functions like
 [`sample_sums()`](https://rdrr.io/pkg/phyloseq/man/sample_sums.html).
