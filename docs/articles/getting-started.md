@@ -86,7 +86,8 @@ data_fungi |>
 fungi_modif <- data_fungi |>
   mutate_samdata_pq(
     depth = sample_sums(.),
-    hill_2 = vegan::renyi(.@otu_table, scales = 2, hill = TRUE),
+    hill_2_vegan = vegan::renyi(.@otu_table, scales = 2, hill = TRUE),
+    hill_2_divent = divent::div_hill(as.matrix(unclass(.@otu_table)), scales = 2, hill = TRUE)
   )
 ```
 

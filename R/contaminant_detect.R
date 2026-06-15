@@ -4,7 +4,8 @@
 #' Detect contaminants by correlating taxon reads with total sample depth
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Identifies potential contaminant taxa by examining the correlation
 #' between each taxon's read count (or relative abundance) and the total

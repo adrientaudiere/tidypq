@@ -4,7 +4,8 @@
 #' Calculate taxa prevalence
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Calculate the prevalence (number of samples in which a taxon is present)
 #' for each taxon in a phyloseq object.
@@ -41,7 +42,8 @@ taxa_prevalence <- function(physeq, threshold = 0) {
 #' Decontaminate based on negative/blank control samples
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Remove potential contaminants by setting OTU values to 0 when they are at or
 #' below the level observed in negative/blank control samples for that particular OTU.
@@ -198,7 +200,8 @@ decontam_sam_control <- function(
 #' Decontaminate based on control taxa
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Remove potential contaminants by using known control taxa (e.g., spike-ins,
 #' synthetic sequences) to estimate background contamination levels. For each

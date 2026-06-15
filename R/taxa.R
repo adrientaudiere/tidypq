@@ -4,7 +4,8 @@
 #' Filter taxa in a phyloseq object
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Filter taxa using data masking on tax_table. Supports the `.` pronoun
 #' to refer to the phyloseq object for use with functions like `taxa_sums()`.
@@ -59,7 +60,8 @@ filter_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' Select columns from tax_table in a phyloseq object
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Select tax_table columns (taxonomic ranks) using tidyselect semantics.
 #'
@@ -108,7 +110,8 @@ select_taxa_pq <- function(physeq, ...) {
 #' Add or modify columns in tax_table
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Create new columns or modify existing ones in tax_table using data masking.
 #' Supports the `.` pronoun to refer to the phyloseq object.
@@ -173,7 +176,8 @@ mutate_taxa_pq <- function(physeq, ...) {
 #' Subset taxa by position
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Select taxa by their integer positions.
 #'
@@ -218,7 +222,8 @@ slice_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' Arrange taxa by column values
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Reorder taxa based on tax_table columns or computed values. Supports the `.`
 #' pronoun to refer to the phyloseq object for sorting by abundance.
@@ -324,7 +329,8 @@ arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' Rename columns in tax_table
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Rename columns (taxonomic ranks) in tax_table using tidyselect semantics.
 #'

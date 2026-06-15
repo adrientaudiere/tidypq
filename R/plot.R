@@ -1,7 +1,8 @@
 #' Plot sample depth differences to detect outliers
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Creates a diagnostic plot showing the log10 differences between consecutive
 #' sorted sample sums. This helps identify samples with unusually low sequencing

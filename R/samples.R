@@ -4,7 +4,8 @@
 #' Filter samples in a phyloseq object
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Filter samples using data masking on sample_data. Supports the `.` pronoun
 #' to refer to the phyloseq object for use with functions like `sample_sums()`.
@@ -60,7 +61,8 @@ filter_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' Select columns from sample_data in a phyloseq object
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Select sample_data columns using tidyselect semantics.
 #'
@@ -108,7 +110,8 @@ select_samdata_pq <- function(physeq, ...) {
 #' Add or modify columns in sample_data
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Create new columns or modify existing ones in sample_data using data masking.
 #' Supports the `.` pronoun to refer to the phyloseq object.
@@ -173,7 +176,8 @@ mutate_samdata_pq <- function(physeq, ...) {
 #' Subset samples by position
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Select samples by their integer positions.
 #'
@@ -220,7 +224,8 @@ slice_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' Arrange samples by column values
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Reorder samples based on sample_data columns. Supports the `.` pronoun
 #' to refer to the phyloseq object for sorting by computed values.
@@ -277,7 +282,8 @@ arrange_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' Rename columns in sample_data
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Rename columns in sample_data using tidyselect semantics.
 #'

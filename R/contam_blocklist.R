@@ -4,7 +4,8 @@
 #' Known reagent- and laboratory-contaminant genera
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' A curated vector of bacterial genera repeatedly reported as reagent,
 #' kit and laboratory contaminants in low-biomass sequencing studies. The
@@ -125,7 +126,8 @@ known_contaminant_genera <- function() {
 #' Flag taxa whose genus belongs to a known-contaminant blocklist
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Flag taxa whose genus matches a blocklist of known reagent and
 #' laboratory contaminants. Unlike [contam_corr_pq()] (which infers

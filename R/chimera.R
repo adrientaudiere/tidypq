@@ -1,7 +1,8 @@
 #' Remove chimeric sequences using dada2
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Applies `dada2::removeBimeraDenovo()` to identify and remove chimeric
 #' sequences from a phyloseq object based on sequence abundance patterns.
@@ -122,7 +123,8 @@ chimera_removal_dada2 <- function(
 #' Remove chimeric sequences using vsearch and a reference database
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Applies UCHIME reference-based chimera detection via
 #' [vsearch](https://github.com/torognes/vsearch) to identify and remove
@@ -313,7 +315,8 @@ chimera_removal_vs_ref <- function(
 #' Create a phyloseq object with synthetic chimeric sequences
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' This function creates synthetic chimeric sequences by combining parts of
 #' existing sequences from a phyloseq object. Useful for benchmarking chimera

@@ -4,7 +4,8 @@
 #' Diagnose contamination from negative controls
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Build a four-panel patchwork figure to inspect potential contamination
 #' from negative-control samples (extraction blanks, PCR blanks, etc.).
@@ -418,7 +419,8 @@ neg_control_diag_pq <- function(
 #' Remove negative-control contaminants from a phyloseq object
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Drop every taxon that is detected above a read threshold in negative
 #' controls, then optionally drop the negative-control samples

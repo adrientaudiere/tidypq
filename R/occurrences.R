@@ -4,7 +4,8 @@
 #' Filter occurrences in the OTU table
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Set OTU table values to 0 based on a condition. This is useful for removing
 #' singletons, low-abundance values, or other filtering operations at the
@@ -95,7 +96,8 @@ filter_occurrences_pq <- function(
 #' Transform OTU table values
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Apply a transformation to all values in the OTU table. This is useful for
 #' computing relative abundances, log transformations, or other value-level

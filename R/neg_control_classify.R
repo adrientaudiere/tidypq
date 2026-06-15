@@ -4,7 +4,8 @@
 #' Classify taxa found in negative controls into contamination categories
 #'
 #' @description
-#' \lifecycle{experimental}
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' Examine taxa detected in negative-control samples and assign each to one
 #' of three contamination categories based on read abundance and occurrence
@@ -410,6 +411,9 @@ neg_control_classify_pq <- function(
 #'
 #' Draws the `gtable` stored in a `wrapped_pheatmap` object (as returned in
 #' the `heatmap_by_category` slot of [neg_control_classify_pq()]).
+#'
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
 #'
 #' @param x A `wrapped_pheatmap` object.
 #' @param ... Ignored, present for S3 compatibility.
