@@ -16,7 +16,11 @@ and the value is the old name. Use \code{new_name = old_name} syntax.}
 A phyloseq object with renamed tax_table columns.
 }
 \description{
-\lifecycle{experimental}
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
 
 Rename columns (taxonomic ranks) in tax_table using tidyselect semantics.
 }

@@ -43,7 +43,11 @@ A phyloseq object with contaminant taxa (and, by default, NC
 samples) removed.
 }
 \description{
-\lifecycle{experimental}
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
 
 Drop every taxon that is detected above a read threshold in negative
 controls, then optionally drop the negative-control samples

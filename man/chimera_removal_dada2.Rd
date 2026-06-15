@@ -29,7 +29,11 @@ chimeric sequences removed. If \code{return_a_list = TRUE}, returns a list with:
 }
 }
 \description{
-\lifecycle{experimental}
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
 
 Applies \code{dada2::removeBimeraDenovo()} to identify and remove chimeric
 sequences from a phyloseq object based on sequence abundance patterns.

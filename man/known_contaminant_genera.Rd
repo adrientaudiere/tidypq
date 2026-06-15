@@ -10,7 +10,11 @@ known_contaminant_genera()
 A character vector of genus names.
 }
 \description{
-\lifecycle{experimental}
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
 
 A curated vector of bacterial genera repeatedly reported as reagent,
 kit and laboratory contaminants in low-biomass sequencing studies. The

@@ -19,7 +19,11 @@ is cleaned using \code{clean_pq()} to remove empty taxa/samples.}
 A phyloseq object with filtered OTU values.
 }
 \description{
-\lifecycle{experimental}
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
 
 Set OTU table values to 0 based on a condition. This is useful for removing
 singletons, low-abundance values, or other filtering operations at the

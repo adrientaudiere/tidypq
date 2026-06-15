@@ -19,7 +19,11 @@ is cleaned using \code{clean_pq()} to remove empty taxa/samples.}
 A phyloseq object with reordered taxa.
 }
 \description{
-\lifecycle{experimental}
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
 
 Reorder taxa based on tax_table columns or computed values. Supports the \code{.}
 pronoun to refer to the phyloseq object for sorting by abundance.

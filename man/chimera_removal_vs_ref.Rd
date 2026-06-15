@@ -42,7 +42,11 @@ chimeric sequences removed. If \code{return_a_list = TRUE}, returns a list with:
 }
 }
 \description{
-\lifecycle{experimental}
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
 
 Applies UCHIME reference-based chimera detection via
 \href{https://github.com/torognes/vsearch}{vsearch} to identify and remove

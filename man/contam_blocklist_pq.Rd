@@ -42,7 +42,11 @@ A named list with four elements:
 }
 }
 \description{
-\lifecycle{experimental}
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
 
 Flag taxa whose genus matches a blocklist of known reagent and
 laboratory contaminants. Unlike \code{\link[=contam_corr_pq]{contam_corr_pq()}} (which infers

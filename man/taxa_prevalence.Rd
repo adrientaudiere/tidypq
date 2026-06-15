@@ -16,7 +16,11 @@ as present in a sample. Values > threshold are counted as present.}
 A named numeric vector (class integer) with prevalence for each taxon.
 }
 \description{
-\lifecycle{experimental}
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
 
 Calculate the prevalence (number of samples in which a taxon is present)
 for each taxon in a phyloseq object.

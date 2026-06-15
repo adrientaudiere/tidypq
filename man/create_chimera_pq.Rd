@@ -60,7 +60,11 @@ min_parent_distance)}
 }
 }
 \description{
-\lifecycle{experimental}
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
 
 This function creates synthetic chimeric sequences by combining parts of
 existing sequences from a phyloseq object. Useful for benchmarking chimera

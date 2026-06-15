@@ -62,7 +62,11 @@ negative controls highlighted, or \code{NULL} if ordination fails.}
 }
 }
 \description{
-\lifecycle{experimental}
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
 
 Examine taxa detected in negative-control samples and assign each to one
 of three contamination categories based on read abundance and occurrence

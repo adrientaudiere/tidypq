@@ -31,7 +31,11 @@ is cleaned using \code{clean_pq()} to remove empty taxa/samples.}
 A phyloseq object with filtered tree and matching taxa.
 }
 \description{
-\lifecycle{experimental}
+\if{html}{\out{
+<a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+<img src="https://img.shields.io/badge/lifecycle-experimental-orange" alt="lifecycle-experimental"></a>
+}}
+
 
 Filter a phyloseq object to include only taxa that are present in the
 phylogenetic tree, or prune the tree to match the taxa in the phyloseq.
