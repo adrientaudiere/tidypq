@@ -95,10 +95,3 @@ Flag, classify and diagnose contaminant taxa.
   : Diagnose contamination from negative controls
 - [`neg_control_clean_pq()`](https://adrientaudiere.github.io/tidypq/reference/neg_control_clean_pq.md)
   : Remove negative-control contaminants from a phyloseq object
-
-## Plots
-
-Diagnostic visualizations.
-
-- [`plot_sample_depth_pq()`](https://adrientaudiere.github.io/tidypq/reference/plot_sample_depth_pq.md)
-  : Plot sample depth differences to detect outliers

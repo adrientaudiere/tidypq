@@ -67,7 +67,3 @@ reference:
   - neg_control_diag_pq
   - neg_control_clean_pq
 
-- title: Plots
-  desc: Diagnostic visualizations.
-  contents:
-  - plot_sample_depth_pq

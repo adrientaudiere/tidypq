@@ -123,7 +123,7 @@ result <- chimera_removal_vs_ref(
   return_a_list = TRUE
 )
 #> Discard 92 chimeric ASVs including:
-#> ASV7;ASV26;ASV93;ASV94;ASV129;ASV170;ASV178;ASV209;ASV267;ASV328...
+#> ASV7;ASV26;ASV94;ASV93;ASV129;ASV170;ASV178;ASV209;ASV267;ASV328...
 #> Try return_a_list=TRUE to see all discarded ASVs in the `chimeric_taxa` element.
 cat("Removed", length(result$chimeric_taxa), "chimeric ASVs\n")
 #> Removed 92 chimeric ASVs
@@ -136,7 +136,7 @@ result_bench <- chimera_removal_vs_ref(
   return_a_list = TRUE
 )
 #> Discard 100 chimeric ASVs including:
-#> ASV7;ASV26;ASV93;ASV94;ASV129;ASV170;ASV178;ASV209;ASV267;ASV337...
+#> ASV7;ASV26;ASV93;ASV94;ASV129;ASV170;ASV178;ASV209;ASV267;ASV328...
 #> Try return_a_list=TRUE to see all discarded ASVs in the `chimeric_taxa` element.
 detected <- pq_chim$chimera_names[
   pq_chim$chimera_names %in% result_bench$chimeric_taxa

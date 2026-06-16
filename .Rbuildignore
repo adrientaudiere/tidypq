@@ -6,3 +6,4 @@
 ^vignettes/\.quarto$
 ^\.claude$
 ^\vignettes\.quarto$
+^README\.Rmd$

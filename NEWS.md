@@ -16,4 +16,3 @@
 * `decontam_sam_control()` and `decontam_taxa_control()` remove contaminants using negative controls or control taxa.
 * `chimera_removal_dada2()` removes chimeric sequences using 'dada2'.
 * `create_chimera_pq()` generates synthetic chimeric sequences for benchmarking chimera detection.
-* `plot_sample_depth_pq()` produces diagnostic plots for detecting sequencing depth outliers.

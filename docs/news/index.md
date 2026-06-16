@@ -64,5 +64,3 @@
 - [`create_chimera_pq()`](https://adrientaudiere.github.io/tidypq/reference/create_chimera_pq.md)
   generates synthetic chimeric sequences for benchmarking chimera
   detection.
-- [`plot_sample_depth_pq()`](https://adrientaudiere.github.io/tidypq/reference/plot_sample_depth_pq.md)
-  produces diagnostic plots for detecting sequencing depth outliers.
