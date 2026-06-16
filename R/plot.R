@@ -35,6 +35,9 @@
 #' Samples with rank >= the first sample exceeding this threshold are
 #' considered to have sufficient depth.
 #'
+#' <a href="https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle">
+#' <img src="https://img.shields.io/badge/lifecycle-maturing-blue" alt="lifecycle-maturing"></a>
+#'
 #' @export
 #'
 #' @examples

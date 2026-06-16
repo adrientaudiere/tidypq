@@ -62,6 +62,7 @@ The threshold is computed as the `threshold_quantile` of differences,
 excluding the smallest `lower_quantile` of differences to avoid noise.
 Samples with rank \>= the first sample exceeding this threshold are
 considered to have sufficient depth.
+[![lifecycle-maturing](https://img.shields.io/badge/lifecycle-maturing-blue)](https://adrientaudiere.github.io/MiscMetabar/articles/Rules.html#lifecycle)
 
 ## Examples
 
