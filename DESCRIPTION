@@ -10,7 +10,7 @@ Description: Tidyverse-style verbs for manipulating 'phyloseq'
     intuitive filtering, selection, and mutation operations. Designed for
     metabarcoding analyses, it integrates with 'MiscMetabar' and the
     'pqverse' ecosystem.
-License: MIT
+License: AGPL-3
 URL: https://adrientaudiere.github.io/tidypq/,
     https://github.com/adrientaudiere/tidypq
 BugReports: https://github.com/adrientaudiere/tidypq/issues
