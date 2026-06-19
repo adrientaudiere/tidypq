@@ -125,7 +125,8 @@ contam_corr_pq <- function(
   keep_samples <- sample_totals >= min_total_reads
   if (sum(keep_samples) < 3) {
     stop(
-      "Fewer than 3 samples have >= ", min_total_reads,
+      "Fewer than 3 samples have >= ",
+      min_total_reads,
       " total reads. Lower min_total_reads or check your data.",
       call. = FALSE
     )
@@ -138,7 +139,8 @@ contam_corr_pq <- function(
   keep_taxa <- prevalence >= min_prevalence
   if (sum(keep_taxa) == 0) {
     stop(
-      "No taxa have prevalence >= ", min_prevalence,
+      "No taxa have prevalence >= ",
+      min_prevalence,
       ". Lower min_prevalence or check your data.",
       call. = FALSE
     )
@@ -274,10 +276,13 @@ contam_corr_pq <- function(
       )
 
     # Panel B: Scatter of cor_abs vs cor_rel
-    p_b <- ggplot2::ggplot(stats_df, ggplot2::aes(
-      x = .data$cor_rel,
-      y = .data$cor_abs
-    )) +
+    p_b <- ggplot2::ggplot(
+      stats_df,
+      ggplot2::aes(
+        x = .data$cor_rel,
+        y = .data$cor_abs
+      )
+    ) +
       ggplot2::geom_point(
         ggplot2::aes(colour = .data$is_contaminant),
         alpha = 0.5,
@@ -289,7 +294,11 @@ contam_corr_pq <- function(
         colour = "red",
         linewidth = 0.6
       ) +
-      ggplot2::geom_hline(yintercept = 0, linetype = "dotted", colour = "grey50") +
+      ggplot2::geom_hline(
+        yintercept = 0,
+        linetype = "dotted",
+        colour = "grey50"
+      ) +
       ggplot2::scale_colour_manual(
         name = "Contaminant",
         values = c(`FALSE` = "#4C72B0", `TRUE` = "#D55E00"),
@@ -356,7 +365,8 @@ contam_corr_pq <- function(
         ggplot2::labs(title = "C. Top flagged taxa")
     }
 
-    result$plot <- (p_a | p_b) / p_c +
+    result$plot <- (p_a | p_b) /
+      p_c +
       patchwork::plot_layout(heights = c(1, 1.2)) +
       patchwork::plot_annotation(
         title = "Contaminant detection via reads-vs-total distribution",

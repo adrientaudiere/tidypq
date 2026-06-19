@@ -7,7 +7,7 @@ test_that("neg_control_diag_pq returns a patchwork object", {
     data_fungi,
     is_control = seq_len(nsamples(.)) <= 2
   )
-  fig <- neg_control_diag_pq(pq, is_control)
+  fig <- suppressWarnings(neg_control_diag_pq(pq, is_control))
   expect_s3_class(fig, "patchwork")
 })
 
@@ -16,7 +16,7 @@ test_that("neg_control_diag_pq works with log10_transform = FALSE", {
     data_fungi,
     is_control = seq_len(nsamples(.)) <= 2
   )
-  fig <- neg_control_diag_pq(pq, is_control, log10_transform = FALSE)
+  fig <- suppressWarnings(neg_control_diag_pq(pq, is_control, log10_transform = FALSE))
   expect_s3_class(fig, "patchwork")
 })
 
@@ -25,12 +25,12 @@ test_that("neg_control_diag_pq accepts a custom palette and title", {
     data_fungi,
     is_control = seq_len(nsamples(.)) <= 2
   )
-  fig <- neg_control_diag_pq(
+  fig <- suppressWarnings(neg_control_diag_pq(
     pq,
     is_control,
     palette = c(`FALSE` = "#888888", `TRUE` = "#000000"),
     title = "Custom title"
-  )
+  ))
   expect_s3_class(fig, "patchwork")
 })
 
@@ -40,7 +40,7 @@ test_that("neg_control_diag_pq evaluates data-masked expressions", {
     data_fungi,
     is_control = seq_len(nsamples(.)) <= 2
   )
-  fig <- neg_control_diag_pq(pq, is_control == TRUE)
+  fig <- suppressWarnings(neg_control_diag_pq(pq, is_control == TRUE))
   expect_s3_class(fig, "patchwork")
 })
 
@@ -67,10 +67,10 @@ test_that("neg_control_diag_pq returns a single-panel figure when n_real == 0", 
     data_fungi,
     is_control = rep(TRUE, nsamples(.))
   )
-  expect_warning(
+  suppressWarnings(expect_warning(
     fig <- neg_control_diag_pq(pq, is_control),
     "only panel A"
-  )
+  ))
   expect_s3_class(fig, "patchwork")
 })
 

@@ -16,8 +16,17 @@ test_that("stats is a data.frame with expected columns", {
   expect_s3_class(res$stats, "data.frame")
   expect_named(
     res$stats,
-    c("taxon", "label", "total_reads", "prevalence",
-      "cor_abs", "cor_rel", "slope", "p_value", "is_contaminant")
+    c(
+      "taxon",
+      "label",
+      "total_reads",
+      "prevalence",
+      "cor_abs",
+      "cor_rel",
+      "slope",
+      "p_value",
+      "is_contaminant"
+    )
   )
 })
 
@@ -26,8 +35,13 @@ test_that("summary is a named numeric vector with expected names", {
   expect_type(res$summary, "double")
   expect_named(
     res$summary,
-    c("samples_analyzed", "taxa_analyzed", "n_contaminants",
-      "pct_contaminants", "contam_threshold")
+    c(
+      "samples_analyzed",
+      "taxa_analyzed",
+      "n_contaminants",
+      "pct_contaminants",
+      "contam_threshold"
+    )
   )
 })
 
@@ -53,7 +67,11 @@ test_that("verbose = FALSE suppresses messages", {
 test_that("error when min_total_reads is too high", {
   max_reads <- max(phyloseq::sample_sums(data_fungi), na.rm = TRUE)
   expect_error(
-    contam_corr_pq(data_fungi, min_total_reads = max_reads + 1, verbose = FALSE),
+    contam_corr_pq(
+      data_fungi,
+      min_total_reads = max_reads + 1,
+      verbose = FALSE
+    ),
     "Fewer than 3 samples have"
   )
 })
@@ -82,7 +100,7 @@ test_that("contam_threshold affects number of flagged contaminants", {
   )
 
   res_lenient <- contam_corr_pq(pq, contam_threshold = -0.1, verbose = FALSE)
-  res_strict  <- contam_corr_pq(pq, contam_threshold = -0.9, verbose = FALSE)
+  res_strict <- contam_corr_pq(pq, contam_threshold = -0.9, verbose = FALSE)
 
   # A more negative threshold (farther from 0) flags fewer contaminants,
   # since is_contaminant is based on cor_rel < threshold

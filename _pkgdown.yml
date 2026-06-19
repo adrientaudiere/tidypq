@@ -2,10 +2,10 @@ url: https://adrientaudiere.github.io/tidypq/
 template:
   bootstrap: 5
   bslib:
-    bg: "#d5ecec"
-    fg: "#124444"
-    primary: "#63450f"
-    secondary: "#3e135a"
+    bg: "#ECD6BA"
+    fg: "#160a04"
+    primary: "#b13c00"
+    secondary: "#3a2410"
 
 reference:
 - title: Sample-scale verbs
