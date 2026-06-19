@@ -16,7 +16,11 @@ test_that("neg_control_diag_pq works with log10_transform = FALSE", {
     data_fungi,
     is_control = seq_len(nsamples(.)) <= 2
   )
-  fig <- suppressWarnings(neg_control_diag_pq(pq, is_control, log10_transform = FALSE))
+  fig <- suppressWarnings(neg_control_diag_pq(
+    pq,
+    is_control,
+    log10_transform = FALSE
+  ))
   expect_s3_class(fig, "patchwork")
 })
 
