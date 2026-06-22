@@ -1,4 +1,4 @@
-# tidypq (development version)
+# tidypq 0.1.1 (development version)
 
 * `chimera_removal_vs_ref()` removes chimeric sequences using UCHIME reference-based detection via vsearch.
 * `contam_blocklist_pq()` flags taxa whose genus belongs to a curated blocklist of known reagent and laboratory contaminants (compiled from Salter et al. 2014, micRoclean and GRIMER), a taxonomy-only method requiring no negative controls; the accompanying `known_contaminant_genera()` returns the default blocklist for inspection or extension.
