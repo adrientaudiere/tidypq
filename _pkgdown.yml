@@ -57,6 +57,12 @@ reference:
   - chimera_removal_vs_ref
   - create_chimera_pq
 
+- title: Primer contamination
+  desc: Detect and remove taxa whose representative sequence embeds a primer (requires Biostrings).
+  contents:
+  - identify_taxa_primer_pq
+  - filter_taxa_primer_pq
+
 - title: Contaminant detection & negative controls
   desc: Flag, classify and diagnose contaminant taxa.
   contents:
