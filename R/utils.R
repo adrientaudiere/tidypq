@@ -17,17 +17,41 @@ build_sample_data_mask <- function(physeq) {
   rlang::new_data_mask(data_env)
 }
 
+#' Return tax_table as a data.frame aligned to taxa_names(physeq)
+#'
+#' Some operations (e.g. previous version of `mumu_pq()`) leave the otu_table and tax_table of a
+#' phyloseq object holding the same taxa but in different orders. Because
+#' `phyloseq::taxa_names()` prioritises the otu_table, any verb that
+#' positionally aligns a tax_table-derived vector with `taxa_names()` must
+#' first reorder the tax_table to that canonical order. This helper
+#' centralises that alignment so taxa-level verbs stay correct even when fed
+#' a phyloseq object whose slots are internally desynchronised.
+#'
+#' @param physeq A phyloseq object.
+#' @return A data.frame with rows in `taxa_names(physeq)` order.
+#' @keywords internal
+#' @noRd
+taxa_table_df <- function(physeq) {
+  df <- as.data.frame(phyloseq::tax_table(physeq))
+  df[phyloseq::taxa_names(physeq), , drop = FALSE]
+}
+
 #' Build a data mask for taxa-level operations
 #'
 #' Creates a data mask containing tax_table columns and a `.` pronoun
 #' that refers to the phyloseq object for use with phyloseq functions.
+#'
+#' The tax_table columns are aligned to `taxa_names(physeq)` (see
+#' [taxa_table_df()]) so that vectors evaluated in the mask are positionally
+#' aligned with `taxa_names()`, even for objects whose otu_table and
+#' tax_table are in different orders.
 #'
 #' @param physeq A phyloseq object.
 #' @return A data mask for use with rlang::eval_tidy.
 #' @keywords internal
 #' @noRd
 build_taxa_data_mask <- function(physeq) {
-  tax_df <- as.data.frame(phyloseq::tax_table(physeq))
+  tax_df <- taxa_table_df(physeq)
   data_env <- rlang::new_environment(as.list(tax_df))
   data_env[["."]] <- physeq
   rlang::new_data_mask(data_env)

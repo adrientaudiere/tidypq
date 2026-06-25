@@ -95,7 +95,7 @@ select_taxa_pq <- function(physeq, ...) {
     )
   }
 
-  tax_df <- as.data.frame(phyloseq::tax_table(physeq))
+  tax_df <- taxa_table_df(physeq)
   loc <- tidyselect::eval_select(rlang::expr(c(...)), tax_df)
   tax_df <- tax_df[, loc, drop = FALSE]
 
@@ -145,7 +145,7 @@ mutate_taxa_pq <- function(physeq, ...) {
   MiscMetabar::verify_pq(physeq)
   new_physeq <- physeq
 
-  tax_df <- as.data.frame(phyloseq::tax_table(physeq))
+  tax_df <- taxa_table_df(physeq)
   original_ntaxa <- nrow(tax_df)
   mask <- build_taxa_data_mask(physeq)
 
@@ -200,7 +200,7 @@ mutate_taxa_pq <- function(physeq, ...) {
 slice_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
   MiscMetabar::verify_pq(physeq)
 
-  tax_df <- as.data.frame(phyloseq::tax_table(physeq))
+  tax_df <- taxa_table_df(physeq)
   indices <- c(...)
   tax_df <- dplyr::slice(tax_df, indices)
 
@@ -264,7 +264,7 @@ arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 
   tar <- taxa_are_rows(physeq)
 
-  tax_df <- as.data.frame(phyloseq::tax_table(physeq))
+  tax_df <- taxa_table_df(physeq)
   mask <- build_taxa_data_mask(physeq)
 
   quos <- rlang::enquos(...)
@@ -353,7 +353,7 @@ rename_taxa_pq <- function(physeq, ...) {
   MiscMetabar::verify_pq(physeq)
   new_physeq <- physeq
 
-  tax_df <- as.data.frame(phyloseq::tax_table(physeq))
+  tax_df <- taxa_table_df(physeq)
   tax_df <- dplyr::rename(tax_df, ...)
 
   new_physeq@tax_table <- phyloseq::tax_table(as.matrix(tax_df))

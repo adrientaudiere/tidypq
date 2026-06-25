@@ -127,7 +127,7 @@ identify_taxa_primer_pq <- function(physeq, primers) {
 #' # Inspect first
 #' identify_taxa_primer_pq(data_fungi, primers)
 #' # Then remove
-#' my_physeq_clean <- filter_taxa_primer_pq(data_fungi, primers)
+#' data_f_clean <- filter_taxa_primer_pq(data_fungi, primers)
 
 filter_taxa_primer_pq <- function(physeq, primers, verbose = TRUE) {
   bad <- identify_taxa_primer_pq(physeq, primers)

@@ -165,3 +165,82 @@ test_that("arrange_taxa_pq works with phy_tree slot", {
   tax <- as.data.frame(phyloseq::tax_table(result))
   expect_true(!is.unsorted(tax$Phylum, na.rm = TRUE))
 })
+
+# ---- Regression: phyloseq objects with desynced otu_table/tax_table order ----
+# Such objects are produced e.g. by MiscMetabar::mumu_pq(), which assigns the
+# otu_table directly in mumu output order while the tax_table stays in input
+# order. taxa_names() prioritises the otu_table, so verbs must not assume that
+# tax_table rows are positionally aligned with taxa_names().
+
+make_desynced_pq <- function() {
+  taxa <- paste0("ASV", 1:6)
+  tax <- data.frame(
+    Kingdom = c("Archaea", "Bacteria", "Archaea", "Bacteria", "Archaea", "Bacteria"),
+    Phylum = c("Thaum", "Firm", "Eury", "Bact", "Cren", "Bact"),
+    row.names = taxa,
+    stringsAsFactors = FALSE
+  )
+  otu <- matrix(
+    c(10, 0, 5, 0, 3, 0,
+      0, 7, 0, 2, 0, 4,
+      4, 0, 8, 0, 1, 0),
+    nrow = 6, byrow = FALSE,
+    dimnames = list(taxa, c("S1", "S2", "S3"))
+  )
+  pq <- phyloseq::phyloseq(
+    phyloseq::otu_table(otu, taxa_are_rows = TRUE),
+    phyloseq::tax_table(as.matrix(tax))
+  )
+  # Desync: tax_table in a different order than the otu_table (same taxa set).
+  shuffled <- c("ASV3", "ASV1", "ASV5", "ASV2", "ASV4", "ASV6")
+  pq@tax_table <- phyloseq::tax_table(as.matrix(tax[shuffled, , drop = FALSE]))
+  pq
+}
+
+test_that("filter_taxa_pq is correct on a desynced object", {
+  pq <- make_desynced_pq()
+  expect_false(identical(
+    phyloseq::taxa_names(pq),
+    rownames(phyloseq::tax_table(pq))
+  ))
+  result <- filter_taxa_pq(pq, Kingdom == "Archaea", clean_phyloseq_object = FALSE)
+  expect_s4_class(result, "phyloseq")
+  kingdoms <- as.character(phyloseq::tax_table(result)[, "Kingdom"])
+  expect_equal(unique(kingdoms), "Archaea")
+  expect_setequal(phyloseq::taxa_names(result), c("ASV1", "ASV3", "ASV5"))
+})
+
+test_that("mutate_taxa_pq is correct on a desynced object", {
+  pq <- make_desynced_pq()
+  result <- mutate_taxa_pq(pq, total = phyloseq::taxa_sums(.))
+  tax <- as.data.frame(phyloseq::tax_table(result))
+  expected <- phyloseq::taxa_sums(pq)
+  expect_equal(as.numeric(tax$total), as.numeric(expected))
+  # Values must be aligned to the correct taxon, not the tax_table order
+  expect_equal(
+    as.numeric(tax[phyloseq::taxa_names(pq), "total"]),
+    as.numeric(expected[phyloseq::taxa_names(pq)])
+  )
+})
+
+test_that("slice_taxa_pq is correct on a desynced object", {
+  pq <- make_desynced_pq()
+  result <- slice_taxa_pq(pq, 1:3, clean_phyloseq_object = FALSE)
+  # Positions refer to taxa_names() order, not the (desynced) tax_table order
+  expect_equal(
+    phyloseq::taxa_names(result),
+    phyloseq::taxa_names(pq)[1:3]
+  )
+})
+
+test_that("arrange_taxa_pq is correct on a desynced object", {
+  pq <- make_desynced_pq()
+  result <- arrange_taxa_pq(pq, Kingdom, clean_phyloseq_object = FALSE)
+  tax <- as.data.frame(phyloseq::tax_table(result))
+  expect_true(!is.unsorted(tax$Kingdom, na.rm = TRUE))
+  # tax_table and otu_table must stay aligned after arranging
+  expect_equal(
+    phyloseq::taxa_names(result),
+    rownames(phyloseq::tax_table(result))
+  )
+})

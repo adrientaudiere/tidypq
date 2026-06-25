@@ -1,5 +1,6 @@
 # tidypq 0.2.0 (Development version)
 
+* `filter_taxa_pq()`, `mutate_taxa_pq()`, `slice_taxa_pq()`, `arrange_taxa_pq()`, `select_taxa_pq()`, and `rename_taxa_pq()` now align `tax_table` to `taxa_names()` before any positional operation. Previously, phyloseq objects whose `otu_table` and `tax_table` held the same taxa in different orders (e.g. produced by `MiscMetabar::mumu_pq()`) caused the wrong taxa to be selected/mutated, so `filter_taxa_pq(pq, Kingdom == "Archaea")` could return Bacteria.
 * `identify_taxa_primer_pq()` identifies taxa whose representative sequence (`@refseq`) contains any primer (forward or reverse complement) using IUPAC-aware pattern matching via Biostrings. Returns a data.frame of contaminated taxa with matched primer names and read counts.
 * `filter_taxa_primer_pq()` removes primer-contaminated taxa detected by `identify_taxa_primer_pq()` and returns the cleaned phyloseq object unchanged when no contamination is found.
 
