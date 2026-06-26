@@ -80,20 +80,20 @@ taxa_prevalence <- function(physeq, threshold = 0) {
 #' pq <- mutate_samdata_pq(data_fungi, is_control = sample_sums(.) < sort(sample_sums(.))[3])
 #'
 #' # Decontaminate using max of controls as threshold (per-taxon)
-#' decontam_sam_control(pq, is_control)
+#' decontam_control_samples_pq(pq, is_control)
 #'
 #' # Use a global threshold (single value for all taxa)
-#' decontam_sam_control(pq, is_control, global_threshold = TRUE)
+#' decontam_control_samples_pq(pq, is_control, global_threshold = TRUE)
 #'
 #' # Use mean instead of max (less conservative)
-#' decontam_sam_control(pq, is_control, fun = mean)
+#' decontam_control_samples_pq(pq, is_control, fun = mean)
 #'
 #' # Keep control samples in output
-#' decontam_sam_control(pq, is_control, remove_controls = FALSE)
+#' decontam_control_samples_pq(pq, is_control, remove_controls = FALSE)
 #'
 #' # Use a custom function (e.g., 2x the max)
-#' decontam_sam_control(pq, is_control, fun = \(x) 2 * max(x))
-decontam_sam_control <- function(
+#' decontam_control_samples_pq(pq, is_control, fun = \(x) 2 * max(x))
+decontam_control_samples_pq <- function(
   physeq,
   control_condition,
   fun = max,
@@ -233,18 +233,18 @@ decontam_sam_control <- function(
 #' @examples
 #' library(MiscMetabar)
 #' # Using a condition on tax_table (e.g., select by Genus)
-#' decontam_taxa_control(data_fungi, Genus == "Tintelnotia")
+#' decontam_control_taxa_pq(data_fungi, Genus == "Tintelnotia")
 #'
 #' # Using taxa names directly
 #' control_taxa <- phyloseq::taxa_names(data_fungi)[1:2]
-#' decontam_taxa_control(data_fungi, taxa_names(.) %in% control_taxa)
+#' decontam_control_taxa_pq(data_fungi, taxa_names(.) %in% control_taxa)
 #'
 #' # Use a global threshold
-#' decontam_taxa_control(data_fungi, Genus == "Tintelnotia", global_threshold = TRUE)
+#' decontam_control_taxa_pq(data_fungi, Genus == "Tintelnotia", global_threshold = TRUE)
 #'
 #' # Keep control taxa in output
-#' decontam_taxa_control(data_fungi, Genus == "Tintelnotia", remove_control_taxa = FALSE)
-decontam_taxa_control <- function(
+#' decontam_control_taxa_pq(data_fungi, Genus == "Tintelnotia", remove_control_taxa = FALSE)
+decontam_control_taxa_pq <- function(
   physeq,
   control_condition,
   fun = max,

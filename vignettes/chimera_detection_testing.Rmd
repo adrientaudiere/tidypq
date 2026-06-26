@@ -32,11 +32,15 @@ detection sensitivity and specificity across three methods:
 
 - **`chimera_removal_vs()`** (MiscMetabar): vsearch de novo — infers chimeras
   from abundance patterns within the sample.
-- **`chimera_removal_dada2()`**: dada2 de novo — same abundance-based logic,
-  different algorithm.
-- **`chimera_removal_vs_ref()`**: vsearch reference-based (UCHIME_ref) —
-  compares each query against a trusted reference database, independent of
-  sample composition.
+- **`identify_contam_chimera_pq(method = "dada2")`**: dada2 de novo — same
+  abundance-based logic, different algorithm.
+- **`identify_contam_chimera_pq(method = "vsearch_ref")`**: vsearch
+  reference-based (UCHIME_ref) — compares each query against a trusted
+  reference database, independent of sample composition.
+
+tidypq's chimera detectors return a `contam_tbl`; the benchmarks below wrap
+them with `filter_contam_pq()` so each method yields a chimera-free phyloseq
+object.
 
 ## Data Preparation
 
@@ -58,7 +62,7 @@ data_fungi_subset <- subset_taxa(
 
 data_fungi_subset
 
-# Mini UNITE database bundled with MiscMetabar (used for chimera_removal_vs_ref)
+# Mini UNITE database bundled with MiscMetabar (used for remove_chimera_vs_ref)
 # NOTE: this is a very small subset of the full UNITE database,
 # so detection rates here will be lower than with the complete database.
 mini_db <- system.file(
@@ -91,6 +95,28 @@ df_chim$parent_info
 ### Helper function for benchmarking
 
 ```{r benchmark-helper}
+# tidypq detectors return a contam_tbl; wrap them with filter_contam_pq()
+# so each returns a chimera-free phyloseq object for the benchmark.
+remove_chimera_dada2 <- function(physeq, ...) {
+  filter_contam_pq(
+    physeq,
+    identify_contam_chimera_pq(physeq, method = "dada2", verbose = FALSE),
+    verbose = FALSE
+  )
+}
+remove_chimera_vs_ref <- function(physeq, database, ...) {
+  filter_contam_pq(
+    physeq,
+    identify_contam_chimera_pq(
+      physeq,
+      method = "vsearch_ref",
+      database = database,
+      verbose = FALSE
+    ),
+    verbose = FALSE
+  )
+}
+
 benchmark_detection <- function(
   physeq,
   method_fn,
@@ -145,7 +171,7 @@ result_vs <- benchmark_detection(
 # dada2 de novo
 result_dada2 <- benchmark_detection(
   data_fungi_test,
-  chimera_removal_dada2,
+  remove_chimera_dada2,
   "dada2",
   known_chimeras
 )
@@ -153,7 +179,7 @@ result_dada2 <- benchmark_detection(
 # vsearch reference-based
 result_vs_ref <- benchmark_detection(
   data_fungi_test,
-  chimera_removal_vs_ref,
+  remove_chimera_vs_ref,
   "vsearch_ref",
   known_chimeras,
   database = mini_db
@@ -301,12 +327,12 @@ for (name in names(datasets)) {
   rate_vs <- calc_detection_rate(nochim_vs, ds$chimeras)
 
   start_time <- Sys.time()
-  nochim_dada2 <- chimera_removal_dada2(ds$physeq)
+  nochim_dada2 <- remove_chimera_dada2(ds$physeq)
   time_dada2 <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
   rate_dada2 <- calc_detection_rate(nochim_dada2, ds$chimeras)
 
   start_time <- Sys.time()
-  nochim_vs_ref <- chimera_removal_vs_ref(ds$physeq, database = mini_db)
+  nochim_vs_ref <- remove_chimera_vs_ref(ds$physeq, database = mini_db)
   time_vs_ref <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
   rate_vs_ref <- calc_detection_rate(nochim_vs_ref, ds$chimeras)
 
@@ -453,12 +479,12 @@ for (mult in abundance_multipliers) {
   rate_vs <- calc_detection_rate(nochim_vs, result_abund$chimera_names)
 
   start_time <- Sys.time()
-  nochim_dada2 <- chimera_removal_dada2(result_abund$physeq)
+  nochim_dada2 <- remove_chimera_dada2(result_abund$physeq)
   time_dada2 <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
   rate_dada2 <- calc_detection_rate(nochim_dada2, result_abund$chimera_names)
 
   start_time <- Sys.time()
-  nochim_vs_ref <- chimera_removal_vs_ref(result_abund$physeq, database = mini_db)
+  nochim_vs_ref <- remove_chimera_vs_ref(result_abund$physeq, database = mini_db)
   time_vs_ref <- as.numeric(difftime(Sys.time(), start_time, units = "secs"))
   rate_vs_ref <- calc_detection_rate(nochim_vs_ref, result_abund$chimera_names)
 
@@ -571,10 +597,10 @@ for (min_dist in c(0, 0.001, 0.01, 0.05, 0.1, 0.2, 0.4)) {
   nochim_vs <- chimera_removal_vs(result_dist$physeq)
   rate_vs <- calc_detection_rate(nochim_vs, result_dist$chimera_names)
 
-  nochim_dada2 <- chimera_removal_dada2(result_dist$physeq)
+  nochim_dada2 <- remove_chimera_dada2(result_dist$physeq)
   rate_dada2 <- calc_detection_rate(nochim_dada2, result_dist$chimera_names)
 
-  nochim_vs_ref <- chimera_removal_vs_ref(result_dist$physeq, database = mini_db)
+  nochim_vs_ref <- remove_chimera_vs_ref(result_dist$physeq, database = mini_db)
   rate_vs_ref <- calc_detection_rate(nochim_vs_ref, result_dist$chimera_names)
 
   distance_results <- rbind(

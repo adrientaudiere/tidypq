@@ -1,0 +1,164 @@
+---
+title: "Detecting and removing contaminants"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Detecting and removing contaminants}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tidypq)
+library(MiscMetabar)
+```
+
+## The detect-then-filter design
+
+tidypq splits contamination handling into two steps:
+
+1. **Detect.** Each `identify_contam_*_pq()` function flags suspect taxa using a
+   different signal, and returns a `contam_tbl` -- a tibble with one row per
+   flagged taxon, a `method` column, and method-specific *evidence* columns. A
+   detector never modifies the phyloseq object.
+2. **Filter.** The single verb `filter_contam_pq()` consumes any `contam_tbl`
+   (or several, combined) and removes the flagged taxa.
+
+| Detector | Signal | Needs |
+|---|---|---|
+| `identify_contam_blocklist_pq()` | genus on a known-contaminant blocklist | `tax_table` |
+| `identify_contam_corr_pq()` | abundance correlates negatively with depth | counts |
+| `identify_contam_primer_pq()` | representative sequence embeds a primer | `refseq`, Biostrings |
+| `identify_contam_chimera_pq()` | chimeric sequence (dada2 or vsearch) | `refseq`, dada2/vsearch |
+| `identify_contam_negcontrol_pq()` | occurrence pattern in negative controls | control samples |
+
+"Contaminant" here is a broad umbrella: technical artefacts (chimeras, primer
+read-through), reagent/lab contaminants, and cross-sample contaminants are all
+sub-types flagged by one detector or another.
+
+## A first detector
+
+The blocklist detector needs only a taxonomy table. `data_fungi` is fungal, so
+the default bacterial blocklist matches nothing; we extend it with a genus
+present in the data for illustration.
+
+```{r}
+flagged <- identify_contam_blocklist_pq(data_fungi, extra_genera = "Mortierella")
+flagged
+```
+
+A `contam_tbl` always starts with `taxon` and `method`; the remaining columns
+are the evidence specific to that detector.
+
+```{r}
+names(flagged)
+```
+
+## Removing flagged taxa
+
+`filter_contam_pq()` removes the flagged taxa by name and returns the cleaned
+phyloseq object. When nothing is flagged it returns the object unchanged.
+
+```{r}
+data_clean <- filter_contam_pq(data_fungi, flagged)
+data_clean
+```
+
+## Combining detectors
+
+Because every detector returns the same object, their outputs compose with
+`rbind()` -- evidence columns missing from one detector are filled with `NA`,
+and `filter_contam_pq()` removes the union of the flagged taxa.
+
+```{r}
+blocklist <- identify_contam_blocklist_pq(
+  data_fungi,
+  extra_genera = "Mortierella",
+  verbose = FALSE
+)
+
+# A second (here, hand-built) contam_tbl standing in for another detector
+manual <- new_contam_tbl(tibble::tibble(
+  taxon = taxa_names(data_fungi)[1:2],
+  method = "manual"
+))
+
+combined <- rbind(blocklist, manual)
+combined
+
+data_clean <- filter_contam_pq(data_fungi, combined)
+```
+
+## Diagnostics
+
+A lightweight overview of how many taxa each method flagged is available through
+the `plot()` / `autoplot()` method on a `contam_tbl`. Publication-grade
+contamination figures live in the companion `ggplotpq` package and consume the
+same `contam_tbl`.
+
+```{r, fig.width = 6, fig.height = 3}
+plot(combined)
+```
+
+## Negative-control classification
+
+When the design includes negative/blank controls, `identify_contam_negcontrol_pq()`
+classifies the taxa seen in those controls into sub-types. Only `artifact` and
+`lab_contaminant` are flagged by default; add `sample_contaminant` to
+`flag_categories` to be more aggressive.
+
+```{r}
+pq <- mutate_samdata_pq(
+  data_fungi,
+  is_control = sample_sums(.) < sort(sample_sums(.))[4]
+)
+
+nc <- identify_contam_negcontrol_pq(pq, is_control)
+nc
+```
+
+## Abundance-, sequence-, and chimera-based detectors
+
+The remaining detectors follow the identical pattern; they are shown here
+without evaluation because they need extra data or packages.
+
+```{r, eval = FALSE}
+# Correlation of relative abundance with sequencing depth (GRIMER-inspired)
+corr <- identify_contam_corr_pq(data_fungi, contam_threshold = -0.5)
+
+# Taxa whose representative sequence embeds a primer (needs Biostrings + refseq)
+primers <- c(fwd = "CCCTACGGGGTGCASCAG", rev = "GGACTACVSGGGTATCTAAT")
+prim <- identify_contam_primer_pq(data_fungi, primers)
+
+# Chimeras, de novo (dada2) or reference-based (vsearch)
+chim <- identify_contam_chimera_pq(data_fungi, method = "dada2")
+
+# One filter call removes everything flagged
+data_clean <- filter_contam_pq(
+  data_fungi,
+  rbind(corr, prim, chim)
+)
+```
+
+## Control-based decontamination (a different tool)
+
+`decontam_control_samples_pq()` and `decontam_control_taxa_pq()` are *not*
+detectors and do not produce a `contam_tbl`. Instead of flagging whole taxa,
+they estimate a background level from a control set and **zero out individual
+occurrences** at or below it -- a per-cell correction. The control reference is
+either negative/blank control *samples* or spike-in control *taxa*.
+
+```{r, eval = FALSE}
+# Background estimated from control SAMPLES, per taxon
+pq <- mutate_samdata_pq(data_fungi, is_control = sample_sums(.) < 500)
+decontam_control_samples_pq(pq, is_control)
+
+# Background estimated from control TAXA (e.g. spike-ins), per sample
+decontam_control_taxa_pq(data_fungi, Genus == "Tintelnotia")
+```

@@ -57,41 +57,67 @@ Utility functions for common operations.
 - [`taxa_prevalence()`](https://adrientaudiere.github.io/tidypq/reference/taxa_prevalence.md)
   : Calculate taxa prevalence
 
-## Decontamination
+## Contaminant detectors
 
-Remove contaminants using negative controls or control taxa.
+Flag suspect taxa; each returns a contam_tbl consumed by
+filter_contam_pq().
 
-- [`decontam_sam_control()`](https://adrientaudiere.github.io/tidypq/reference/decontam_sam_control.md)
-  : Decontaminate based on negative/blank control samples
-- [`decontam_taxa_control()`](https://adrientaudiere.github.io/tidypq/reference/decontam_taxa_control.md)
-  : Decontaminate based on control taxa
-
-## Chimera detection
-
-Detect and benchmark chimeric sequences.
-
-- [`chimera_removal_dada2()`](https://adrientaudiere.github.io/tidypq/reference/chimera_removal_dada2.md)
-  : Remove chimeric sequences using dada2
-- [`chimera_removal_vs_ref()`](https://adrientaudiere.github.io/tidypq/reference/chimera_removal_vs_ref.md)
-  : Remove chimeric sequences using vsearch and a reference database
-- [`create_chimera_pq()`](https://adrientaudiere.github.io/tidypq/reference/create_chimera_pq.md)
-  : Create a phyloseq object with synthetic chimeric sequences
-
-## Contaminant detection & negative controls
-
-Flag, classify and diagnose contaminant taxa.
-
-- [`contam_blocklist_pq()`](https://adrientaudiere.github.io/tidypq/reference/contam_blocklist_pq.md)
-  : Flag taxa whose genus belongs to a known-contaminant blocklist
-- [`contam_corr_pq()`](https://adrientaudiere.github.io/tidypq/reference/contam_corr_pq.md)
+- [`identify_contam_blocklist_pq()`](https://adrientaudiere.github.io/tidypq/reference/identify_contam_blocklist_pq.md)
+  : Detect taxa whose genus belongs to a known-contaminant blocklist
+- [`identify_contam_chimera_pq()`](https://adrientaudiere.github.io/tidypq/reference/identify_contam_chimera_pq.md)
+  : Detect chimeric taxa with dada2 or vsearch
+- [`identify_contam_corr_pq()`](https://adrientaudiere.github.io/tidypq/reference/identify_contam_corr_pq.md)
   : Detect contaminants by correlating taxon reads with total sample
   depth
+- [`identify_contam_negcontrol_pq()`](https://adrientaudiere.github.io/tidypq/reference/identify_contam_negcontrol_pq.md)
+  : Detect contaminants from negative-control occurrence patterns
+- [`identify_contam_primer_pq()`](https://adrientaudiere.github.io/tidypq/reference/identify_contam_primer_pq.md)
+  : Detect taxa whose representative sequence contains a primer
 - [`known_contaminant_genera()`](https://adrientaudiere.github.io/tidypq/reference/known_contaminant_genera.md)
   : Known reagent- and laboratory-contaminant genera
-- [`neg_control_classify_pq()`](https://adrientaudiere.github.io/tidypq/reference/neg_control_classify_pq.md)
-  : Classify taxa found in negative controls into contamination
-  categories
-- [`neg_control_diag_pq()`](https://adrientaudiere.github.io/tidypq/reference/neg_control_diag_pq.md)
-  : Diagnose contamination from negative controls
-- [`neg_control_clean_pq()`](https://adrientaudiere.github.io/tidypq/reference/neg_control_clean_pq.md)
-  : Remove negative-control contaminants from a phyloseq object
+
+## Contaminant removal and the contam_tbl object
+
+Remove flagged taxa and work with the detector output object.
+
+- [`filter_contam_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_contam_pq.md)
+  : Remove contaminant taxa flagged by a detector
+
+- [`new_contam_tbl()`](https://adrientaudiere.github.io/tidypq/reference/contam_tbl.md)
+  [`is_contam_tbl()`](https://adrientaudiere.github.io/tidypq/reference/contam_tbl.md)
+  :
+
+  The `contam_tbl` class
+
+- [`print(`*`<contam_tbl>`*`)`](https://adrientaudiere.github.io/tidypq/reference/print.contam_tbl.md)
+  :
+
+  Print a `contam_tbl`
+
+- [`rbind(`*`<contam_tbl>`*`)`](https://adrientaudiere.github.io/tidypq/reference/rbind.contam_tbl.md)
+  :
+
+  Combine several `contam_tbl` objects
+
+- [`autoplot(`*`<contam_tbl>`*`)`](https://adrientaudiere.github.io/tidypq/reference/autoplot.contam_tbl.md)
+  [`plot(`*`<contam_tbl>`*`)`](https://adrientaudiere.github.io/tidypq/reference/autoplot.contam_tbl.md)
+  :
+
+  Diagnostic plot for a `contam_tbl`
+
+## Control-based decontamination
+
+Zero out occurrences below a background level estimated from control
+samples or control taxa.
+
+- [`decontam_control_samples_pq()`](https://adrientaudiere.github.io/tidypq/reference/decontam_control_samples_pq.md)
+  : Decontaminate based on negative/blank control samples
+- [`decontam_control_taxa_pq()`](https://adrientaudiere.github.io/tidypq/reference/decontam_control_taxa_pq.md)
+  : Decontaminate based on control taxa
+
+## Chimera utilities
+
+Generate synthetic chimeras for benchmarking detectors.
+
+- [`create_chimera_pq()`](https://adrientaudiere.github.io/tidypq/reference/create_chimera_pq.md)
+  : Create a phyloseq object with synthetic chimeric sequences

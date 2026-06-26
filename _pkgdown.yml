@@ -44,32 +44,38 @@ reference:
   contents:
   - taxa_prevalence
 
-- title: Decontamination
-  desc: Remove contaminants using negative controls or control taxa.
+- title: Contaminant detectors
+  desc: >
+    Flag suspect taxa; each returns a contam_tbl consumed by
+    filter_contam_pq().
   contents:
-  - decontam_sam_control
-  - decontam_taxa_control
-
-- title: Chimera detection
-  desc: Detect and benchmark chimeric sequences.
-  contents:
-  - chimera_removal_dada2
-  - chimera_removal_vs_ref
-  - create_chimera_pq
-
-- title: Primer contamination
-  desc: Detect and remove taxa whose representative sequence embeds a primer (requires Biostrings).
-  contents:
-  - identify_taxa_primer_pq
-  - filter_taxa_primer_pq
-
-- title: Contaminant detection & negative controls
-  desc: Flag, classify and diagnose contaminant taxa.
-  contents:
-  - contam_blocklist_pq
-  - contam_corr_pq
+  - identify_contam_blocklist_pq
+  - identify_contam_chimera_pq
+  - identify_contam_corr_pq
+  - identify_contam_negcontrol_pq
+  - identify_contam_primer_pq
   - known_contaminant_genera
-  - neg_control_classify_pq
-  - neg_control_diag_pq
-  - neg_control_clean_pq
+
+- title: Contaminant removal and the contam_tbl object
+  desc: Remove flagged taxa and work with the detector output object.
+  contents:
+  - filter_contam_pq
+  - filter_chimera_pq
+  - contam_tbl
+  - print.contam_tbl
+  - rbind.contam_tbl
+  - autoplot.contam_tbl
+
+- title: Control-based decontamination
+  desc: >
+    Zero out occurrences below a background level estimated from control
+    samples or control taxa.
+  contents:
+  - decontam_control_samples_pq
+  - decontam_control_taxa_pq
+
+- title: Chimera utilities
+  desc: Generate synthetic chimeras for benchmarking detectors.
+  contents:
+  - create_chimera_pq
 

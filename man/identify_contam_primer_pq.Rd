@@ -37,13 +37,15 @@ This is a pure detector: it flags taxa and returns a \link{contam_tbl} without
 modifying \code{physeq}. Use \code{\link[=filter_contam_pq]{filter_contam_pq()}} to remove the flagged taxa.
 }
 \examples{
+\dontshow{if (rlang::is_installed("Biostrings")) withAutoprint(\{ # examplesIf}
 library(MiscMetabar)
-# Requires a phyloseq object with a refseq slot and Biostrings installed.
+# Requires a phyloseq object with a populated @refseq slot.
 primers <- c(
   fwd = "CCCTACGGGGTGCASCAG",
   rev = "GGACTACVSGGGTATCTAAT"
 )
 identify_contam_primer_pq(data_fungi, primers)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=filter_contam_pq]{filter_contam_pq()}} to remove flagged taxa,

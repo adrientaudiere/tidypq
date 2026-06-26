@@ -20,8 +20,8 @@ A curated vector of bacterial genera repeatedly reported as reagent,
 kit and laboratory contaminants in low-biomass sequencing studies. The
 list is compiled from Salter et al. (2014), the \code{micRoclean} workflow
 and the GRIMER \code{contaminants.yml} / \code{human-related.yml} resources. It is
-intended as a starting blocklist for \code{\link[=contam_blocklist_pq]{contam_blocklist_pq()}}; users
-should adapt it to their own substrate and primers.
+intended as a starting blocklist for \code{\link[=identify_contam_blocklist_pq]{identify_contam_blocklist_pq()}};
+users should adapt it to their own substrate and primers.
 }
 \examples{
 head(known_contaminant_genera())

@@ -31,3 +31,7 @@ data.frame, or a named list bundling stats and plots).
   standard "could not find function" rather than a migration message.
 - Detection now runs once and yields a reusable `contam_tbl`; expensive
   detectors (chimera via dada2/vsearch) are no longer re-run to re-filter.
+- One deliberate exception to the "no one-shot wrapper" stance: `filter_chimera_pq()`
+  composes `identify_contam_chimera_pq()` + `filter_contam_pq()` in a single call,
+  because chimera removal is a near-ubiquitous cleaning step. No equivalent wrapper
+  is provided for the other detectors; they are composed explicitly.

@@ -7,7 +7,7 @@ and laboratory contaminants in low-biomass sequencing studies. The list
 is compiled from Salter et al. (2014), the `micRoclean` workflow and the
 GRIMER `contaminants.yml` / `human-related.yml` resources. It is
 intended as a starting blocklist for
-[`contam_blocklist_pq()`](https://adrientaudiere.github.io/tidypq/reference/contam_blocklist_pq.md);
+[`identify_contam_blocklist_pq()`](https://adrientaudiere.github.io/tidypq/reference/identify_contam_blocklist_pq.md);
 users should adapt it to their own substrate and primers.
 
 ## Usage

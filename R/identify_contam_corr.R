@@ -112,8 +112,13 @@ identify_contam_corr_pq <- function(
   for (i in seq_len(n_taxa)) {
     abs_reads <- otu[i, ]
     rel_reads <- rel_abu[i, ]
-    cor_abs[i] <- stats::cor(abs_reads, sample_totals, use = "complete.obs")
-    cor_rel[i] <- stats::cor(rel_reads, sample_totals, use = "complete.obs")
+    # Zero-variance taxa yield NA (and a warning) -- expected, filtered later.
+    cor_abs[i] <- suppressWarnings(
+      stats::cor(abs_reads, sample_totals, use = "complete.obs")
+    )
+    cor_rel[i] <- suppressWarnings(
+      stats::cor(rel_reads, sample_totals, use = "complete.obs")
+    )
     fit <- tryCatch(
       stats::lm(rel_reads ~ sample_totals),
       error = function(e) NULL

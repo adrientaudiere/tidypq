@@ -32,9 +32,9 @@
 #'   [MiscMetabar::cutadapt_remove_primers()] for cutadapt-based primer removal
 #'   of fastq files.
 #'
-#' @examples
+#' @examplesIf rlang::is_installed("Biostrings")
 #' library(MiscMetabar)
-#' # Requires a phyloseq object with a refseq slot and Biostrings installed.
+#' # Requires a phyloseq object with a populated @@refseq slot.
 #' primers <- c(
 #'   fwd = "CCCTACGGGGTGCASCAG",
 #'   rev = "GGACTACVSGGGTATCTAAT"

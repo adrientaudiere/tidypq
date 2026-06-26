@@ -28,24 +28,24 @@ test_that("taxa_prevalence works with filter_taxa_pq", {
 })
 
 ################################################################################
-# decontam_sam_control tests
+# decontam_control_samples_pq tests
 ################################################################################
 
-test_that("decontam_sam_control removes contamination based on controls", {
+test_that("decontam_control_samples_pq removes contamination based on controls", {
   # Add control column: first 2 samples are controls
   pq <- mutate_samdata_pq(data_fungi, is_control = seq_len(nsamples(.)) <= 2)
 
-  result <- decontam_sam_control(pq, is_control, verbose = FALSE)
+  result <- decontam_control_samples_pq(pq, is_control, verbose = FALSE)
   expect_s4_class(result, "phyloseq")
 
   # Control samples should be kept by default (remove_controls = FALSE)
   expect_equal(phyloseq::nsamples(result), phyloseq::nsamples(data_fungi))
 })
 
-test_that("decontam_sam_control removes controls when remove_controls = TRUE", {
+test_that("decontam_control_samples_pq removes controls when remove_controls = TRUE", {
   pq <- mutate_samdata_pq(data_fungi, is_control = seq_len(nsamples(.)) <= 2)
 
-  result <- decontam_sam_control(
+  result <- decontam_control_samples_pq(
     pq,
     is_control,
     remove_controls = TRUE,
@@ -60,14 +60,19 @@ test_that("decontam_sam_control removes controls when remove_controls = TRUE", {
   ))
 })
 
-test_that("decontam_sam_control works with different summary functions", {
+test_that("decontam_control_samples_pq works with different summary functions", {
   pq <- mutate_samdata_pq(data_fungi, is_control = seq_len(nsamples(.)) <= 2)
 
   # max (default) - most conservative
-  result_max <- decontam_sam_control(pq, is_control, fun = max, verbose = FALSE)
+  result_max <- decontam_control_samples_pq(
+    pq,
+    is_control,
+    fun = max,
+    verbose = FALSE
+  )
 
   # mean - less conservative
-  result_mean <- decontam_sam_control(
+  result_mean <- decontam_control_samples_pq(
     pq,
     is_control,
     fun = mean,
@@ -85,11 +90,11 @@ test_that("decontam_sam_control works with different summary functions", {
   )
 })
 
-test_that("decontam_sam_control works with global_threshold = TRUE", {
+test_that("decontam_control_samples_pq works with global_threshold = TRUE", {
   pq <- mutate_samdata_pq(data_fungi, is_control = seq_len(nsamples(.)) <= 2)
 
   # Per-taxon thresholds (default)
-  result_per_taxon <- decontam_sam_control(
+  result_per_taxon <- decontam_control_samples_pq(
     pq,
     is_control,
     global_threshold = FALSE,
@@ -97,7 +102,7 @@ test_that("decontam_sam_control works with global_threshold = TRUE", {
   )
 
   # Global threshold
-  result_global <- decontam_sam_control(
+  result_global <- decontam_control_samples_pq(
     pq,
     is_control,
     global_threshold = TRUE,
@@ -111,11 +116,11 @@ test_that("decontam_sam_control works with global_threshold = TRUE", {
   expect_true(phyloseq::nsamples(result_global) > 0)
 })
 
-test_that("decontam_sam_control works with custom function", {
+test_that("decontam_control_samples_pq works with custom function", {
   pq <- mutate_samdata_pq(data_fungi, is_control = seq_len(nsamples(.)) <= 2)
 
   # Custom function: 2x the max
-  result <- decontam_sam_control(
+  result <- decontam_control_samples_pq(
     pq,
     is_control,
     fun = \(x) 2 * max(x),
@@ -124,34 +129,34 @@ test_that("decontam_sam_control works with custom function", {
   expect_s4_class(result, "phyloseq")
 })
 
-test_that("decontam_sam_control errors with no control samples", {
+test_that("decontam_control_samples_pq errors with no control samples", {
   pq <- mutate_samdata_pq(data_fungi, is_control = FALSE)
 
   expect_error(
-    decontam_sam_control(pq, is_control, verbose = FALSE),
+    decontam_control_samples_pq(pq, is_control, verbose = FALSE),
     "No samples match"
   )
 })
 
-test_that("decontam_sam_control errors with all control samples", {
+test_that("decontam_control_samples_pq errors with all control samples", {
   pq <- mutate_samdata_pq(data_fungi, is_control = TRUE)
 
   expect_error(
-    decontam_sam_control(pq, is_control, verbose = FALSE),
+    decontam_control_samples_pq(pq, is_control, verbose = FALSE),
     "All samples are controls"
   )
 })
 
-test_that("decontam_sam_control errors with non-logical condition", {
+test_that("decontam_control_samples_pq errors with non-logical condition", {
   pq <- mutate_samdata_pq(data_fungi, control_value = 1)
 
   expect_error(
-    decontam_sam_control(pq, control_value, verbose = FALSE),
+    decontam_control_samples_pq(pq, control_value, verbose = FALSE),
     "must evaluate to a logical"
   )
 })
 
-test_that("decontam_sam_control correctly sets values to zero", {
+test_that("decontam_control_samples_pq correctly sets values to zero", {
   # Create a simple controlled test case
   pq <- mutate_samdata_pq(data_fungi, is_control = seq_len(nsamples(.)) <= 2)
 
@@ -166,7 +171,7 @@ test_that("decontam_sam_control correctly sets values to zero", {
   first_taxon <- phyloseq::taxa_names(pq)[1]
   threshold <- max(otu[first_taxon, control_samples])
 
-  result <- decontam_sam_control(
+  result <- decontam_control_samples_pq(
     pq,
     is_control,
     clean_phyloseq_object = FALSE,
@@ -189,14 +194,14 @@ test_that("decontam_sam_control correctly sets values to zero", {
 })
 
 ################################################################################
-# decontam_taxa_control tests
+# decontam_control_taxa_pq tests
 ################################################################################
 
-test_that("decontam_taxa_control removes contamination based on control taxa", {
+test_that("decontam_control_taxa_pq removes contamination based on control taxa", {
   # Use first 3 taxa as controls via taxa_names
   control_taxa <- phyloseq::taxa_names(data_fungi)[1:3]
 
-  result <- decontam_taxa_control(
+  result <- decontam_control_taxa_pq(
     data_fungi,
     taxa_names(.) %in% control_taxa,
     verbose = FALSE,
@@ -209,13 +214,13 @@ test_that("decontam_taxa_control removes contamination based on control taxa", {
   expect_false(any(control_taxa %in% phyloseq::taxa_names(result)))
 })
 
-test_that("decontam_taxa_control works with tax_table condition", {
+test_that("decontam_control_taxa_pq works with tax_table condition", {
   # Use a condition on tax_table (e.g., select by Genus)
   # First find a Genus that exists
   tax_mat <- as(phyloseq::tax_table(data_fungi), "matrix")
   test_genus <- tax_mat[1, "Genus"]
 
-  result <- decontam_taxa_control(
+  result <- decontam_control_taxa_pq(
     data_fungi,
     Genus == test_genus,
     verbose = FALSE
@@ -223,10 +228,10 @@ test_that("decontam_taxa_control works with tax_table condition", {
   expect_s4_class(result, "phyloseq")
 })
 
-test_that("decontam_taxa_control keeps control taxa when remove_control_taxa = FALSE", {
+test_that("decontam_control_taxa_pq keeps control taxa when remove_control_taxa = FALSE", {
   control_taxa <- phyloseq::taxa_names(data_fungi)[1:3]
 
-  result <- decontam_taxa_control(
+  result <- decontam_control_taxa_pq(
     data_fungi,
     taxa_names(.) %in% control_taxa,
     remove_control_taxa = FALSE,
@@ -238,11 +243,11 @@ test_that("decontam_taxa_control keeps control taxa when remove_control_taxa = F
   expect_true(all(control_taxa %in% phyloseq::taxa_names(result)))
 })
 
-test_that("decontam_taxa_control works with global_threshold = TRUE", {
+test_that("decontam_control_taxa_pq works with global_threshold = TRUE", {
   control_taxa <- phyloseq::taxa_names(data_fungi)[1:3]
 
   # Per-sample thresholds (default)
-  result_per_sample <- decontam_taxa_control(
+  result_per_sample <- decontam_control_taxa_pq(
     data_fungi,
     taxa_names(.) %in% control_taxa,
     global_threshold = FALSE,
@@ -250,7 +255,7 @@ test_that("decontam_taxa_control works with global_threshold = TRUE", {
   )
 
   # Global threshold
-  result_global <- decontam_taxa_control(
+  result_global <- decontam_control_taxa_pq(
     data_fungi,
     taxa_names(.) %in% control_taxa,
     global_threshold = TRUE,
@@ -261,16 +266,16 @@ test_that("decontam_taxa_control works with global_threshold = TRUE", {
   expect_s4_class(result_global, "phyloseq")
 })
 
-test_that("decontam_taxa_control works with different summary functions", {
+test_that("decontam_control_taxa_pq works with different summary functions", {
   control_taxa <- phyloseq::taxa_names(data_fungi)[1:3]
 
-  result_max <- decontam_taxa_control(
+  result_max <- decontam_control_taxa_pq(
     data_fungi,
     taxa_names(.) %in% control_taxa,
     fun = max,
     verbose = FALSE
   )
-  result_mean <- decontam_taxa_control(
+  result_mean <- decontam_control_taxa_pq(
     data_fungi,
     taxa_names(.) %in% control_taxa,
     fun = mean,
@@ -287,9 +292,9 @@ test_that("decontam_taxa_control works with different summary functions", {
   )
 })
 
-test_that("decontam_taxa_control errors with no matching taxa", {
+test_that("decontam_control_taxa_pq errors with no matching taxa", {
   expect_error(
-    decontam_taxa_control(
+    decontam_control_taxa_pq(
       data_fungi,
       Genus == "NONEXISTENT_GENUS_XYZ",
       verbose = FALSE
@@ -298,9 +303,9 @@ test_that("decontam_taxa_control errors with no matching taxa", {
   )
 })
 
-test_that("decontam_taxa_control errors with all control taxa", {
+test_that("decontam_control_taxa_pq errors with all control taxa", {
   expect_error(
-    decontam_taxa_control(
+    decontam_control_taxa_pq(
       data_fungi,
       taxa_names(.) %in% taxa_names(.),
       verbose = FALSE
@@ -309,31 +314,31 @@ test_that("decontam_taxa_control errors with all control taxa", {
   )
 })
 
-test_that("decontam_taxa_control errors with non-logical condition", {
+test_that("decontam_control_taxa_pq errors with non-logical condition", {
   expect_error(
-    decontam_taxa_control(data_fungi, taxa_sums(.), verbose = FALSE),
+    decontam_control_taxa_pq(data_fungi, taxa_sums(.), verbose = FALSE),
     "must evaluate to a logical"
   )
 })
 
-test_that("decontam_sam_control verbose output works", {
+test_that("decontam_control_samples_pq verbose output works", {
   pq <- mutate_samdata_pq(
     data_fungi,
     is_control = seq_len(nsamples(.)) <= 2
   )
   expect_message(
-    decontam_sam_control(pq, is_control, verbose = TRUE),
+    decontam_control_samples_pq(pq, is_control, verbose = TRUE),
     "Decontamination complete"
   )
 })
 
-test_that("decontam_sam_control verbose with global_threshold", {
+test_that("decontam_control_samples_pq verbose with global_threshold", {
   pq <- mutate_samdata_pq(
     data_fungi,
     is_control = seq_len(nsamples(.)) <= 2
   )
   expect_message(
-    decontam_sam_control(
+    decontam_control_samples_pq(
       pq,
       is_control,
       global_threshold = TRUE,
@@ -343,10 +348,10 @@ test_that("decontam_sam_control verbose with global_threshold", {
   )
 })
 
-test_that("decontam_taxa_control verbose output works", {
+test_that("decontam_control_taxa_pq verbose output works", {
   control_taxa <- phyloseq::taxa_names(data_fungi)[1:3]
   expect_message(
-    decontam_taxa_control(
+    decontam_control_taxa_pq(
       data_fungi,
       taxa_names(.) %in% control_taxa,
       verbose = TRUE
@@ -355,10 +360,10 @@ test_that("decontam_taxa_control verbose output works", {
   )
 })
 
-test_that("decontam_taxa_control verbose with global_threshold", {
+test_that("decontam_control_taxa_pq verbose with global_threshold", {
   control_taxa <- phyloseq::taxa_names(data_fungi)[1:3]
   expect_message(
-    decontam_taxa_control(
+    decontam_control_taxa_pq(
       data_fungi,
       taxa_names(.) %in% control_taxa,
       global_threshold = TRUE,

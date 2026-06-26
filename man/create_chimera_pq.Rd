@@ -69,7 +69,7 @@ min_parent_distance)}
 This function creates synthetic chimeric sequences by combining parts of
 existing sequences from a phyloseq object. Useful for benchmarking chimera
 detection methods like \code{\link[MiscMetabar:chimera_removal_vs]{MiscMetabar::chimera_removal_vs()}} or
-\code{\link[=chimera_removal_dada2]{chimera_removal_dada2()}}.
+\code{\link[=identify_contam_chimera_pq]{identify_contam_chimera_pq()}}.
 }
 \examples{
 \dontshow{if (rlang::is_installed("Biostrings")) withAutoprint(\{ # examplesIf}
@@ -126,7 +126,7 @@ result5 <- create_chimera_pq(data_fungi,
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-\code{\link[MiscMetabar:chimera_removal_vs]{MiscMetabar::chimera_removal_vs()}}, \code{\link[=chimera_removal_dada2]{chimera_removal_dada2()}}
+\code{\link[MiscMetabar:chimera_removal_vs]{MiscMetabar::chimera_removal_vs()}}, \code{\link[=identify_contam_chimera_pq]{identify_contam_chimera_pq()}}
 }
 \author{
 Adrien Taudiere

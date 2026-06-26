@@ -6,9 +6,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Benchmarking Chimera Detection Methods • tidypq</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Benchmarking Chimera Detection Methods">
 </head>
@@ -20,7 +25,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">tidypq</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +40,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/advanced-usage.html">Advanced Usage</a></li>
     <li><a class="dropdown-item" href="../articles/chimera_detection_testing.html">Benchmarking Chimera Detection Methods</a></li>
+    <li><a class="dropdown-item" href="../articles/decontamination.html">Detecting and removing contaminants</a></li>
     <li><a class="dropdown-item" href="../articles/getting-started.html">Getting Started with tidypq</a></li>
   </ul>
 </li>
@@ -86,13 +92,16 @@ three methods:</p>
 vsearch de novo — infers chimeras from abundance patterns within the
 sample.</li>
 <li>
-<strong><code><a href="../reference/chimera_removal_dada2.html">chimera_removal_dada2()</a></code></strong>: dada2 de novo
-— same abundance-based logic, different algorithm.</li>
+<strong><code>identify_contam_chimera_pq(method = "dada2")</code></strong>:
+dada2 de novo — same abundance-based logic, different algorithm.</li>
 <li>
-<strong><code><a href="../reference/chimera_removal_vs_ref.html">chimera_removal_vs_ref()</a></code></strong>: vsearch
-reference-based (UCHIME_ref) — compares each query against a trusted
-reference database, independent of sample composition.</li>
+<strong><code>identify_contam_chimera_pq(method = "vsearch_ref")</code></strong>:
+vsearch reference-based (UCHIME_ref) — compares each query against a
+trusted reference database, independent of sample composition.</li>
 </ul>
+<p>tidypq’s chimera detectors return a <code>contam_tbl</code>; the
+benchmarks below wrap them with <code><a href="../reference/filter_contam_pq.html">filter_contam_pq()</a></code> so each
+method yields a chimera-free phyloseq object.</p>
 </div>
 <div class="section level2">
 <h2 id="data-preparation">Data Preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
@@ -115,7 +124,7 @@ filtering to test on larger or smaller datasets.</p>
 <span></span>
 <span><span class="va">data_fungi_subset</span></span>
 <span></span>
-<span><span class="co"># Mini UNITE database bundled with MiscMetabar (used for chimera_removal_vs_ref)</span></span>
+<span><span class="co"># Mini UNITE database bundled with MiscMetabar (used for remove_chimera_vs_ref)</span></span>
 <span><span class="co"># NOTE: this is a very small subset of the full UNITE database,</span></span>
 <span><span class="co"># so detection rates here will be lower than with the complete database.</span></span>
 <span><span class="va">mini_db</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
@@ -148,7 +157,29 @@ sufficiently different, making chimeras detectable.</p>
 <h3 id="helper-function-for-benchmarking">Helper function for benchmarking<a class="anchor" aria-label="anchor" href="#helper-function-for-benchmarking"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">benchmark_detection</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="co"># tidypq detectors return a contam_tbl; wrap them with filter_contam_pq()</span></span>
+<span><span class="co"># so each returns a chimera-free phyloseq object for the benchmark.</span></span>
+<span><span class="va">remove_chimera_dada2</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">physeq</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="../reference/filter_contam_pq.html">filter_contam_pq</a></span><span class="op">(</span></span>
+<span>    <span class="va">physeq</span>,</span>
+<span>    <span class="fu"><a href="../reference/identify_contam_chimera_pq.html">identify_contam_chimera_pq</a></span><span class="op">(</span><span class="va">physeq</span>, method <span class="op">=</span> <span class="st">"dada2"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>    verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="va">remove_chimera_vs_ref</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">physeq</span>, <span class="va">database</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="../reference/filter_contam_pq.html">filter_contam_pq</a></span><span class="op">(</span></span>
+<span>    <span class="va">physeq</span>,</span>
+<span>    <span class="fu"><a href="../reference/identify_contam_chimera_pq.html">identify_contam_chimera_pq</a></span><span class="op">(</span></span>
+<span>      <span class="va">physeq</span>,</span>
+<span>      method <span class="op">=</span> <span class="st">"vsearch_ref"</span>,</span>
+<span>      database <span class="op">=</span> <span class="va">database</span>,</span>
+<span>      verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">benchmark_detection</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span></span>
 <span>  <span class="va">physeq</span>,</span>
 <span>  <span class="va">method_fn</span>,</span>
 <span>  <span class="va">method_name</span>,</span>
@@ -202,7 +233,7 @@ sufficiently different, making chimeras detectable.</p>
 <span><span class="co"># dada2 de novo</span></span>
 <span><span class="va">result_dada2</span> <span class="op">&lt;-</span> <span class="fu">benchmark_detection</span><span class="op">(</span></span>
 <span>  <span class="va">data_fungi_test</span>,</span>
-<span>  <span class="va">chimera_removal_dada2</span>,</span>
+<span>  <span class="va">remove_chimera_dada2</span>,</span>
 <span>  <span class="st">"dada2"</span>,</span>
 <span>  <span class="va">known_chimeras</span></span>
 <span><span class="op">)</span></span>
@@ -210,7 +241,7 @@ sufficiently different, making chimeras detectable.</p>
 <span><span class="co"># vsearch reference-based</span></span>
 <span><span class="va">result_vs_ref</span> <span class="op">&lt;-</span> <span class="fu">benchmark_detection</span><span class="op">(</span></span>
 <span>  <span class="va">data_fungi_test</span>,</span>
-<span>  <span class="va">chimera_removal_vs_ref</span>,</span>
+<span>  <span class="va">remove_chimera_vs_ref</span>,</span>
 <span>  <span class="st">"vsearch_ref"</span>,</span>
 <span>  <span class="va">known_chimeras</span>,</span>
 <span>  database <span class="op">=</span> <span class="va">mini_db</span></span>
@@ -351,12 +382,12 @@ robustness:</p>
 <span>  <span class="va">rate_vs</span> <span class="op">&lt;-</span> <span class="fu">calc_detection_rate</span><span class="op">(</span><span class="va">nochim_vs</span>, <span class="va">ds</span><span class="op">$</span><span class="va">chimeras</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="va">nochim_dada2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chimera_removal_dada2.html">chimera_removal_dada2</a></span><span class="op">(</span><span class="va">ds</span><span class="op">$</span><span class="va">physeq</span><span class="op">)</span></span>
+<span>  <span class="va">nochim_dada2</span> <span class="op">&lt;-</span> <span class="fu">remove_chimera_dada2</span><span class="op">(</span><span class="va">ds</span><span class="op">$</span><span class="va">physeq</span><span class="op">)</span></span>
 <span>  <span class="va">time_dada2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/difftime.html" class="external-link">difftime</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">start_time</span>, units <span class="op">=</span> <span class="st">"secs"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">rate_dada2</span> <span class="op">&lt;-</span> <span class="fu">calc_detection_rate</span><span class="op">(</span><span class="va">nochim_dada2</span>, <span class="va">ds</span><span class="op">$</span><span class="va">chimeras</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="va">nochim_vs_ref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chimera_removal_vs_ref.html">chimera_removal_vs_ref</a></span><span class="op">(</span><span class="va">ds</span><span class="op">$</span><span class="va">physeq</span>, database <span class="op">=</span> <span class="va">mini_db</span><span class="op">)</span></span>
+<span>  <span class="va">nochim_vs_ref</span> <span class="op">&lt;-</span> <span class="fu">remove_chimera_vs_ref</span><span class="op">(</span><span class="va">ds</span><span class="op">$</span><span class="va">physeq</span>, database <span class="op">=</span> <span class="va">mini_db</span><span class="op">)</span></span>
 <span>  <span class="va">time_vs_ref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/difftime.html" class="external-link">difftime</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">start_time</span>, units <span class="op">=</span> <span class="st">"secs"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">rate_vs_ref</span> <span class="op">&lt;-</span> <span class="fu">calc_detection_rate</span><span class="op">(</span><span class="va">nochim_vs_ref</span>, <span class="va">ds</span><span class="op">$</span><span class="va">chimeras</span><span class="op">)</span></span>
 <span></span>
@@ -503,12 +534,12 @@ sensitivity.</p>
 <span>  <span class="va">rate_vs</span> <span class="op">&lt;-</span> <span class="fu">calc_detection_rate</span><span class="op">(</span><span class="va">nochim_vs</span>, <span class="va">result_abund</span><span class="op">$</span><span class="va">chimera_names</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="va">nochim_dada2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chimera_removal_dada2.html">chimera_removal_dada2</a></span><span class="op">(</span><span class="va">result_abund</span><span class="op">$</span><span class="va">physeq</span><span class="op">)</span></span>
+<span>  <span class="va">nochim_dada2</span> <span class="op">&lt;-</span> <span class="fu">remove_chimera_dada2</span><span class="op">(</span><span class="va">result_abund</span><span class="op">$</span><span class="va">physeq</span><span class="op">)</span></span>
 <span>  <span class="va">time_dada2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/difftime.html" class="external-link">difftime</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">start_time</span>, units <span class="op">=</span> <span class="st">"secs"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">rate_dada2</span> <span class="op">&lt;-</span> <span class="fu">calc_detection_rate</span><span class="op">(</span><span class="va">nochim_dada2</span>, <span class="va">result_abund</span><span class="op">$</span><span class="va">chimera_names</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="va">nochim_vs_ref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chimera_removal_vs_ref.html">chimera_removal_vs_ref</a></span><span class="op">(</span><span class="va">result_abund</span><span class="op">$</span><span class="va">physeq</span>, database <span class="op">=</span> <span class="va">mini_db</span><span class="op">)</span></span>
+<span>  <span class="va">nochim_vs_ref</span> <span class="op">&lt;-</span> <span class="fu">remove_chimera_vs_ref</span><span class="op">(</span><span class="va">result_abund</span><span class="op">$</span><span class="va">physeq</span>, database <span class="op">=</span> <span class="va">mini_db</span><span class="op">)</span></span>
 <span>  <span class="va">time_vs_ref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/difftime.html" class="external-link">difftime</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">start_time</span>, units <span class="op">=</span> <span class="st">"secs"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">rate_vs_ref</span> <span class="op">&lt;-</span> <span class="fu">calc_detection_rate</span><span class="op">(</span><span class="va">nochim_vs_ref</span>, <span class="va">result_abund</span><span class="op">$</span><span class="va">chimera_names</span><span class="op">)</span></span>
 <span></span>
@@ -621,10 +652,10 @@ detect.</p>
 <span>  <span class="va">nochim_vs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://adrientaudiere.github.io/MiscMetabar/reference/chimera_removal_vs.html" class="external-link">chimera_removal_vs</a></span><span class="op">(</span><span class="va">result_dist</span><span class="op">$</span><span class="va">physeq</span><span class="op">)</span></span>
 <span>  <span class="va">rate_vs</span> <span class="op">&lt;-</span> <span class="fu">calc_detection_rate</span><span class="op">(</span><span class="va">nochim_vs</span>, <span class="va">result_dist</span><span class="op">$</span><span class="va">chimera_names</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="va">nochim_dada2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chimera_removal_dada2.html">chimera_removal_dada2</a></span><span class="op">(</span><span class="va">result_dist</span><span class="op">$</span><span class="va">physeq</span><span class="op">)</span></span>
+<span>  <span class="va">nochim_dada2</span> <span class="op">&lt;-</span> <span class="fu">remove_chimera_dada2</span><span class="op">(</span><span class="va">result_dist</span><span class="op">$</span><span class="va">physeq</span><span class="op">)</span></span>
 <span>  <span class="va">rate_dada2</span> <span class="op">&lt;-</span> <span class="fu">calc_detection_rate</span><span class="op">(</span><span class="va">nochim_dada2</span>, <span class="va">result_dist</span><span class="op">$</span><span class="va">chimera_names</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="va">nochim_vs_ref</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/chimera_removal_vs_ref.html">chimera_removal_vs_ref</a></span><span class="op">(</span><span class="va">result_dist</span><span class="op">$</span><span class="va">physeq</span>, database <span class="op">=</span> <span class="va">mini_db</span><span class="op">)</span></span>
+<span>  <span class="va">nochim_vs_ref</span> <span class="op">&lt;-</span> <span class="fu">remove_chimera_vs_ref</span><span class="op">(</span><span class="va">result_dist</span><span class="op">$</span><span class="va">physeq</span>, database <span class="op">=</span> <span class="va">mini_db</span><span class="op">)</span></span>
 <span>  <span class="va">rate_vs_ref</span> <span class="op">&lt;-</span> <span class="fu">calc_detection_rate</span><span class="op">(</span><span class="va">nochim_vs_ref</span>, <span class="va">result_dist</span><span class="op">$</span><span class="va">chimera_names</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">distance_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>

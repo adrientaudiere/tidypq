@@ -14,3 +14,8 @@ evidence columns (a correlation scatter needs `cor`/`slope`; a blocklist match
 has nothing to plot), so keeping the basic view next to the detector buys
 locality and adds no new dependency. The `contam_tbl` contract is the seam that
 lets richer figures move to ggplotpq later without changing tidypq.
+
+Realised: the four-panel negative-control diagnostic `neg_control_diag_pq()` was
+migrated out of tidypq into `ggplotpq` (its programmatic counterpart stays here
+as `identify_contam_negcontrol_pq()`). It is the first rich contamination figure
+to live in ggplotpq under this split.

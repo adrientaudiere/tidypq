@@ -175,16 +175,22 @@ test_that("arrange_taxa_pq works with phy_tree slot", {
 make_desynced_pq <- function() {
   taxa <- paste0("ASV", 1:6)
   tax <- data.frame(
-    Kingdom = c("Archaea", "Bacteria", "Archaea", "Bacteria", "Archaea", "Bacteria"),
+    Kingdom = c(
+      "Archaea",
+      "Bacteria",
+      "Archaea",
+      "Bacteria",
+      "Archaea",
+      "Bacteria"
+    ),
     Phylum = c("Thaum", "Firm", "Eury", "Bact", "Cren", "Bact"),
     row.names = taxa,
     stringsAsFactors = FALSE
   )
   otu <- matrix(
-    c(10, 0, 5, 0, 3, 0,
-      0, 7, 0, 2, 0, 4,
-      4, 0, 8, 0, 1, 0),
-    nrow = 6, byrow = FALSE,
+    c(10, 0, 5, 0, 3, 0, 0, 7, 0, 2, 0, 4, 4, 0, 8, 0, 1, 0),
+    nrow = 6,
+    byrow = FALSE,
     dimnames = list(taxa, c("S1", "S2", "S3"))
   )
   pq <- phyloseq::phyloseq(
@@ -203,7 +209,11 @@ test_that("filter_taxa_pq is correct on a desynced object", {
     phyloseq::taxa_names(pq),
     rownames(phyloseq::tax_table(pq))
   ))
-  result <- filter_taxa_pq(pq, Kingdom == "Archaea", clean_phyloseq_object = FALSE)
+  result <- filter_taxa_pq(
+    pq,
+    Kingdom == "Archaea",
+    clean_phyloseq_object = FALSE
+  )
   expect_s4_class(result, "phyloseq")
   kingdoms <- as.character(phyloseq::tax_table(result)[, "Kingdom"])
   expect_equal(unique(kingdoms), "Archaea")
