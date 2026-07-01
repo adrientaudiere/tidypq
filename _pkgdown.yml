@@ -39,6 +39,11 @@ reference:
   contents:
   - filter_tree_pq
 
+- title: Tidy conversion
+  desc: Convert a phyloseq object into a tidy tibble.
+  contents:
+  - pq_to_tidy
+
 - title: Helpers
   desc: Utility functions for common operations.
   contents:

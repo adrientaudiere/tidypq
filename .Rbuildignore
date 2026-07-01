@@ -7,3 +7,9 @@
 ^\.claude$
 ^\vignettes\.quarto$
 ^README\.Rmd$
+^CONTEXT\.md$
+^README\.html$
+^Rplots\.pdf$
+^LICENSE\.md$
+^audits$
+^dev$
