@@ -42,6 +42,13 @@
 
 ### New features
 
+- [`filter_chimera_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_chimera_pq.md)
+  detects and removes chimeric taxa in one step (a convenience wrapper
+  over
+  [`identify_contam_chimera_pq()`](https://adrientaudiere.github.io/tidypq/reference/identify_contam_chimera_pq.md)
+  and
+  [`filter_contam_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_contam_pq.md)),
+  supporting `method = "dada2"` and `method = "vsearch_ref"`.
 - [`filter_contam_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_contam_pq.md)
   removes the taxa flagged in a `contam_tbl` (from one detector, or
   several combined with [`rbind()`](https://rdrr.io/r/base/cbind.html)),
@@ -86,6 +93,23 @@
   [`MiscMetabar::mumu_pq()`](https://adrientaudiere.github.io/MiscMetabar/reference/mumu_pq.html))
   caused the wrong taxa to be selected/mutated, so
   `filter_taxa_pq(pq, Kingdom == "Archaea")` could return Bacteria.
+- Every verb that returns a phyloseq object (`filter_*_pq()`,
+  `select_*_pq()`, `mutate_*_pq()`, `slice_*_pq()`, `arrange_*_pq()`,
+  `rename_*_pq()`,
+  [`filter_occurrences_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_occurrences_pq.md),
+  [`filter_contam_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_contam_pq.md),
+  [`filter_chimera_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_chimera_pq.md),
+  [`decontam_control_samples_pq()`](https://adrientaudiere.github.io/tidypq/reference/decontam_control_samples_pq.md),
+  [`decontam_control_taxa_pq()`](https://adrientaudiere.github.io/tidypq/reference/decontam_control_taxa_pq.md))
+  now reorders a desynchronised `sam_data` or `tax_table` back to the
+  canonical `otu_table` order (emitting a message when a reorder was
+  needed) and verifies the result with
+  `MiscMetabar::verify_pq(check_order = TRUE)` before returning. This
+  guarantees the returned object keeps
+  [`sample_names()`](https://rdrr.io/pkg/phyloseq/man/sample_names-methods.html)/[`taxa_names()`](https://rdrr.io/pkg/phyloseq/man/taxa_names-methods.html)
+  aligned across slots, fixing a class of silent positional bugs
+  (e.g. `sam_data` columns no longer ending up attached to the wrong
+  samples).
 
 ## tidypq 0.1.1
 

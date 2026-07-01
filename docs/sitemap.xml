@@ -25,6 +25,7 @@
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/decontam_control_taxa_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/decontam_sam_control.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/decontam_taxa_control.html</loc></url>
+<url><loc>https://adrientaudiere.github.io/tidypq/reference/filter_chimera_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/filter_contam_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/filter_occurrences_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/filter_samples_pq.html</loc></url>
@@ -44,6 +45,7 @@
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/neg_control_clean_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/neg_control_diag_pq.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/plot_sample_depth_pq.html</loc></url>
+<url><loc>https://adrientaudiere.github.io/tidypq/reference/pq_to_tidy.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/print.contam_tbl.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/print.wrapped_pheatmap.html</loc></url>
 <url><loc>https://adrientaudiere.github.io/tidypq/reference/rbind.contam_tbl.html</loc></url>

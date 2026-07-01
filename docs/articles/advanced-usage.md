@@ -1,7 +1,6 @@
 # Advanced Usage
 
 ``` r
-
 library(tidypq)
 #> Loading required package: phyloseq
 #> Loading required package: MiscMetabar
@@ -21,7 +20,6 @@ library(MiscMetabar)
 ## Custom functions in filter
 
 ``` r
-
 # Filter taxa present in at least 3 samples
 data_fungi |>
   filter_taxa_pq(taxa_prevalence(.) >= 3)
@@ -45,7 +43,6 @@ data_fungi |>
 ## Custom functions in mutate
 
 ``` r
-
 # Prevalence ratio
 data_fungi |> mutate_taxa_pq(
   prev_ratio = taxa_prevalence(.) / nsamples(.)
@@ -71,7 +68,6 @@ data_fungi |> mutate_taxa_pq(
 ## Occurrence-level transformations
 
 ``` r
-
 # Relative abundance
 data_fungi |> mutate_occurrences_pq(. / sample_total)
 #> phyloseq-class experiment-level object
@@ -92,7 +88,6 @@ data_fungi |> filter_occurrences_pq(. / sample_total > 0.001)
 ## Complex pipelines
 
 ``` r
-
 data_fungi |>
   filter_samples_pq(sample_sums(.) > quantile(sample_sums(.), 0.25)) |>
   filter_taxa_pq(taxa_prevalence(.) >= 2, taxa_sums(.) > 10) |>

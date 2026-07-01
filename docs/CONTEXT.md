@@ -93,6 +93,31 @@ compare ≥2 views; single-view functions are out of scope.
 **taxinfo** — pqverse package for augmenting phyloseq objects with
 external taxonomy-based information from GBIF, Wikipedia, and GloBI.
 
+**`augment_tax_table()`** — taxinfo-internal deep module (the merge-back
+seam) shared by the `tax_*_pq` family. Takes a phyloseq object and a
+per-taxon `info_tbl` keyed by a column (`info_key`, default
+`taxa_name`), and returns the phyloseq with the tibble’s columns
+left-joined into its `tax_table`. Owns key construction, `col_prefix`
+collision handling, the `left_join`, the `as.matrix() |> tax_table()`
+round-trip, and the `rownames <- taxa_names()` restore. Each `tax_*_pq`
+function only builds its `info_tbl`; the external fetch stays in the
+caller.
+
+**`taxnames_from_rank()`** — taxinfo-internal key-builder shared by
+`taxonomic_rank_to_taxnames()` (query side) and `augment_tax_table()`
+(merge side). Pastes the `taxonomic_rank` column(s) per taxon into a
+single name and applies the `"NA NA"` / `" NA"` cleanup, guaranteeing
+the API query key and the merge-back join key are identical (closing a
+latent silent-drop bug for multi-column ranks with genus-only taxa).
+
+**`resolve_taxa_input()`** — taxinfo-internal front-matter helper shared
+by the `tax_*_pq` family (the counterpart of the `augment_tax_table()`
+merge-back). Validates the mutually exclusive `physeq` / `taxnames`
+input, resolves the `add_to_phyloseq` default, and extracts taxon names
+from `physeq` via `taxonomic_rank_to_taxnames()`; returns
+`list(taxnames, add_to_phyloseq)`. Each `tax_*_pq` function calls it
+instead of repeating the ~22-line validate-and-extract block.
+
 **greenAlgoR** — pqverse package for estimating the carbon footprint of
 R computations, including targets pipelines, based on the Green
 Algorithms framework.
@@ -111,6 +136,23 @@ names.
 **`merge_sample_by`** — Canonical parameter name for the sample-data
 column used to aggregate (merge) samples within a phyloseq object.
 Already consistent across MiscMetabar, comparpq, and ggplotpq.
+
+**[`pq_to_tidy()`](https://adrientaudiere.github.io/tidypq/reference/pq_to_tidy.md)**
+— Canonical phyloseq-to-tidy data-preparation module, exported from
+**tidypq**. Converts a phyloseq object into an ungrouped tibble with
+columns `sample_id`, `taxon_id`, `abundance`, `fact`, `bifactor`,
+selected taxonomic rank columns (wide, NA→“Unknown”), and all
+`sample_data` columns. Owns the full pipeline: `verify_pq` → `clean_pq`
+→ `pivot_longer` → join sample_data + tax_table → optional
+`merge_sample_by` aggregation (tibble space) → optional `transform` (per
+sample_id, keeps `abundance_raw`) → resolve fact/bifactor (enforces
+2-level on bifactor) → optional `filter_zero`. Does NOT wrap
+[`phyloseq::psmelt()`](https://rdrr.io/pkg/phyloseq/man/psmelt.html) —
+it builds from scratch. Does NOT replicate
+[`MiscMetabar::psmelt_samples_pq()`](https://adrientaudiere.github.io/MiscMetabar/reference/psmelt_samples_pq.html)
+(sample-level Hill summary). See ADR 0002. **Prefer
+[`pq_to_tidy()`](https://adrientaudiere.github.io/tidypq/reference/pq_to_tidy.md)
+over reinventing the pipeline in each plot/analysis function.**
 
 **`_pq` suffix** — Naming convention for all exported pqverse functions
 that take a phyloseq object as their primary argument

@@ -50,6 +50,13 @@ Filter phylogenetic trees.
 - [`filter_tree_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_tree_pq.md)
   : Filter phyloseq by tree topology
 
+## Tidy conversion
+
+Convert a phyloseq object into a tidy tibble.
+
+- [`pq_to_tidy()`](https://adrientaudiere.github.io/tidypq/reference/pq_to_tidy.md)
+  : Convert a phyloseq object to a tidy tibble
+
 ## Helpers
 
 Utility functions for common operations.
@@ -82,6 +89,9 @@ Remove flagged taxa and work with the detector output object.
 
 - [`filter_contam_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_contam_pq.md)
   : Remove contaminant taxa flagged by a detector
+
+- [`filter_chimera_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_chimera_pq.md)
+  : Remove chimeric taxa in one step
 
 - [`new_contam_tbl()`](https://adrientaudiere.github.io/tidypq/reference/contam_tbl.md)
   [`is_contam_tbl()`](https://adrientaudiere.github.io/tidypq/reference/contam_tbl.md)
