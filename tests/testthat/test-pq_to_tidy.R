@@ -38,8 +38,7 @@ test_that("pq_to_tidy psmelt parity", {
   data_fungi_mini <- NULL
   data("data_fungi_mini", package = "MiscMetabar", envir = environment())
 
-  df <- pq_to_tidy(data_fungi_mini, verbose = FALSE,
-    filter_zero = FALSE)
+  df <- pq_to_tidy(data_fungi_mini, verbose = FALSE, filter_zero = FALSE)
   psm <- as.data.frame(phyloseq::psmelt(data_fungi_mini))
 
   df_sorted <- df[order(df$sample_id, df$taxon_id), ]
@@ -135,8 +134,7 @@ test_that("pq_to_tidy merge_sample_by aggregation", {
   data_fungi_mini <- NULL
   data("data_fungi_mini", package = "MiscMetabar", envir = environment())
 
-  df <- pq_to_tidy(data_fungi_mini, merge_sample_by = "Height",
-    verbose = FALSE)
+  df <- pq_to_tidy(data_fungi_mini, merge_sample_by = "Height", verbose = FALSE)
 
   expect_equal(
     sort(unique(df$sample_id)),
@@ -157,7 +155,8 @@ test_that("pq_to_tidy transform with function", {
   data_fungi_mini <- NULL
   data("data_fungi_mini", package = "MiscMetabar", envir = environment())
 
-  df <- pq_to_tidy(data_fungi_mini,
+  df <- pq_to_tidy(
+    data_fungi_mini,
     transform = function(x) x / sum(x),
     verbose = FALSE
   )
@@ -181,8 +180,7 @@ test_that("pq_to_tidy transform preserves abundance_raw", {
   data("data_fungi_mini", package = "MiscMetabar", envir = environment())
 
   df_raw <- pq_to_tidy(data_fungi_mini, verbose = FALSE)
-  df_trans <- pq_to_tidy(data_fungi_mini, transform = "log1p",
-    verbose = FALSE)
+  df_trans <- pq_to_tidy(data_fungi_mini, transform = "log1p", verbose = FALSE)
   expect_equal(df_trans$abundance_raw, df_raw$abundance)
 })
 
@@ -216,10 +214,12 @@ test_that("pq_to_tidy filter_zero removes zero rows", {
   data_fungi_mini <- NULL
   data("data_fungi_mini", package = "MiscMetabar", envir = environment())
 
-  df_filtered <- pq_to_tidy(data_fungi_mini, filter_zero = TRUE,
-    verbose = FALSE)
-  df_all <- pq_to_tidy(data_fungi_mini, filter_zero = FALSE,
-    verbose = FALSE)
+  df_filtered <- pq_to_tidy(
+    data_fungi_mini,
+    filter_zero = TRUE,
+    verbose = FALSE
+  )
+  df_all <- pq_to_tidy(data_fungi_mini, filter_zero = FALSE, verbose = FALSE)
   expect_true(nrow(df_filtered) < nrow(df_all))
   expect_true(all(df_filtered$abundance > 0))
 })
@@ -231,8 +231,10 @@ test_that("pq_to_tidy handles taxa-as-columns", {
   ps <- data_fungi_mini
   if (phyloseq::taxa_are_rows(ps)) {
     otu <- as(phyloseq::otu_table(ps), "matrix")
-    phyloseq::otu_table(ps) <- phyloseq::otu_table(t(otu),
-      taxa_are_rows = FALSE)
+    phyloseq::otu_table(ps) <- phyloseq::otu_table(
+      t(otu),
+      taxa_are_rows = FALSE
+    )
   }
 
   df <- pq_to_tidy(ps, verbose = FALSE)
