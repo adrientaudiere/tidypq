@@ -103,7 +103,8 @@ decontam_control_samples_pq <- function(
   verbose = TRUE
 ) {
   fun_name <- deparse(substitute(fun))
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
 
   # Identify control samples using data masking
   mask <- build_sample_data_mask(physeq)
@@ -193,6 +194,7 @@ decontam_control_samples_pq <- function(
     )
   }
 
+  MiscMetabar::verify_pq(new_physeq)
   return(new_physeq)
 }
 
@@ -254,7 +256,8 @@ decontam_control_taxa_pq <- function(
   verbose = TRUE
 ) {
   fun_name <- deparse(substitute(fun))
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
 
   all_taxa <- phyloseq::taxa_names(physeq)
 
@@ -349,5 +352,6 @@ decontam_control_taxa_pq <- function(
     )
   }
 
+  MiscMetabar::verify_pq(new_physeq)
   return(new_physeq)
 }

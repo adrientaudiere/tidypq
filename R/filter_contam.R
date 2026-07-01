@@ -41,7 +41,8 @@ filter_contam_pq <- function(
   clean_phyloseq_object = TRUE,
   verbose = TRUE
 ) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
   if (!is_contam_tbl(contam)) {
     stop(
       "`contam` must be a contam_tbl, the output of an ",
@@ -69,5 +70,6 @@ filter_contam_pq <- function(
   if (clean_phyloseq_object) {
     res <- MiscMetabar::clean_pq(res, silent = TRUE)
   }
+  MiscMetabar::verify_pq(res)
   res
 }

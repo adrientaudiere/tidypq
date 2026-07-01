@@ -37,7 +37,8 @@
 #' # Keep samples above half of the average abundance
 #' filter_samples_pq(data_fungi, sample_sums(.) > sum(sample_sums(.)) / phyloseq::nsamples(.) / 2)
 filter_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
 
   mask <- build_sample_data_mask(physeq)
   quos <- rlang::enquos(...)
@@ -51,10 +52,10 @@ filter_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 
   new_physeq <- phyloseq::prune_samples(samples_to_keep, physeq)
   if (clean_phyloseq_object) {
-    return(MiscMetabar::clean_pq(new_physeq, silent = TRUE))
-  } else {
-    return(new_physeq)
+    new_physeq <- MiscMetabar::clean_pq(new_physeq, silent = TRUE)
   }
+  MiscMetabar::verify_pq(new_physeq)
+  return(new_physeq)
 }
 
 ################################################################################
@@ -87,7 +88,8 @@ filter_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' # Exclude columns
 #' select_samdata_pq(data_fungi, !Sample_id)
 select_samdata_pq <- function(physeq, ...) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
   new_physeq <- physeq
 
   if (length(rlang::enquos(...)) == 0) {
@@ -143,7 +145,8 @@ select_samdata_pq <- function(physeq, ...) {
 #' # Modify an existing column
 #' mutate_samdata_pq(data_fungi, Height = toupper(Height))
 mutate_samdata_pq <- function(physeq, ...) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
   new_physeq <- physeq
 
   sam_df <- as.data.frame(phyloseq::sample_data(physeq))
@@ -199,7 +202,8 @@ mutate_samdata_pq <- function(physeq, ...) {
 #' # Remove first 2 samples
 #' slice_samples_pq(data_fungi, -(1:2))
 slice_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
 
   sam_df <- as_tibble(phyloseq::sample_data(physeq))
   sam_df$sample_names__for_slicing <- phyloseq::sample_names(physeq)
@@ -214,10 +218,10 @@ slice_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 
   new_physeq <- phyloseq::prune_samples(samples_to_keep, physeq)
   if (clean_phyloseq_object) {
-    return(MiscMetabar::clean_pq(new_physeq, silent = TRUE))
-  } else {
-    return(new_physeq)
+    new_physeq <- MiscMetabar::clean_pq(new_physeq, silent = TRUE)
   }
+  MiscMetabar::verify_pq(new_physeq)
+  return(new_physeq)
 }
 
 ################################################################################
@@ -248,7 +252,8 @@ slice_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' # Arrange by sequencing depth (descending)
 #' arrange_samples_pq(data_fungi, dplyr::desc(sample_sums(.)))
 arrange_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
 
   sam_df <- as.data.frame(phyloseq::sample_data(physeq))
   mask <- build_sample_data_mask(physeq)
@@ -272,10 +277,10 @@ arrange_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 
   new_physeq <- phyloseq::prune_samples(samples_order, physeq)
   if (clean_phyloseq_object) {
-    return(MiscMetabar::clean_pq(new_physeq, silent = TRUE))
-  } else {
-    return(new_physeq)
+    new_physeq <- MiscMetabar::clean_pq(new_physeq, silent = TRUE)
   }
+  MiscMetabar::verify_pq(new_physeq)
+  return(new_physeq)
 }
 
 ################################################################################
@@ -303,7 +308,8 @@ arrange_samples_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' # Rename multiple columns
 #' rename_samples_pq(data_fungi, sample_height = Height, sample_time = Time)
 rename_samples_pq <- function(physeq, ...) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
   new_physeq <- physeq
 
   sam_df <- as_tibble(phyloseq::sample_data(physeq))

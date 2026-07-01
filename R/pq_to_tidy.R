@@ -107,8 +107,11 @@ pq_to_tidy <- function(
 
   if (verbose) {
     message(
-      "After clean_pq: ", phyloseq::nsamples(ps), " samples, ",
-      phyloseq::ntaxa(ps), " taxa."
+      "After clean_pq: ",
+      phyloseq::nsamples(ps),
+      " samples, ",
+      phyloseq::ntaxa(ps),
+      " taxa."
     )
   }
 
@@ -151,7 +154,8 @@ pq_to_tidy <- function(
         stop(
           "Ranks not found in tax_table: ",
           paste(missing_ranks, collapse = ", "),
-          ". Available: ", paste(all_ranks, collapse = ", ")
+          ". Available: ",
+          paste(all_ranks, collapse = ", ")
         )
       }
       selected_ranks <- ranks
@@ -171,8 +175,11 @@ pq_to_tidy <- function(
   if (!is.null(merge_sample_by)) {
     if (!merge_sample_by %in% colnames(df)) {
       stop(
-        "merge_sample_by '", merge_sample_by, "' not found in sample_data. ",
-        "Available: ", paste(colnames(sd_df), collapse = ", ")
+        "merge_sample_by '",
+        merge_sample_by,
+        "' not found in sample_data. ",
+        "Available: ",
+        paste(colnames(sd_df), collapse = ", ")
       )
     }
     if (verbose) {
@@ -218,7 +225,9 @@ pq_to_tidy <- function(
   } else {
     if (!fact %in% colnames(df)) {
       stop(
-        "fact '", fact, "' not found in sample_data. Available: ",
+        "fact '",
+        fact,
+        "' not found in sample_data. Available: ",
         paste(colnames(sd_df), collapse = ", ")
       )
     }
@@ -230,7 +239,9 @@ pq_to_tidy <- function(
   } else {
     if (!bifactor %in% colnames(df)) {
       stop(
-        "bifactor '", bifactor, "' not found in sample_data. Available: ",
+        "bifactor '",
+        bifactor,
+        "' not found in sample_data. Available: ",
         paste(colnames(sd_df), collapse = ", ")
       )
     }
@@ -238,8 +249,11 @@ pq_to_tidy <- function(
     n_levels <- length(unique(bf_vals))
     if (n_levels != 2) {
       stop(
-        "bifactor '", bifactor, "' must have exactly 2 levels, found ",
-        n_levels, "."
+        "bifactor '",
+        bifactor,
+        "' must have exactly 2 levels, found ",
+        n_levels,
+        "."
       )
     }
     bf_vals
@@ -259,8 +273,13 @@ pq_to_tidy <- function(
   df$taxon_id <- as.character(df$taxon_id)
 
   if (verbose) {
-    message("Returning tibble with ", nrow(df), " rows and ",
-      ncol(df), " columns.")
+    message(
+      "Returning tibble with ",
+      nrow(df),
+      " rows and ",
+      ncol(df),
+      " columns."
+    )
   }
 
   tibble::as_tibble(df)

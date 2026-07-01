@@ -36,7 +36,8 @@
 #' filter_taxa_pq(data_fungi, taxa_sums(.) > median(taxa_sums(.)))
 #'
 filter_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
 
   mask <- build_taxa_data_mask(physeq)
   quos <- rlang::enquos(...)
@@ -50,10 +51,10 @@ filter_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 
   new_physeq <- phyloseq::prune_taxa(taxa_to_keep, physeq)
   if (clean_phyloseq_object) {
-    return(MiscMetabar::clean_pq(new_physeq, silent = TRUE))
-  } else {
-    return(new_physeq)
+    new_physeq <- MiscMetabar::clean_pq(new_physeq, silent = TRUE)
   }
+  MiscMetabar::verify_pq(new_physeq)
+  return(new_physeq)
 }
 
 ################################################################################
@@ -86,7 +87,8 @@ filter_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' # Exclude ranks
 #' select_taxa_pq(data_fungi, !Species)
 select_taxa_pq <- function(physeq, ...) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
   new_physeq <- physeq
 
   if (length(rlang::enquos(...)) == 0) {
@@ -142,7 +144,8 @@ select_taxa_pq <- function(physeq, ...) {
 #' # Add a new column based on abundance
 #' mutate_taxa_pq(data_fungi, total_abundance = taxa_sums(.))
 mutate_taxa_pq <- function(physeq, ...) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
   new_physeq <- physeq
 
   tax_df <- taxa_table_df(physeq)
@@ -198,7 +201,8 @@ mutate_taxa_pq <- function(physeq, ...) {
 #' # Remove first 5 taxa
 #' slice_taxa_pq(data_fungi, -(1:5))
 slice_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
 
   tax_df <- taxa_table_df(physeq)
   indices <- c(...)
@@ -212,10 +216,10 @@ slice_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 
   new_physeq <- phyloseq::prune_taxa(taxa_to_keep, physeq)
   if (clean_phyloseq_object) {
-    return(MiscMetabar::clean_pq(new_physeq, silent = TRUE))
-  } else {
-    return(new_physeq)
+    new_physeq <- MiscMetabar::clean_pq(new_physeq, silent = TRUE)
   }
+  MiscMetabar::verify_pq(new_physeq)
+  return(new_physeq)
 }
 
 ################################################################################
@@ -250,7 +254,8 @@ slice_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' dfm_arr <- arrange_taxa_pq(data_fungi, Class, Genus)@tax_table[, c("Class", "Genus")]
 #' arrange_taxa_pq(data_fungi, Genus, Class)@tax_table[, c("Class", "Genus")]
 arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
 
   new_physeq <- physeq
   new_phy_tree <- NULL
@@ -316,13 +321,11 @@ arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
     new_physeq@phy_tree <- new_phy_tree
   }
 
-  MiscMetabar::verify_pq(new_physeq)
-
   if (clean_phyloseq_object) {
-    return(MiscMetabar::clean_pq(new_physeq, silent = TRUE))
-  } else {
-    return(new_physeq)
+    new_physeq <- MiscMetabar::clean_pq(new_physeq, silent = TRUE)
   }
+  MiscMetabar::verify_pq(new_physeq)
+  return(new_physeq)
 }
 
 ################################################################################
@@ -350,7 +353,8 @@ arrange_taxa_pq <- function(physeq, ..., clean_phyloseq_object = TRUE) {
 #' # Rename multiple ranks
 #' rename_taxa_pq(data_fungi, tax_phylum = Phylum, tax_class = Class)
 rename_taxa_pq <- function(physeq, ...) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
   new_physeq <- physeq
 
   tax_df <- taxa_table_df(physeq)

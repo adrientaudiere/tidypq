@@ -46,7 +46,8 @@ filter_occurrences_pq <- function(
   condition,
   clean_phyloseq_object = TRUE
 ) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
   if (missing(condition)) {
     stop("The 'condition' argument is required.")
   }
@@ -86,10 +87,10 @@ filter_occurrences_pq <- function(
   new_physeq@otu_table <- phyloseq::otu_table(otu, taxa_are_rows = tar)
 
   if (clean_phyloseq_object) {
-    return(MiscMetabar::clean_pq(new_physeq, silent = TRUE))
-  } else {
-    return(new_physeq)
+    new_physeq <- MiscMetabar::clean_pq(new_physeq, silent = TRUE)
   }
+  MiscMetabar::verify_pq(new_physeq)
+  return(new_physeq)
 }
 
 ################################################################################
@@ -132,7 +133,8 @@ filter_occurrences_pq <- function(
 #' # Center by taxon mean
 #' mutate_occurrences_pq(data_fungi, . - taxon_mean)
 mutate_occurrences_pq <- function(physeq, expr) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
 
   tar <- phyloseq::taxa_are_rows(physeq)
   otu <- as(phyloseq::otu_table(physeq), "matrix")

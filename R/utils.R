@@ -36,6 +36,49 @@ taxa_table_df <- function(physeq) {
   df[phyloseq::taxa_names(physeq), , drop = FALSE]
 }
 
+#' Reorder sam_data / tax_table rows to the canonical phyloseq order
+#'
+#' `phyloseq::sample_names()` and `phyloseq::taxa_names()` read their order
+#' from the otu_table. A phyloseq object can nonetheless hold a sam_data
+#' whose rows, or a tax_table whose rows, are in a different order than the
+#' otu_table (phyloseq tolerates this, but it silently breaks any verb that
+#' aligns slots positionally and is rejected by
+#' `MiscMetabar::verify_pq(check_order = TRUE)`). This helper reorders the
+#' sam_data and tax_table rows back to the canonical otu_table order and
+#' emits a message whenever a reorder was actually needed, so a slot-rebuilding
+#' verb stays correct even when fed a desynchronised object.
+#'
+#' @param physeq A phyloseq object.
+#' @return The phyloseq object with sam_data and tax_table rows in
+#'   `sample_names(physeq)` / `taxa_names(physeq)` order.
+#' @keywords internal
+#' @noRd
+canonicalize_pq_order <- function(physeq) {
+  if (!is.null(physeq@sam_data)) {
+    target <- phyloseq::sample_names(physeq)
+    current <- phyloseq::sample_names(physeq@sam_data)
+    if (setequal(current, target) && !identical(current, target)) {
+      message(
+        "Reordering sam_data rows to match the canonical sample_names order ",
+        "of the otu_table."
+      )
+      physeq@sam_data <- physeq@sam_data[target, , drop = FALSE]
+    }
+  }
+  if (!is.null(physeq@tax_table)) {
+    target <- phyloseq::taxa_names(physeq)
+    current <- phyloseq::taxa_names(physeq@tax_table)
+    if (setequal(current, target) && !identical(current, target)) {
+      message(
+        "Reordering tax_table rows to match the canonical taxa_names order ",
+        "of the otu_table."
+      )
+      physeq@tax_table <- physeq@tax_table[target, , drop = FALSE]
+    }
+  }
+  physeq
+}
+
 #' Build a data mask for taxa-level operations
 #'
 #' Creates a data mask containing tax_table columns and a `.` pronoun

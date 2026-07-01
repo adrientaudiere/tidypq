@@ -41,7 +41,8 @@ filter_tree_pq <- function(
   invert = FALSE,
   clean_phyloseq_object = TRUE
 ) {
-  MiscMetabar::verify_pq(physeq)
+  MiscMetabar::verify_pq(physeq, check_order = FALSE)
+  physeq <- canonicalize_pq_order(physeq)
 
   if (is.null(physeq@phy_tree)) {
     stop(
@@ -81,8 +82,8 @@ filter_tree_pq <- function(
   new_physeq@phy_tree <- new_tree
 
   if (clean_phyloseq_object) {
-    return(MiscMetabar::clean_pq(new_physeq, silent = TRUE))
-  } else {
-    return(new_physeq)
+    new_physeq <- MiscMetabar::clean_pq(new_physeq, silent = TRUE)
   }
+  MiscMetabar::verify_pq(new_physeq)
+  return(new_physeq)
 }
