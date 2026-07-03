@@ -11,7 +11,7 @@
 #' contamination sub-type from read abundance and occurrence patterns:
 #'
 #' * **artifact**: very low total reads AND present in very few samples --
-#'   likely sequencing noise or index hopping.
+#'   likely sequencing noise or cross-talk.
 #' * **lab_contaminant**: predominantly found in negative controls relative to
 #'   real samples -- likely introduced during library preparation.
 #' * **sample_contaminant**: detected in controls but also widespread in real

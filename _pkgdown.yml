@@ -79,6 +79,14 @@ reference:
   - decontam_control_samples_pq
   - decontam_control_taxa_pq
 
+- title: Cross-talk (tag-jump) filtering
+  desc: >
+    Detect, visualise, and remove per-cell cross-talk (tag-switching) with the
+    UNCROSS2 score.
+  contents:
+  - uncross2_pq
+  - plot_uncross2_scores
+
 - title: Chimera utilities
   desc: Generate synthetic chimeras for benchmarking detectors.
   contents:
