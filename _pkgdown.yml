@@ -44,6 +44,11 @@ reference:
   contents:
   - pq_to_tidy
 
+- title: Merging markers
+  desc: Stack phyloseq objects from different markers into one object.
+  contents:
+  - merge_markers_pq
+
 - title: Helpers
   desc: Utility functions for common operations.
   contents:
