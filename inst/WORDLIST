@@ -1,6 +1,7 @@
 BMC
 Benchmarking
 FASTA
+GBIF
 GRIMER
 MJ
 MiscMetabar
@@ -34,6 +35,7 @@ pqverse
 refseq
 sd
 taxon's
+taxonomyTable
 th
 tidyselect
 tidyverse

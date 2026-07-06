@@ -24,10 +24,12 @@ Imports:
     dplyr (>= 1.0.0),
     ggplot2,
     lifecycle,
+    methods,
     rlang (>= 1.0.0),
     tibble,
     tidyr,
-    tidyselect
+    tidyselect,
+    utils
 Suggests:
     Biostrings,
     dada2,

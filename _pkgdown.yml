@@ -43,6 +43,7 @@ reference:
   desc: Convert a phyloseq object into a tidy tibble.
   contents:
   - pq_to_tidy
+  - tax_table_to_df
 
 - title: Merging markers
   desc: Stack phyloseq objects from different markers into one object.

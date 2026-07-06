@@ -114,7 +114,7 @@ pq_16S <- make_marker(c("ASV_1", "ASV_2"), c("Kingdom", "Phylum"))
 # Note the SAME taxon name "ASV_1" reused in the ITS object:
 pq_ITS <- make_marker(c("ASV_1", "ASV_3"), c("Kingdom", "Phylum", "Genus"))
 
-merged <- merge_markers_pq(list(marker_16S = pq_16S, marker_ITS = pq_ITS))
+merged <- merge_markers_pq(list("marker_16S" = pq_16S, "marker_ITS" = pq_ITS))
 
 # Taxa are disambiguated and never merged: 4 taxa, not 3.
 taxa_names(merged)
