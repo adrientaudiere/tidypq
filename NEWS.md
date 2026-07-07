@@ -1,3 +1,5 @@
+# tidypq 0.3.0 (Development version)
+
 # tidypq 0.2.0
 ## Breaking changes
 
