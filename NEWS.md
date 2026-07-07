@@ -1,5 +1,4 @@
-# tidypq 0.2.0 (Development version)
-
+# tidypq 0.2.0
 ## Breaking changes
 
 * Contamination handling is unified around a detector then filter design: each `identify_contam_*_pq()` detector returns a `contam_tbl` (one row per flagged taxon), and the single verb `filter_contam_pq()` removes the flagged taxa. The previous one-shot functions are removed with no deprecation, so old scripts fail with `could not find function`. Update calls as follows: `contam_corr_pq()` to `identify_contam_corr_pq()`; `contam_blocklist_pq()` to `identify_contam_blocklist_pq()`; `identify_taxa_primer_pq()` and `filter_taxa_primer_pq()` to `identify_contam_primer_pq()`; `chimera_removal_dada2()` and `chimera_removal_vs_ref()` to `identify_contam_chimera_pq(method = "dada2")` and `identify_contam_chimera_pq(method = "vsearch_ref")`; `neg_control_classify_pq()`, `neg_control_clean_pq()`, and `neg_control_diag_pq()` to `identify_contam_negcontrol_pq()`. In every case, pass the result to `filter_contam_pq()` to remove taxa.
