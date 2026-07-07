@@ -6,6 +6,9 @@ template:
     fg: "#160a04"
     primary: "#b13c00"
     secondary: "#3a2410"
+    base_font: "Fira Mono, monospace"
+    heading_font: "Fira Sans, sans-serif"
+    code_font: "Fira Code, monospace"
 
 reference:
 - title: Sample-scale verbs
