@@ -1,6 +1,7 @@
 # Benchmarking Chimera Detection Methods
 
 ``` r
+
 library(tidypq)
 library(MiscMetabar)
 library(phyloseq)
@@ -38,6 +39,7 @@ taxonomy. You can adjust the filtering to test on larger or smaller
 datasets.
 
 ``` r
+
 data(data_fungi)
 
 # Filter to a single Class for faster computation
@@ -68,6 +70,7 @@ Create a phyloseq object with known chimeric sequences.
 different, making chimeras detectable.
 
 ``` r
+
 df_chim <- create_chimera_pq(
   data_fungi_subset,
   n_chimeras = 50,
@@ -85,6 +88,7 @@ df_chim$parent_info
 ### Helper function for benchmarking
 
 ``` r
+
 # tidypq detectors return a contam_tbl; wrap them with filter_contam_pq()
 # so each returns a chimera-free phyloseq object for the benchmark.
 remove_chimera_dada2 <- function(physeq, ...) {
@@ -150,6 +154,7 @@ calc_detection_rate <- function(physeq_nochim, known_chimeras) {
 ### Run benchmarks
 
 ``` r
+
 # vsearch de novo
 result_vs <- benchmark_detection(
   data_fungi_test,
@@ -179,6 +184,7 @@ result_vs_ref <- benchmark_detection(
 ## Benchmark Summary Table
 
 ``` r
+
 benchmark_summary <- data.frame(
   Method = c(
     result_vs$method,
@@ -226,6 +232,7 @@ knitr::kable(benchmark_summary, caption = "Chimera Detection Benchmark Summary")
 Examine which chimeras were missed and their parent sequences:
 
 ``` r
+
 if (length(result_vs$missed_names) > 0) {
   missed_info <- df_chim$parent_info[
     df_chim$parent_info$chimera %in% result_vs$missed_names,
@@ -235,6 +242,7 @@ if (length(result_vs$missed_names) > 0) {
 ```
 
 ``` r
+
 if (length(result_dada2$missed_names) > 0) {
   missed_info <- df_chim$parent_info[
     df_chim$parent_info$chimera %in% result_dada2$missed_names,
@@ -244,6 +252,7 @@ if (length(result_dada2$missed_names) > 0) {
 ```
 
 ``` r
+
 if (length(result_vs_ref$missed_names) > 0) {
   missed_info <- df_chim$parent_info[
     df_chim$parent_info$chimera %in% result_vs_ref$missed_names,
@@ -258,6 +267,7 @@ Create different types of synthetic chimeras to test detection
 robustness:
 
 ``` r
+
 # More variable proportions (harder to detect)
 result_hard <- create_chimera_pq(
   data_fungi_subset,
@@ -285,6 +295,7 @@ result_low_abund <- create_chimera_pq(
 Run all three detection methods on all chimera types:
 
 ``` r
+
 datasets <- list(
   default = list(physeq = data_fungi_test, chimeras = known_chimeras),
   hard = list(
@@ -345,6 +356,7 @@ results
 ## Summary Table: All Scenarios
 
 ``` r
+
 results_wide <- reshape(
   results,
   direction = "wide",
@@ -364,6 +376,7 @@ knitr::kable(
 ## Visualizing Results
 
 ``` r
+
 METHOD_COLORS <- c(
   "vsearch" = "steelblue",
   "dada2" = "coral",
@@ -447,6 +460,7 @@ Chimera abundance relative to parent sequences affects detection
 sensitivity.
 
 ``` r
+
 abundance_multipliers <- c(0.01, 0.05, 0.1, 0.5)
 
 abundance_results <- data.frame(
@@ -498,6 +512,7 @@ abundance_results
 ### Abundance Summary Table
 
 ``` r
+
 knitr::kable(
   abundance_results,
   caption = "Detection by Chimera Abundance Level",
@@ -508,6 +523,7 @@ knitr::kable(
 ### Visualizing Abundance Effect
 
 ``` r
+
 p_abund_detection <- ggplot(
   abundance_results,
   aes(x = multiplier, y = detection_rate, color = method)
@@ -564,6 +580,7 @@ Chimeras created from very similar parent sequences are harder to
 detect.
 
 ``` r
+
 distance_results <- data.frame(
   min_param_distance = numeric(),
   method = character(),
@@ -623,6 +640,7 @@ knitr::kable(
 ```
 
 ``` r
+
 p_dist <- ggplot(
   distance_results,
   aes(x = min_param_distance, y = detection_rate, color = method)

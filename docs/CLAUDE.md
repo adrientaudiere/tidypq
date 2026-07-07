@@ -44,26 +44,26 @@ Rscript -e "devtools::check()"
 
 ### Key Modules
 
-| Module             | Purpose                                                    |
-|--------------------|------------------------------------------------------------|
-| `tidypq-package.R` | Package documentation and imports                          |
-| `utils.R`          | Internal helpers for data masking                          |
-| `samples.R`        | filter, select, mutate, slice, arrange, rename for samples |
-| `taxa.R`           | filter, select, mutate, slice, arrange, rename for taxa    |
-| `occurrences.R`    | filter, mutate for OTU table values                        |
-| `tree.R`           | filter for phylogenetic tree                               |
-| `helpers.R`        | taxa_prevalence and other helpers                          |
+| Module | Purpose |
+|----|----|
+| `tidypq-package.R` | Package documentation and imports |
+| `utils.R` | Internal helpers for data masking |
+| `samples.R` | filter, select, mutate, slice, arrange, rename for samples |
+| `taxa.R` | filter, select, mutate, slice, arrange, rename for taxa |
+| `occurrences.R` | filter, mutate for OTU table values |
+| `tree.R` | filter for phylogenetic tree |
+| `helpers.R` | taxa_prevalence and other helpers |
 
 ### Function Naming Convention
 
 All functions follow: `{verb}_{scale}_pq()`
 
-| Scale       | filter                  | select              | mutate                  | slice              | arrange              | rename              |
-|-------------|-------------------------|---------------------|-------------------------|--------------------|----------------------|---------------------|
-| samples     | `filter_samples_pq`     | `select_samdata_pq` | `mutate_samdata_pq`     | `slice_samples_pq` | `arrange_samples_pq` | `rename_samples_pq` |
-| taxa        | `filter_taxa_pq`        | `select_taxa_pq`    | `mutate_taxa_pq`        | `slice_taxa_pq`    | `arrange_taxa_pq`    | `rename_taxa_pq`    |
-| occurrences | `filter_occurrences_pq` | \-                  | `mutate_occurrences_pq` | \-                 | \-                   | \-                  |
-| tree        | `filter_tree_pq`        | \-                  | \-                      | \-                 | \-                   | \-                  |
+| Scale | filter | select | mutate | slice | arrange | rename |
+|----|----|----|----|----|----|----|
+| samples | `filter_samples_pq` | `select_samdata_pq` | `mutate_samdata_pq` | `slice_samples_pq` | `arrange_samples_pq` | `rename_samples_pq` |
+| taxa | `filter_taxa_pq` | `select_taxa_pq` | `mutate_taxa_pq` | `slice_taxa_pq` | `arrange_taxa_pq` | `rename_taxa_pq` |
+| occurrences | `filter_occurrences_pq` | \- | `mutate_occurrences_pq` | \- | \- | \- |
+| tree | `filter_tree_pq` | \- | \- | \- | \- | \- |
 
 ### Data Masking Pattern
 
@@ -71,6 +71,7 @@ Functions use rlang data masking with a special `.` pronoun that refers
 to the phyloseq object:
 
 ``` r
+
 filter_samples_pq(data_fungi, Height == "Low", sample_sums(.) > 1000)
 ```
 

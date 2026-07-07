@@ -57,6 +57,18 @@ Convert a phyloseq object into a tidy tibble.
 - [`pq_to_tidy()`](https://adrientaudiere.github.io/tidypq/reference/pq_to_tidy.md)
   : Convert a phyloseq object to a tidy tibble
 
+- [`tax_table_to_df()`](https://adrientaudiere.github.io/tidypq/reference/tax_table_to_df.md)
+  :
+
+  Convert a `tax_table` into a data.frame with numeric and list columns
+
+## Merging markers
+
+Stack phyloseq objects from different markers into one object.
+
+- [`merge_markers_pq()`](https://adrientaudiere.github.io/tidypq/reference/merge_markers_pq.md)
+  : Merge phyloseq objects from different markers into a single object
+
 ## Helpers
 
 Utility functions for common operations.
@@ -124,6 +136,16 @@ samples or control taxa.
   : Decontaminate based on negative/blank control samples
 - [`decontam_control_taxa_pq()`](https://adrientaudiere.github.io/tidypq/reference/decontam_control_taxa_pq.md)
   : Decontaminate based on control taxa
+
+## Cross-talk (tag-jump) filtering
+
+Detect, visualise, and remove per-cell cross-talk (tag-switching) with
+the UNCROSS2 score.
+
+- [`uncross2_pq()`](https://adrientaudiere.github.io/tidypq/reference/uncross2_pq.md)
+  : Remove cross-talk (tag-jumps) using the UNCROSS2 score
+- [`plot_uncross2_scores()`](https://adrientaudiere.github.io/tidypq/reference/plot_uncross2_scores.md)
+  : Plot UNCROSS2 cross-talk scores against OTU abundance
 
 ## Chimera utilities
 

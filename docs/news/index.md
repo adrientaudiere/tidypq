@@ -42,6 +42,14 @@
 
 ### New features
 
+- [`uncross2_pq()`](https://adrientaudiere.github.io/tidypq/reference/uncross2_pq.md)
+  can now estimate the rate of tax-switching using internal function
+  [`estimate_xtalk_rate_pq()`](https://adrientaudiere.github.io/tidypq/reference/estimate_xtalk_rate_pq.md).
+  It estimates the cross-talk (tag-jump) rate `f` de novo from an OTU
+  table following Edgar 2018 (UNCROSS2, eqs. 1-2), with
+  `rate = "edgar2018"` (paper eq. 2) or `rate = "fraction"` (the raw
+  low-read fraction that usearch reports), returning `NA` when the
+  estimate is undetermined.
 - [`filter_chimera_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_chimera_pq.md)
   detects and removes chimeric taxa in one step (a convenience wrapper
   over
@@ -53,6 +61,18 @@
   removes the taxa flagged in a `contam_tbl` (from one detector, or
   several combined with [`rbind()`](https://rdrr.io/r/base/cbind.html)),
   returning the phyloseq object unchanged when nothing is flagged.
+- [`merge_markers_pq()`](https://adrientaudiere.github.io/tidypq/reference/merge_markers_pq.md)
+  combines several phyloseq objects sequenced with different markers
+  (e.g. 16S and ITS) into a single object: it full-joins the `sam_data`,
+  disambiguates taxa names by their marker so taxa from different
+  objects are never merged, records the marker of origin in a new
+  `tax_table` column, and zero-fills unobserved marker/sample
+  occurrences.
+- [`tax_table_to_df()`](https://adrientaudiere.github.io/tidypq/reference/tax_table_to_df.md)
+  converts a phyloseq `tax_table` into a tibble with numeric and list
+  columns, lifting the character-only limitation of the `tax_table`
+  matrix: numeric-looking ranks are converted to their natural type via
+  `convert`, and columns named in `split` become genuine list columns.
 - [`identify_contam_blocklist_pq()`](https://adrientaudiere.github.io/tidypq/reference/identify_contam_blocklist_pq.md)
   flags taxa whose genus matches a curated blocklist of known reagent
   and laboratory contaminants (Salter et al. 2014, micRoclean, GRIMER);
@@ -78,6 +98,13 @@
   and [`plot()`](https://rdrr.io/r/graphics/plot.default.html) /
   [`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
   methods support the `contam_tbl` class returned by every detector.
+- [`uncross2_pq()`](https://adrientaudiere.github.io/tidypq/reference/uncross2_pq.md)
+  removes per-cell cross-talk (tag-jumps) using Edgar’s published
+  UNCROSS2 score (eq. 3), with a fixed rate `f` or `f = "auto"` for the
+  de novo estimate, `method = "cut"` or `"subtract"`, and an optional
+  `return_scores` for the score and flag matrices; it is a faithful,
+  gentler implementation of the paper and does not reproduce the more
+  aggressive usearch binary filtering.
 - [`filter_taxa_pq()`](https://adrientaudiere.github.io/tidypq/reference/filter_taxa_pq.md),
   [`mutate_taxa_pq()`](https://adrientaudiere.github.io/tidypq/reference/mutate_taxa_pq.md),
   [`slice_taxa_pq()`](https://adrientaudiere.github.io/tidypq/reference/slice_taxa_pq.md),
