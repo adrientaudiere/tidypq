@@ -46,15 +46,15 @@
 #'
 #' @examples
 #' data_fungi_mini <-
-#'  tidypq::mutate_taxa_pq(data_fungi_mini, 
+#'  tidypq::mutate_taxa_pq(data_fungi_mini,
 #'  Mol_Abundance = taxa_sums(.))
-#' 
+#'
 #' # Numeric-looking ranks are converted to numeric
 #' df <- tax_table_to_df(data_fungi_mini)
-#' df |> 
-#'   group_by(Class) |> 
+#' df |>
+#'   group_by(Class) |>
 #'   summarize(mean=mean(Mol_Abundance))
-#' 
+#'
 #'
 #' \dontrun{
 #' # Split a packed column into a list column
