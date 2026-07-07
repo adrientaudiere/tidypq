@@ -29,9 +29,8 @@
 - The rich diagnostic plots formerly bundled in detector return values
   are removed; a lightweight
   [`plot()`](https://rdrr.io/r/graphics/plot.default.html) /
-  [`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
-  method on `contam_tbl` replaces them, with publication-grade figures
-  deferred to the `ggplotpq` package.
+  `autoplot()` method on `contam_tbl` replaces them, with
+  publication-grade figures deferred to the `ggplotpq` package.
 - `decontam_sam_control()` and `decontam_taxa_control()` are renamed
   [`decontam_control_samples_pq()`](https://adrientaudiere.github.io/tidypq/reference/decontam_control_samples_pq.md)
   and
@@ -96,8 +95,8 @@
 - [`new_contam_tbl()`](https://adrientaudiere.github.io/tidypq/reference/contam_tbl.md),
   [`is_contam_tbl()`](https://adrientaudiere.github.io/tidypq/reference/contam_tbl.md),
   and [`plot()`](https://rdrr.io/r/graphics/plot.default.html) /
-  [`autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
-  methods support the `contam_tbl` class returned by every detector.
+  `autoplot()` methods support the `contam_tbl` class returned by every
+  detector.
 - [`uncross2_pq()`](https://adrientaudiere.github.io/tidypq/reference/uncross2_pq.md)
   removes per-cell cross-talk (tag-jumps) using Edgar’s published
   UNCROSS2 score (eq. 3), with a fixed rate `f` or `f = "auto"` for the
@@ -112,11 +111,9 @@
   [`select_taxa_pq()`](https://adrientaudiere.github.io/tidypq/reference/select_taxa_pq.md),
   and
   [`rename_taxa_pq()`](https://adrientaudiere.github.io/tidypq/reference/rename_taxa_pq.md)
-  now align `tax_table` to
-  [`taxa_names()`](https://rdrr.io/pkg/phyloseq/man/taxa_names-methods.html)
-  before any positional operation. Previously, phyloseq objects whose
-  `otu_table` and `tax_table` held the same taxa in different orders
-  (e.g. produced by
+  now align `tax_table` to `taxa_names()` before any positional
+  operation. Previously, phyloseq objects whose `otu_table` and
+  `tax_table` held the same taxa in different orders (e.g. produced by
   [`MiscMetabar::mumu_pq()`](https://adrientaudiere.github.io/MiscMetabar/reference/mumu_pq.html))
   caused the wrong taxa to be selected/mutated, so
   `filter_taxa_pq(pq, Kingdom == "Archaea")` could return Bacteria.
@@ -132,8 +129,7 @@
   canonical `otu_table` order (emitting a message when a reorder was
   needed) and verifies the result with
   `MiscMetabar::verify_pq(check_order = TRUE)` before returning. This
-  guarantees the returned object keeps
-  [`sample_names()`](https://rdrr.io/pkg/phyloseq/man/sample_names-methods.html)/[`taxa_names()`](https://rdrr.io/pkg/phyloseq/man/taxa_names-methods.html)
+  guarantees the returned object keeps `sample_names()`/`taxa_names()`
   aligned across slots, fixing a class of silent positional bugs
   (e.g. `sam_data` columns no longer ending up attached to the wrong
   samples).
