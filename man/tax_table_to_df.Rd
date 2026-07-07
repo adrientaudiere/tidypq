@@ -58,19 +58,20 @@ It does \strong{not} modify the phyloseq object; it produces a stand-alone
 tibble for downstream (tidyverse) manipulation.
 }
 \examples{
-\donttest{
-library(MiscMetabar)
+data_fungi_mini <-
+ tidypq::mutate_taxa_pq(data_fungi_mini,
+ Mol_Abundance = taxa_sums(.))
+
 # Numeric-looking ranks are converted to numeric
 df <- tax_table_to_df(data_fungi_mini)
-df
+df |>
+  group_by(Class) |>
+  summarize(mean=mean(Mol_Abundance))
 
-# Keep taxa names as row names instead of a column
-tax_table_to_df(data_fungi_mini, taxa_names_col = NULL)
-}
 
 \dontrun{
 # Split a packed column into a list column
-tax_table_to_df(data_fungi_mini, split = "Genus", sep = "_")
+  tax_table_to_df(data_fungi_mini, split = "Genus", sep = "_")
 }
 }
 \seealso{

@@ -7,14 +7,14 @@ Tidyverse-style verbs for manipulating phyloseq objects at four scales:
 
 All functions follow the pattern: `{verb}_{scale}_pq()`
 
-| Verb | samples | taxa | occurrences | tree |
-|----|----|----|----|----|
-| **filter** | `filter_samples_pq` | `filter_taxa_pq` | `filter_occurrences_pq` | `filter_tree_pq` |
-| **select** | `select_samdata_pq` | `select_taxa_pq` | \- | \- |
-| **mutate** | `mutate_samdata_pq` | `mutate_taxa_pq` | `mutate_occurrences_pq` | \- |
-| **slice** | `slice_samples_pq` | `slice_taxa_pq` | \- | \- |
-| **arrange** | `arrange_samples_pq` | `arrange_taxa_pq` | \- | \- |
-| **rename** | `rename_samples_pq` | `rename_taxa_pq` | \- | \- |
+| Verb        | samples              | taxa              | occurrences             | tree             |
+|-------------|----------------------|-------------------|-------------------------|------------------|
+| **filter**  | `filter_samples_pq`  | `filter_taxa_pq`  | `filter_occurrences_pq` | `filter_tree_pq` |
+| **select**  | `select_samdata_pq`  | `select_taxa_pq`  | \-                      | \-               |
+| **mutate**  | `mutate_samdata_pq`  | `mutate_taxa_pq`  | `mutate_occurrences_pq` | \-               |
+| **slice**   | `slice_samples_pq`   | `slice_taxa_pq`   | \-                      | \-               |
+| **arrange** | `arrange_samples_pq` | `arrange_taxa_pq` | \-                      | \-               |
+| **rename**  | `rename_samples_pq`  | `rename_taxa_pq`  | \-                      | \-               |
 
 **Helper:** `taxa_prevalence(physeq, threshold)`
 
@@ -24,7 +24,6 @@ All functions follow the pattern: `{verb}_{scale}_pq()`
 development version from GitHub with:
 
 ``` r
-
 # Install from GitHub (development version)
 if (!require("devtools", quietly = TRUE)) {
   install.packages("devtools")
@@ -38,7 +37,6 @@ You can install the unstable development version from
 [GitHub](https://github.com/) with:
 
 ``` r
-
 if (!require("devtools", quietly = TRUE)) {
   install.packages("devtools")
 }
@@ -48,7 +46,6 @@ devtools::install_github("adrientaudiere/tidypq", ref = "dev")
 ## Usage
 
 ``` r
-
 library(tidypq)
 library(MiscMetabar)
 
