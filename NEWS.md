@@ -1,5 +1,4 @@
-# tidypq 0.3.0 (Development version)
-
+# tidypq 0.3.0
 * Fix missing `Remotes` field in `DESCRIPTION` so that `pak::pkg_install()` can resolve the GitHub-only dependency `MiscMetabar` when installing tidypq standalone.
 
 # tidypq 0.2.0
