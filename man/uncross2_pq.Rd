@@ -52,7 +52,8 @@ taxa/samples.}
 By default a phyloseq object with flagged cross-talk removed. If
 \code{return_scores = TRUE}, a list with:
 \itemize{
-\item \code{physeq}: the cleaned phyloseq object.
+\item \code{old_physeq}: the input phyloseq object (before cleaning).
+\item \code{new_physeq}: the cleaned phyloseq object.
 \item \code{scores}: taxa-by-samples matrix of UNCROSS2 scores.
 \item \code{tagjump}: logical taxa-by-samples matrix of flagged cells (always
 relative to \code{tmin}, even when \code{method = "subtract"}).
@@ -110,6 +111,26 @@ abundances but the score's interpretation no longer holds, so prefer raw
 counts.
 }
 
+\examples{
+library(MiscMetabar)
+data(data_fungi)
+\donttest{
+# Remove weak cross-talk (default)
+unc_data_fungi <- uncross2_pq(data_fungi)
+
+# Estimate the rate de novo instead of assuming 1\%
+uncross2_pq(data_fungi, f = "auto")
+
+# Only strong cross-talk, sharper transition
+uncross2_pq(data_fungi, tmin = 0.4, k = 2)
+
+# Inspect scores without committing to a threshold
+res <- uncross2_pq(data_fungi, return_scores = TRUE)
+summary(as.vector(res$scores))
+
+summary_plot_pq(res$old_physeq) / summary_plot_pq(res$new_physeq)
+}
+}
 \references{
 Edgar, R.C. (2018) UNCROSS2: identification of cross-talk in 16S rRNA OTU
 tables. \emph{bioRxiv} 400762. \doi{10.1101/400762}
