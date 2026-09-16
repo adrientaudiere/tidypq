@@ -85,7 +85,7 @@ canonicalize_pq_order <- function(physeq) {
 #' that refers to the phyloseq object for use with phyloseq functions.
 #'
 #' The tax_table columns are aligned to `taxa_names(physeq)` (see
-#' [taxa_table_df()]) so that vectors evaluated in the mask are positionally
+#' `taxa_table_df()`) so that vectors evaluated in the mask are positionally
 #' aligned with `taxa_names()`, even for objects whose otu_table and
 #' tax_table are in different orders.
 #'

@@ -73,7 +73,8 @@
 #'
 #' @return By default a phyloseq object with flagged cross-talk removed. If
 #'   `return_scores = TRUE`, a list with:
-#'   * `physeq`: the cleaned phyloseq object.
+#'   * `old_physeq`: the input phyloseq object (before cleaning).
+#'   * `new_physeq`: the cleaned phyloseq object.
 #'   * `scores`: taxa-by-samples matrix of UNCROSS2 scores.
 #'   * `tagjump`: logical taxa-by-samples matrix of flagged cells (always
 #'     relative to `tmin`, even when `method = "subtract"`).
@@ -106,7 +107,7 @@
 #' summary(as.vector(res$scores))
 #'
 #' summary_plot_pq(res$old_physeq) / summary_plot_pq(res$new_physeq)
-#'
+#' }
 uncross2_pq <- function(
   physeq,
   f = 0.01,
