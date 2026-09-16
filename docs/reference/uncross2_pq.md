@@ -95,7 +95,9 @@ uncross2_pq(
 By default a phyloseq object with flagged cross-talk removed. If
 `return_scores = TRUE`, a list with:
 
-- `physeq`: the cleaned phyloseq object.
+- `old_physeq`: the input phyloseq object (before cleaning).
+
+- `new_physeq`: the cleaned phyloseq object.
 
 - `scores`: taxa-by-samples matrix of UNCROSS2 scores.
 
@@ -144,3 +146,42 @@ for blank-based decontamination.
 ## Author
 
 Adrien Taudière
+
+## Examples
+
+``` r
+library(MiscMetabar)
+data(data_fungi)
+# \donttest{
+# Remove weak cross-talk (default)
+unc_data_fungi <- uncross2_pq(data_fungi)
+#> ℹ uncross2 (cut): removed 984 reads across 250620 flagged cells (occurences) (f = 0.01, tmin = 0.1, k = 1).
+
+# Estimate the rate de novo instead of assuming 1%
+uncross2_pq(data_fungi, f = "auto")
+#> ! de novo cross-talk rate undetermined: only 7 candidate OTUs (< cmin = 10). Supply `f` manually.
+#> Error in uncross2_pq(data_fungi, f = "auto"): de novo cross-talk rate is undetermined for this object.
+#> ℹ Supply `f` manually (e.g. `f = 0.01`).
+
+# Only strong cross-talk, sharper transition
+uncross2_pq(data_fungi, tmin = 0.4, k = 2)
+#> ℹ uncross2 (cut): removed 174 reads across 250322 flagged cells (occurences) (f = 0.01, tmin = 0.4, k = 2).
+#> phyloseq-class experiment-level object
+#> otu_table()   OTU Table:         [ 1420 taxa and 185 samples ]
+#> sample_data() Sample Data:       [ 185 samples by 7 sample variables ]
+#> tax_table()   Taxonomy Table:    [ 1420 taxa by 12 taxonomic ranks ]
+#> refseq()      DNAStringSet:      [ 1420 reference sequences ]
+
+# Inspect scores without committing to a threshold
+res <- uncross2_pq(data_fungi, return_scores = TRUE)
+#> ℹ uncross2 (cut): removed 984 reads across 250620 flagged cells (occurences) (f = 0.01, tmin = 0.1, k = 1).
+summary(as.vector(res$scores))
+#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#>  0.0000  1.0000  1.0000  0.9532  1.0000  1.0000 
+
+summary_plot_pq(res$old_physeq) / summary_plot_pq(res$new_physeq)
+#> Error: Can't find method for generic `/(e1, e2)`:
+#> - e1: <ggplot2::ggplot>
+#> - e2: <ggplot2::ggplot>
+# }
+```
