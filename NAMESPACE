@@ -38,48 +38,60 @@ export(slice_taxa_pq)
 export(tax_table_to_df)
 export(taxa_prevalence)
 export(uncross2_pq)
-importFrom(MiscMetabar,clean_pq)
-importFrom(MiscMetabar,taxa_as_rows)
-importFrom(MiscMetabar,verify_pq)
-importFrom(ape,drop.tip)
-importFrom(ape,keep.tip)
-importFrom(dplyr,arrange)
-importFrom(dplyr,filter)
-importFrom(dplyr,left_join)
-importFrom(dplyr,rename)
-importFrom(dplyr,select)
-importFrom(dplyr,slice)
-importFrom(ggplot2,aes)
-importFrom(ggplot2,autoplot)
-importFrom(ggplot2,geom_abline)
-importFrom(ggplot2,geom_point)
-importFrom(ggplot2,ggplot)
-importFrom(ggplot2,labs)
-importFrom(ggplot2,scale_color_viridis_c)
-importFrom(ggplot2,scale_x_log10)
-importFrom(ggplot2,scale_y_log10)
-importFrom(phyloseq,"sample_names<-")
-importFrom(phyloseq,nsamples)
-importFrom(phyloseq,ntaxa)
-importFrom(phyloseq,otu_table)
-importFrom(phyloseq,phy_tree)
-importFrom(phyloseq,prune_samples)
-importFrom(phyloseq,prune_taxa)
-importFrom(phyloseq,sample_data)
-importFrom(phyloseq,sample_names)
-importFrom(phyloseq,sample_sums)
-importFrom(phyloseq,tax_table)
-importFrom(phyloseq,taxa_are_rows)
-importFrom(phyloseq,taxa_names)
-importFrom(phyloseq,taxa_sums)
-importFrom(rlang,"%||%")
-importFrom(rlang,":=")
-importFrom(rlang,.data)
-importFrom(rlang,caller_env)
-importFrom(rlang,enquos)
-importFrom(rlang,eval_tidy)
-importFrom(rlang,new_data_mask)
-importFrom(rlang,new_environment)
+importFrom(MiscMetabar,
+  clean_pq,
+  taxa_as_rows,
+  verify_pq
+)
+importFrom(ape,
+  drop.tip,
+  keep.tip
+)
+importFrom(dplyr,
+  arrange,
+  filter,
+  left_join,
+  rename,
+  select,
+  slice
+)
+importFrom(ggplot2,
+  aes,
+  autoplot,
+  geom_abline,
+  geom_point,
+  ggplot,
+  labs,
+  scale_color_viridis_c,
+  scale_x_log10,
+  scale_y_log10
+)
+importFrom(phyloseq,
+  "sample_names<-",
+  nsamples,
+  ntaxa,
+  otu_table,
+  phy_tree,
+  prune_samples,
+  prune_taxa,
+  sample_data,
+  sample_names,
+  sample_sums,
+  tax_table,
+  taxa_are_rows,
+  taxa_names,
+  taxa_sums
+)
+importFrom(rlang,
+  "%||%",
+  ":=",
+  .data,
+  caller_env,
+  enquos,
+  eval_tidy,
+  new_data_mask,
+  new_environment
+)
 importFrom(tibble,as_tibble)
 importFrom(tidyr,pivot_longer)
 importFrom(tidyselect,eval_select)
