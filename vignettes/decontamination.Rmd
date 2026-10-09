@@ -162,3 +162,48 @@ decontam_control_samples_pq(pq, is_control)
 # Background estimated from control TAXA (e.g. spike-ins), per sample
 decontam_control_taxa_pq(data_fungi, Genus == "Tintelnotia")
 ```
+
+## Cross-talk: tag jumps versus index hopping
+
+Cross-talk moves reads of one sample into another. It has two main sources,
+which act on different technical units, so they call for different settings:
+
+| | Tag jumps (tag switching) | Index hopping |
+|---|---|---|
+| Where | library preparation of pooled, tagged amplicons | sequencer (worst with exclusion-amplification chemistry, e.g. HiSeq X) |
+| Unit | the **library** (pool) | the **lane** or run |
+| Pattern | systematic, tied to the position in the tag matrix | low-read samples receive the largest share |
+| Key reference | Schnell et al. 2015; Rodriguez-Martinez et al. 2023 | van der Valk et al. 2020 |
+| Mitigation | blanks spread across the tag matrix reveal the pattern | unique dual indexes (MacConaill et al. 2018) |
+| tidypq | `uncross2_pq(batch = "library")` | `decontam_control_samples_pq(batch = "run")` |
+
+Both functions take a `batch` argument naming a `sam_data` column, so each
+library or run is handled on its own. `uncross2_pq()` models leaks from the
+read counts alone: with `batch`, an OTU is only expected to leak into the
+samples of its batch. It assumes the leak spreads **evenly** over those
+samples, whereas Rodriguez-Martinez et al. (2023) found tag jumps to follow
+the tag layout, so some samples can be under- or over-corrected (see
+`?uncross2_pq`). `decontam_control_samples_pq()` uses the blanks sequenced in
+each run as a direct, per-taxon estimate of that run's background.
+
+```{r, eval = FALSE}
+pq <- mutate_samdata_pq(
+  data_fungi,
+  library = rep(c("lib1", "lib2"), length.out = nsamples(.)),
+  run = rep(c("run1", "run2"), each = ceiling(nsamples(.) / 2))[seq_len(nsamples(.))],
+  is_blank = sample_sums(.) < 500
+)
+
+# Tag jumps: score within each library
+pq_tj <- uncross2_pq(pq, batch = "library")
+
+# Index hopping: clean each run with its own blanks
+pq_ih <- decontam_control_samples_pq(pq_tj, is_blank, batch = "run")
+```
+
+References:
+
+- MacConaill et al. (2018) *BMC Genomics* 19, 30. <https://doi.org/10.1186/s12864-017-4428-5>
+- Rodriguez-Martinez et al. (2023) *Molecular Ecology Resources* 23(3), 621-631. <https://doi.org/10.1111/1755-0998.13745>
+- Schnell, Bohmann & Gilbert (2015) *Molecular Ecology Resources* 15(6), 1289-1303. <https://doi.org/10.1111/1755-0998.12402>
+- van der Valk et al. (2020) *Molecular Ecology Resources* 20(5), 1171-1181. <https://doi.org/10.1111/1755-0998.13009>

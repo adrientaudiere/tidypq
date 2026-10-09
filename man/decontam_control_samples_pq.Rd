@@ -9,6 +9,7 @@ decontam_control_samples_pq(
   control_condition,
   fun = max,
   global_threshold = FALSE,
+  batch = NULL,
   remove_controls = FALSE,
   clean_phyloseq_object = TRUE,
   verbose = TRUE
@@ -30,6 +31,12 @@ single value.}
 \item{global_threshold}{(logical, default FALSE) If TRUE, compute a single
 global threshold from all control occurrences instead of per-taxon thresholds.
 This applies \code{fun} to all values in the control samples.}
+
+\item{batch}{(character, default \code{NULL}) Name of a \code{sam_data} column giving
+the technical batch of each sample (e.g. sequencing run or lane). If set,
+thresholds are computed from the control samples of each batch and applied
+only to the samples of that batch; every batch must contain at least one
+control sample. \code{NULL} uses all control samples for all samples.}
 
 \item{remove_controls}{(logical, default FALSE) Whether to remove the control
 samples from the output phyloseq object after decontamination.}
@@ -55,6 +62,19 @@ If multiple control are available, for each taxon a threshold is computed from t
 control samples using a summary function (default: \code{max}). Occurrences in
 non-control samples that are at or below this threshold are set to 0.
 }
+\section{Index hopping}{
+
+Index hopping moves reads between libraries sequenced on the \strong{same lane}:
+about 0.5 \% of reads on a HiSeq X, with samples of few reads receiving the
+largest share (van der Valk et al. 2020). Blanks sequenced on a lane receive
+such reads, so they estimate, per taxon, the background of that lane. Set
+\code{batch} to the run or lane column so each run is cleaned with its own blanks.
+Unique dual indexes largely prevent index hopping (MacConaill et al. 2018).
+Tag jumps, which happen within a library rather than a lane, are handled by
+\code{\link[=uncross2_pq]{uncross2_pq()}}; \code{vignette("decontamination", package = "tidypq")} compares
+the two.
+}
+
 \examples{
 library(MiscMetabar)
 # Add a mock control column for demonstration using the 3 samples with lowest
@@ -75,6 +95,26 @@ decontam_control_samples_pq(pq, is_control, remove_controls = FALSE)
 
 # Use a custom function (e.g., 2x the max)
 decontam_control_samples_pq(pq, is_control, fun = \(x) 2 * max(x))
+
+# Clean each sequencing run with its own controls (here a mock run column;
+# the 4 samples of lowest depth stand for the blanks of both runs)
+pq_runs <- mutate_samdata_pq(
+  data_fungi,
+  run = rep(c("run1", "run2"), length.out = nsamples(.)),
+  is_control = sample_sums(.) < sort(sample_sums(.))[5]
+)
+decontam_control_samples_pq(pq_runs, is_control, batch = "run")
+}
+\references{
+MacConaill, L.E. et al. (2018) Unique, dual-indexed sequencing adapters
+with UMIs effectively eliminate index cross-talk and significantly improve
+sensitivity of massively parallel sequencing. \emph{BMC Genomics} 19, 30.
+\doi{10.1186/s12864-017-4428-5}
+
+van der Valk, T., Vezzi, F., Ormestad, M., Dalén, L. and Guschanski, K.
+(2020) Index hopping on the Illumina HiseqX platform and its consequences
+for ancient DNA studies. \emph{Molecular Ecology Resources} 20(5), 1171-1181.
+\doi{10.1111/1755-0998.13009}
 }
 \author{
 Adrien Taudière

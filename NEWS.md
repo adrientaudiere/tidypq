@@ -1,5 +1,9 @@
 # tidypq 0.3.1 (Development version)
 
+* The decontamination vignette gains a section separating tag jumps (within a library) from index hopping (within a sequencing lane), with the tidypq tool and `batch` setting for each.
+* `decontam_control_samples_pq()` gains a `batch` argument naming a `sam_data` column (e.g. the sequencing run): thresholds are then computed from the control samples of each batch and applied only to that batch, so each run is cleaned with its own blanks, as suits index hopping. A help section explains index hopping.
+* `uncross2_pq()` gains a `batch` argument naming a `sam_data` column (e.g. the library): the expected cross-talk is then computed within each batch, and `f = "auto"` estimates one rate per batch. A help section explains tag jumps versus index hopping and states that UNCROSS2 assumes leaks spread evenly within a batch, whereas tag jumps follow the tag layout.
+
 # tidypq 0.3.0
 * Fix missing `Remotes` field in `DESCRIPTION` so that `pak::pkg_install()` can resolve the GitHub-only dependency `MiscMetabar` when installing tidypq standalone.
 

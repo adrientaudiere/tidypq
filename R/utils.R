@@ -17,6 +17,47 @@ build_sample_data_mask <- function(physeq) {
   rlang::new_data_mask(data_env)
 }
 
+#' Batch label of each sample, read from a sam_data column
+#'
+#' Validates `batch` and returns the label of each sample, named by sample
+#' name and in `sample_names(physeq)` order, so callers can index it by the
+#' column names of their OTU matrix instead of relying on positions. With
+#' `batch = NULL` every sample belongs to a single batch.
+#'
+#' @param physeq A phyloseq object.
+#' @param batch `NULL` or a single column name of `sam_data`.
+#' @return A named character vector, one label per sample.
+#' @keywords internal
+#' @noRd
+batch_labels <- function(physeq, batch) {
+  samples <- phyloseq::sample_names(physeq)
+  if (is.null(batch)) {
+    labels <- rep("all", length(samples))
+    names(labels) <- samples
+    return(labels)
+  }
+  if (!is.character(batch) || length(batch) != 1 || is.na(batch)) {
+    cli::cli_abort(
+      "{.arg batch} must be a single column name of {.code sam_data}."
+    )
+  }
+  sam <- physeq@sam_data
+  if (is.null(sam) || !batch %in% colnames(sam)) {
+    cli::cli_abort(c(
+      "Column {.val {batch}} not found in {.code sam_data}.",
+      "i" = "Available columns: {.val {colnames(sam)}}."
+    ))
+  }
+  labels <- as.character(sam[[batch]])
+  names(labels) <- rownames(sam)
+  if (anyNA(labels)) {
+    cli::cli_abort(
+      "Column {.val {batch}} of {.code sam_data} contains NA values."
+    )
+  }
+  labels[samples]
+}
+
 #' Return tax_table as a data.frame aligned to taxa_names(physeq)
 #'
 #' Some operations (e.g. previous version of `mumu_pq()`) leave the otu_table and tax_table of a

@@ -10,6 +10,7 @@ uncross2_pq(
   tmin = 0.1,
   k = 1,
   method = c("cut", "subtract"),
+  batch = NULL,
   return_scores = FALSE,
   clean_phyloseq_object = TRUE,
   verbose = TRUE
@@ -21,7 +22,8 @@ uncross2_pq(
 \item{f}{(numeric or \code{"auto"}, default \code{0.01}) Expected cross-talk rate: the
 fraction of an OTU's reads assumed to be misassigned across the plate. Set
 \code{f = "auto"} to estimate it de novo with \code{\link[=estimate_xtalk_rate_pq]{estimate_xtalk_rate_pq()}}; this
-errors if the estimate is undetermined.}
+errors if the estimate is undetermined. With \code{batch}, the rate is
+estimated within each batch, and any undetermined batch is an error.}
 
 \item{tmin}{(numeric, default \code{0.1}) Minimum UNCROSS2 score for a cell to be
 flagged as cross-talk. \code{0.1} = weak, \code{0.4} = strong (Edgar 2018).}
@@ -36,6 +38,11 @@ slope on the exponent (\code{exp(k * x / z)}). \code{k = 1} reproduces UNCROSS2;
 \item \code{"subtract"}: subtract the expected count \code{z} from \strong{all} cells of each
 OTU and floor negatives at \code{0} (background subtraction; ignores \code{tmin}).
 }}
+
+\item{batch}{(character, default \code{NULL}) Name of a \code{sam_data} column giving
+the technical batch of each sample (e.g. library or sequencing run). If
+set, \code{N} and \code{n} are computed within each batch. \code{NULL} treats the whole
+object as a single batch.}
 
 \item{return_scores}{(logical, default \code{FALSE}) If \code{TRUE}, return a list with
 the input phyloseq object, the cleaned phyloseq object
@@ -57,6 +64,9 @@ By default a phyloseq object with flagged cross-talk removed. If
 \item \code{scores}: taxa-by-samples matrix of UNCROSS2 scores.
 \item \code{tagjump}: logical taxa-by-samples matrix of flagged cells (always
 relative to \code{tmin}, even when \code{method = "subtract"}).
+\item \code{tmin}: the score threshold used.
+\item \code{f}: the cross-talk rate used; with \code{f = "auto"} and \code{batch}, a vector
+with one rate per batch, named by batch.
 Matrices are oriented taxa-as-rows regardless of the input orientation.
 }
 }
@@ -86,7 +96,45 @@ where \code{x} is the observed count in that cell. The score tends to \code{1} a
 \code{x -> 0} (looks like cross-talk) and to \code{0} as \verb{x >> z} (genuine signal).
 Cells with \code{s >= tmin} are treated as cross-talk. The default \code{tmin = 0.1}
 matches Edgar's "weak" (yellow) cut-off; use \code{0.4} for "strong" only.
+
+With \code{batch}, \code{N} and \code{n} are computed \strong{within each batch} (e.g. each
+library or sequencing run), so an OTU is only expected to leak into the
+samples that shared its batch.
 }
+\section{Tag jumps versus index hopping}{
+
+Cross-talk has two main sources, which act on different technical units:
+\itemize{
+\item \strong{Tag jumps} (tag switching) arise while preparing a library from pooled,
+tagged amplicons: a sequence of one sample ends up carrying the tags of
+another sample of the \strong{same library} (Schnell et al. 2015). They follow
+systematic patterns tied to the position of the tag combinations in the
+tag matrix, and can make a large share of the detected taxa false
+positives (Rodriguez-Martinez et al. 2023).
+\item \strong{Index hopping} arises on the sequencer: reads of one library receive
+the index of another library sequenced on the \strong{same lane} (van der Valk
+et al. 2020, about 0.5 \% of reads on a HiSeq X). Samples with few reads
+receive the largest share of misassigned reads. Unique dual indexes
+largely prevent it (MacConaill et al. 2018).
+}
+
+UNCROSS2 models leaks in general, so set \code{batch} to the unit of the artifact
+you target: the library column for tag jumps, the lane or run column for
+index hopping. When blanks were sequenced on each lane, they give a direct
+estimate of index hopping: see \code{\link[=decontam_control_samples_pq]{decontam_control_samples_pq()}} with \code{batch},
+and \code{vignette("decontamination", package = "tidypq")}.
+
+\strong{Limit.} UNCROSS2 assumes that an OTU leaks \strong{evenly} into every sample
+of its batch (the same expected count \code{z} for each sample), and \code{batch} does
+not change that assumption: it only restricts the spread to one batch. Tag
+jumps are not even: Rodriguez-Martinez et al. (2023) found that the reads
+in blanks depended on the position of the blank in the tag matrix, which
+they attribute to the exchange of 3' tags during PCR. Depending on where
+its tag combination sits, a sample can therefore receive more leaked reads
+than \code{z} (under-corrected) or fewer (over-corrected). Blanks spread across
+the tag matrix show whether this pattern affects your data.
+}
+
 \section{Relationship to Edgar's usearch binary}{
  This function faithfully
 implements the \emph{published} UNCROSS2 score (eq. 3), verified cell-for-cell
@@ -129,11 +177,38 @@ res <- uncross2_pq(data_fungi, return_scores = TRUE)
 summary(as.vector(res$scores))
 
 summary_plot_pq(res$old_physeq) / summary_plot_pq(res$new_physeq)
+
+# Score within each library (here a mock library column)
+pq <- mutate_samdata_pq(
+  data_fungi,
+  library = rep(c("lib1", "lib2"), length.out = nsamples(.))
+)
+uncross2_pq(pq, batch = "library")
 }
 }
 \references{
 Edgar, R.C. (2018) UNCROSS2: identification of cross-talk in 16S rRNA OTU
 tables. \emph{bioRxiv} 400762. \doi{10.1101/400762}
+
+MacConaill, L.E. et al. (2018) Unique, dual-indexed sequencing adapters
+with UMIs effectively eliminate index cross-talk and significantly improve
+sensitivity of massively parallel sequencing. \emph{BMC Genomics} 19, 30.
+\doi{10.1186/s12864-017-4428-5}
+
+Rodriguez-Martinez, S., Klaminder, J., Morlock, M.A., Dalén, L. and Huang,
+D.Y.-T. (2023) The topological nature of tag jumping in environmental DNA
+metabarcoding studies. \emph{Molecular Ecology Resources} 23(3), 621-631.
+\doi{10.1111/1755-0998.13745}
+
+Schnell, I.B., Bohmann, K. and Gilbert, M.T.P. (2015) Tag jumps
+illuminated: reducing sequence-to-sample misidentifications in
+metabarcoding studies. \emph{Molecular Ecology Resources} 15(6), 1289-1303.
+\doi{10.1111/1755-0998.12402}
+
+van der Valk, T., Vezzi, F., Ormestad, M., Dalén, L. and Guschanski, K.
+(2020) Index hopping on the Illumina HiseqX platform and its consequences
+for ancient DNA studies. \emph{Molecular Ecology Resources} 20(5), 1171-1181.
+\doi{10.1111/1755-0998.13009}
 }
 \seealso{
 \code{\link[=estimate_xtalk_rate_pq]{estimate_xtalk_rate_pq()}} for the de novo rate;

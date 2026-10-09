@@ -63,15 +63,42 @@ taxa_prevalence <- function(physeq, threshold = 0) {
 #' @param global_threshold (logical, default FALSE) If TRUE, compute a single
 #'   global threshold from all control occurrences instead of per-taxon thresholds.
 #'   This applies `fun` to all values in the control samples.
+#' @param batch (character, default `NULL`) Name of a `sam_data` column giving
+#'   the technical batch of each sample (e.g. sequencing run or lane). If set,
+#'   thresholds are computed from the control samples of each batch and applied
+#'   only to the samples of that batch; every batch must contain at least one
+#'   control sample. `NULL` uses all control samples for all samples.
 #' @param remove_controls (logical, default FALSE) Whether to remove the control
 #'   samples from the output phyloseq object after decontamination.
 #' @param clean_phyloseq_object (logical, default TRUE) Whether to clean the
 #'   resulting phyloseq object using `clean_pq()` to remove empty taxa/samples.
 #' @param verbose (logical, default TRUE) Whether to print additional information.
 #'
+#' @section Index hopping:
+#' Index hopping moves reads between libraries sequenced on the **same lane**:
+#' about 0.5 % of reads on a HiSeq X, with samples of few reads receiving the
+#' largest share (van der Valk et al. 2020). Blanks sequenced on a lane receive
+#' such reads, so they estimate, per taxon, the background of that lane. Set
+#' `batch` to the run or lane column so each run is cleaned with its own blanks.
+#' Unique dual indexes largely prevent index hopping (MacConaill et al. 2018).
+#' Tag jumps, which happen within a library rather than a lane, are handled by
+#' [uncross2_pq()]; `vignette("decontamination", package = "tidypq")` compares
+#' the two.
+#'
 #' @return A phyloseq object with decontaminated OTU values.
 #' @export
 #' @author Adrien Taudière
+#'
+#' @references
+#' MacConaill, L.E. et al. (2018) Unique, dual-indexed sequencing adapters
+#' with UMIs effectively eliminate index cross-talk and significantly improve
+#' sensitivity of massively parallel sequencing. *BMC Genomics* 19, 30.
+#' \doi{10.1186/s12864-017-4428-5}
+#'
+#' van der Valk, T., Vezzi, F., Ormestad, M., Dalén, L. and Guschanski, K.
+#' (2020) Index hopping on the Illumina HiseqX platform and its consequences
+#' for ancient DNA studies. *Molecular Ecology Resources* 20(5), 1171-1181.
+#' \doi{10.1111/1755-0998.13009}
 #'
 #' @examples
 #' library(MiscMetabar)
@@ -93,11 +120,21 @@ taxa_prevalence <- function(physeq, threshold = 0) {
 #'
 #' # Use a custom function (e.g., 2x the max)
 #' decontam_control_samples_pq(pq, is_control, fun = \(x) 2 * max(x))
+#'
+#' # Clean each sequencing run with its own controls (here a mock run column;
+#' # the 4 samples of lowest depth stand for the blanks of both runs)
+#' pq_runs <- mutate_samdata_pq(
+#'   data_fungi,
+#'   run = rep(c("run1", "run2"), length.out = nsamples(.)),
+#'   is_control = sample_sums(.) < sort(sample_sums(.))[5]
+#' )
+#' decontam_control_samples_pq(pq_runs, is_control, batch = "run")
 decontam_control_samples_pq <- function(
   physeq,
   control_condition,
   fun = max,
   global_threshold = FALSE,
+  batch = NULL,
   remove_controls = FALSE,
   clean_phyloseq_object = TRUE,
   verbose = TRUE
@@ -133,26 +170,31 @@ decontam_control_samples_pq <- function(
     otu <- t(otu)
   }
 
-  # Calculate threshold from control samples
-  control_otu <- otu[, control_samples, drop = FALSE]
+  # Each batch (a single one when batch = NULL) needs at least one control
+  batch_vec <- batch_labels(physeq, batch)[colnames(otu)]
+  is_control_col <- colnames(otu) %in% control_samples
+  no_control <- setdiff(unique(batch_vec), batch_vec[is_control_col])
+  if (length(no_control) > 0) {
+    cli::cli_abort(c(
+      "Every {.arg batch} needs at least one control sample.",
+      "x" = "No control sample in batch{?es} {.val {no_control}}."
+    ))
+  }
 
-  if (global_threshold) {
-    # Single global threshold from all control values
-    threshold_value <- fun(as.vector(control_otu))
-    threshold_matrix <- matrix(
-      threshold_value,
-      nrow = nrow(otu),
-      ncol = ncol(otu)
-    )
-  } else {
-    # Per-taxon thresholds
-    thresholds <- apply(control_otu, 1, fun)
-    threshold_matrix <- matrix(
-      thresholds,
-      nrow = nrow(otu),
-      ncol = ncol(otu),
-      byrow = FALSE
-    )
+  # Calculate thresholds from the control samples of each batch
+  threshold_matrix <- matrix(0, nrow(otu), ncol(otu), dimnames = dimnames(otu))
+  global_values <- c()
+  for (b in unique(batch_vec)) {
+    cols <- batch_vec == b
+    control_otu <- otu[, cols & is_control_col, drop = FALSE]
+    if (global_threshold) {
+      # Single global threshold from all control values of the batch
+      global_values[b] <- fun(as.vector(control_otu))
+      threshold_matrix[, cols] <- global_values[[b]]
+    } else {
+      # Per-taxon thresholds
+      threshold_matrix[, cols] <- apply(control_otu, 1, fun)
+    }
   }
 
   # Set values to 0 where value <= threshold (only for non-control samples)
@@ -179,16 +221,29 @@ decontam_control_samples_pq <- function(
   }
 
   if (verbose) {
+    threshold_type <- if (global_threshold) "global" else "per-taxon"
+    global_threshold_value <- if (global_threshold) {
+      global_values[[1]]
+    }
+    if (!is.null(batch)) {
+      threshold_type <- paste0(threshold_type, ", within each ", batch)
+      if (global_threshold) {
+        global_threshold_value <- paste(
+          names(global_values),
+          global_values,
+          sep = " = ",
+          collapse = ", "
+        )
+      }
+    }
     decontam_message(
       physeq,
       new_physeq,
-      threshold_type = if (global_threshold) "global" else "per-taxon",
+      threshold_type = threshold_type,
       n_control = length(control_samples),
       n_non_control = length(non_control_samples),
       fun_name = fun_name,
-      global_threshold_value = if (global_threshold) {
-        fun(as.vector(control_otu))
-      },
+      global_threshold_value = global_threshold_value,
       control_label = "samples",
       removed = remove_controls
     )

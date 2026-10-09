@@ -189,3 +189,110 @@ test_that("uncross2_pq f = 'auto' uses the de novo estimate", {
     "undetermined"
   )
 })
+
+test_that("uncross2_pq with a single-level batch matches batch = NULL", {
+  pq <- mutate_samdata_pq(make_xtalk_pq(), one = rep("x", nsamples(.)))
+  run <- function(...) {
+    uncross2_pq(
+      pq,
+      ...,
+      return_scores = TRUE,
+      clean_phyloseq_object = FALSE,
+      verbose = FALSE
+    )
+  }
+  expect_equal(run(batch = "one")$scores, run()$scores)
+  expect_equal(
+    phyloseq::otu_table(run(batch = "one", method = "subtract")$new_physeq),
+    phyloseq::otu_table(run(method = "subtract")$new_physeq)
+  )
+})
+
+test_that("uncross2_pq scores within each batch", {
+  pq <- make_xtalk_pq()
+  res <- uncross2_pq(
+    pq,
+    tmin = 0.4,
+    batch = "grp",
+    return_scores = TRUE,
+    clean_phyloseq_object = FALSE,
+    verbose = FALSE
+  )
+  z_a <- 0.01 * 1005 / 2
+  expect_equal(
+    res$scores["otu1", "s2"],
+    2 / (1 + exp(5 / z_a)),
+    tolerance = 1e-6
+  )
+  expect_true(res$tagjump["otu1", "s2"])
+  expect_equal(res$scores["otu1", "s3"], 0)
+
+  global <- uncross2_pq(
+    pq,
+    tmin = 0.4,
+    return_scores = TRUE,
+    clean_phyloseq_object = FALSE,
+    verbose = FALSE
+  )
+  expect_false(global$tagjump["otu1", "s2"])
+
+  sub <- uncross2_pq(
+    pq,
+    method = "subtract",
+    batch = "grp",
+    clean_phyloseq_object = FALSE,
+    verbose = FALSE
+  )
+  m <- as(phyloseq::otu_table(sub), "matrix")
+  expect_equal(m["otu1", "s1"], 1000 - z_a, tolerance = 1e-6)
+  expect_equal(m["otu1", "s2"], 0)
+})
+
+test_that("uncross2_pq validates batch", {
+  pq <- make_xtalk_pq()
+  expect_error(uncross2_pq(pq, batch = "nope", verbose = FALSE), "not found")
+  expect_error(uncross2_pq(pq, batch = 1, verbose = FALSE), "batch")
+  sam <- phyloseq::sample_data(pq)
+  sam$grp[1] <- NA
+  phyloseq::sample_data(pq) <- sam
+  expect_error(uncross2_pq(pq, batch = "grp", verbose = FALSE), "NA")
+})
+
+test_that("uncross2_pq f = 'auto' estimates one rate per batch", {
+  mat <- matrix(
+    0,
+    12,
+    24,
+    dimnames = list(paste0("o", 1:12), paste0("s", 1:24))
+  )
+  mat[, c(1, 13)] <- 1000
+  mat[, c(2:4, 14:16)] <- 1
+  pq <- phyloseq::phyloseq(
+    phyloseq::otu_table(mat, taxa_are_rows = TRUE),
+    phyloseq::tax_table(matrix(
+      "x",
+      12,
+      1,
+      dimnames = list(rownames(mat), "Kingdom")
+    )),
+    phyloseq::sample_data(data.frame(
+      row.names = colnames(mat),
+      run = rep(c("r1", "r2"), each = 12)
+    ))
+  )
+  res <- uncross2_pq(
+    pq,
+    f = "auto",
+    batch = "run",
+    return_scores = TRUE,
+    clean_phyloseq_object = FALSE,
+    verbose = FALSE
+  )
+  expect_named(res$f, c("r1", "r2"))
+  expect_equal(res$f[["r1"]], res$f[["r2"]])
+
+  expect_error(
+    uncross2_pq(make_xtalk_pq(), f = "auto", batch = "grp", verbose = FALSE),
+    "undetermined"
+  )
+})

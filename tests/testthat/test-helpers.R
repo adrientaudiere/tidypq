@@ -193,6 +193,125 @@ test_that("decontam_control_samples_pq correctly sets values to zero", {
   }
 })
 
+# Two sequencing runs, each with its own blank.
+make_runs_pq <- function() {
+  mat <- matrix(
+    c(
+      50,
+      30,
+      100,
+      0,
+      30,
+      100, # otu1
+      0,
+      5,
+      10,
+      8,
+      5,
+      10 # otu2
+    ),
+    nrow = 2,
+    byrow = TRUE,
+    dimnames = list(
+      c("otu1", "otu2"),
+      c("blankA", "s1", "s2", "blankB", "s3", "s4")
+    )
+  )
+  samp <- data.frame(
+    row.names = colnames(mat),
+    run = rep(c("A", "B"), each = 3),
+    is_control = c(TRUE, FALSE, FALSE, TRUE, FALSE, FALSE)
+  )
+  phyloseq::phyloseq(
+    phyloseq::otu_table(mat, taxa_are_rows = TRUE),
+    phyloseq::sample_data(samp),
+    phyloseq::tax_table(matrix(
+      "k",
+      nrow = 2,
+      dimnames = list(rownames(mat), "Kingdom")
+    ))
+  )
+}
+
+test_that("decontam_control_samples_pq uses the controls of each batch", {
+  res <- decontam_control_samples_pq(
+    make_runs_pq(),
+    is_control,
+    batch = "run",
+    clean_phyloseq_object = FALSE,
+    verbose = FALSE
+  )
+  m <- as(phyloseq::otu_table(res), "matrix")
+  expect_equal(m["otu1", "s1"], 0)
+  expect_equal(m["otu1", "s3"], 30)
+  expect_equal(m["otu2", "s1"], 5)
+  expect_equal(m["otu2", "s3"], 0)
+
+  no_batch <- decontam_control_samples_pq(
+    make_runs_pq(),
+    is_control,
+    clean_phyloseq_object = FALSE,
+    verbose = FALSE
+  )
+  expect_equal(as(phyloseq::otu_table(no_batch), "matrix")["otu1", "s3"], 0)
+})
+
+test_that("decontam_control_samples_pq with a single-level batch matches batch = NULL", {
+  pq <- mutate_samdata_pq(
+    data_fungi,
+    is_control = seq_len(nsamples(.)) <= 2,
+    one = rep("x", nsamples(.))
+  )
+  expect_equal(
+    phyloseq::otu_table(
+      decontam_control_samples_pq(
+        pq,
+        is_control,
+        batch = "one",
+        verbose = FALSE
+      )
+    ),
+    phyloseq::otu_table(decontam_control_samples_pq(
+      pq,
+      is_control,
+      verbose = FALSE
+    ))
+  )
+})
+
+test_that("decontam_control_samples_pq errors when a batch has no control", {
+  pq <- make_runs_pq()
+  sam <- phyloseq::sample_data(pq)
+  sam$run[4:6] <- c("B", "C", "C")
+  phyloseq::sample_data(pq) <- sam
+  expect_error(
+    decontam_control_samples_pq(pq, is_control, batch = "run", verbose = FALSE),
+    "No control sample"
+  )
+  expect_error(
+    decontam_control_samples_pq(
+      pq,
+      is_control,
+      batch = "nope",
+      verbose = FALSE
+    ),
+    "not found"
+  )
+})
+
+test_that("decontam_control_samples_pq reports per-batch global thresholds", {
+  expect_message(
+    decontam_control_samples_pq(
+      make_runs_pq(),
+      is_control,
+      global_threshold = TRUE,
+      batch = "run",
+      verbose = TRUE
+    ),
+    "A = 50, B = 8"
+  )
+})
+
 ################################################################################
 # decontam_control_taxa_pq tests
 ################################################################################
