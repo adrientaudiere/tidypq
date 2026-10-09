@@ -1,6 +1,8 @@
 # Changelog
 
-## tidypq 0.3.0 (Development version)
+## tidypq 0.3.1 (Development version)
+
+## tidypq 0.3.0
 
 - Fix missing `Remotes` field in `DESCRIPTION` so that
   [`pak::pkg_install()`](https://pak.r-lib.org/reference/pkg_install.html)
